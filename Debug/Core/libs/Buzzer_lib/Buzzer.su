@@ -1,0 +1,6 @@
+../Core/libs/Buzzer_lib/Buzzer.cpp:10:6:bool Buzzer::beep(int, int, int, int)	24	static
+../Core/libs/Buzzer_lib/Buzzer.cpp:28:6:void Buzzer::run()	16	static
+../Core/libs/Buzzer_lib/Buzzer.cpp:56:6:bool Buzzer::isBusy()	16	static
+../Core/libs/Buzzer_lib/Buzzer.cpp:61:10:uint16_t Buzzer::msToTick(uint16_t)	16	static
+../Core/libs/Buzzer_lib/Buzzer.cpp:66:6:void Buzzer::Buzz_on()	16	static
+../Core/libs/Buzzer_lib/Buzzer.cpp:73:6:void Buzzer::Buzz_off()	16	static

@@ -1,0 +1,9 @@
+C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/Interfaces/Timeout.h:24:7:void Timeout::resetTimeoutCounter()	16	static
+C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/Interfaces/Timeout.h:42:7:void Timeout::setTimeoutValue(uint8_t)	16	static
+C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/Interfaces/Timeout.h:17:7:constexpr Timeout::Timeout()	16	static
+../Core/libs/FrSkyRX_lib/FrSkyRX.cpp:10:1:FrSkyRX::FrSkyRX(UART_HandleTypeDef*, DMA_HandleTypeDef*, Buzzer*, uint8_t)	24	static
+../Core/libs/FrSkyRX_lib/FrSkyRX.cpp:19:6:void FrSkyRX::begin()	16	static
+../Core/libs/FrSkyRX_lib/FrSkyRX.cpp:24:6:void FrSkyRX::update()	24	static
+../Core/libs/FrSkyRX_lib/FrSkyRX.cpp:90:6:bool FrSkyRX::isRxOk()	16	static
+../Core/libs/FrSkyRX_lib/FrSkyRX.cpp:98:10:uint8_t* FrSkyRX::getBuffer_ptr()	16	static
+../Core/libs/FrSkyRX_lib/FrSkyRX.cpp:103:9:uint8_t FrSkyRX::getFrameLength()	16	static

@@ -1,0 +1,14 @@
+accX_max=10300
+accX_min=-6050
+accX_offset=2125
+accX_scale=2
+
+accY_max=7450
+accY_min=-9000
+accY_offset=-775
+accY_scale=2
+
+accZ_max=10750
+accZ_min=-5650
+accZ_offset=2550
+accZ_scale=2

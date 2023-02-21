@@ -1,0 +1,12 @@
+INTERRUPTS:
+ *USART1-HAL_UART_TxCpltCallback(bluetooth)
+ *USART2-HAL_UARTEx_RxEventCallback
+ *USART3-HAL_UARTEx_RxEventCallback
+ *USART4-HAL_UARTEx_RxEventCallback
+ *TIM1-HAL_TIM_PeriodElapsedCallback
+ *TIM4-HAL_TIM_PeriodElapsedCallback
+ *GPIO4-HAL_GPIO_EXTI_Callback
+ *GPIO8-HAL_GPIO_EXTI_Callback
+ *GPIO2-HAL_GPIO_EXTI_Callback
+ 
+ Gatekeeper:testTask
