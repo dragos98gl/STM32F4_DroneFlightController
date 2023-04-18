@@ -4,24 +4,34 @@
  * 	-remove generated icm,lis,bmp IRQ
  */
 
-#define DISABLE_ALL_BEEPS 1 // 1-OFF
+//#define DISABLE_ALL_BEEPS 5 // 1-OFF
 
 #include "main.h"
 #include "cmsis_os.h"
 #include "usb_device.h"
-#include "BMP390.h"
-#include "ICM42688P.h"
-#include "LIS3MDLTR.h"
-#include "PMW3901UY.h"
-#include "HC05.h"
-#include "MB1043.h"
-#include "FrSkyRX.h"
-#include "math.h"
+#include "interrupts.h"
+#include "Enums.hpp"
+#include "BMP390.hpp"
+#include "ICM42688P.hpp"
+#include "LIS3MDLTR.hpp"
+#include "PMW3901UY.hpp"
+#include "HC05.hpp"
+#include "MB1043.hpp"
+#include "FrSkyRX.hpp"
 #include "PID_Control.hpp"
 #include "Buzzer.hpp"
 #include "BatteryManagement.hpp"
 #include "MadgwickAHRS.h"
 #include <string>
+#include "math.h"
+
+enum class FaultsStatus
+{
+	OKAY,
+	NOT_READY,
+	FAILURE,
+	CRITICAL
+};
 
 ADC_HandleTypeDef hadc1;
 DMA_HandleTypeDef hdma_adc1;
@@ -56,22 +66,26 @@ static void MX_USART6_UART_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_TIM3_Init();
 
-Buzzer buzz;
-HC05 bt(&huart1);
-PMW3901UY pmw(&huart2,&hdma_usart2_rx,100);
-FrSkyRX remote_rx(&huart3,&hdma_usart3_rx,&buzz,100);
-MB1043 sonar(&huart4,&hdma_uart4_rx,100);
+FaultsStatus currentFaultsStatus {FaultsStatus::NOT_READY};
 
 LIS3MDLTR lis(&hspi2);
 BMP390 bmp(&hspi2);
 ICM42688P icm(&hspi2);
 
+Buzzer buzz;
+HC05 bt(&huart1);
+PMW3901UY pmw(&huart2,&hdma_usart2_rx,300, icm);
+FrSkyRX remote_rx(&huart3,&hdma_usart3_rx,&buzz,1);
+MB1043 sonar(&huart4,&hdma_uart4_rx,300);
+
 BatteryManagement BattMgmt(&hadc1,&buzz,1000);
 
-QueueHandle_t SPI2_Gatekeeper;
-void testTask(void *pvParameters);
-
-int senIndex=0;
+TaskHandle_t FaultsCheckHandler = NULL;
+TaskHandle_t SensorsDataReadHandler = NULL;
+TaskHandle_t DynamicsProcessHandler = NULL;
+void FaultsCheckTask(void *pvParameters);
+void SensorsDataReadTask(void *pvParameters);
+void DynamicsProcessTask(void *pvParameters);
 
 int icmCounter = 0;
 int bmpCounter = 0;
@@ -79,21 +93,49 @@ int lisCounter = 0;
 int remoteCounter = 0;
 int pmwCounter = 0;
 int sonarCounter = 0;
+int icmCounter1 = 0;
+int bmpCounter1 = 0;
+int lisCounter1 = 0;
+int remoteCounter1 = 0;
+int pmwCounter1 = 0;
+int sonarCounter1 = 0;
 int taskCounter = 0;
 int timCounter = 0;
 
 float euler_x;
 float euler_y;
 float euler_z;
-PID_Control roll_pid(euler_y,0,0,3);
-PID_Control pitch_pid(euler_x,0,0,0);
-PID_Control yaw_pid(euler_z,1,0,0);
+//PID_Control roll_pid(euler_y, 10, 0.001, 5000);
+PID_Control roll_pid(
+		euler_y,
+		remote_rx.target_roll,
+		10,
+		0,
+		0);
+//PID_Control pitch_pid(euler_x, 10, 0.001, 5000);
+PID_Control pitch_pid(
+		euler_x,
+		remote_rx.target_pitch,
+		10,
+		0,
+		0);
+PID_Control yaw_pid(
+		euler_z,
+		remote_rx.target_yaw,
+		0,
+		0,
+		0);
 
+float roll, pitch, heading;
+float test1=roll_pid.out();
 int tick1=0;
+int icmCouter2 = 0;
+int duplicates = 0;
+int duplicatesCounter = 0;
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
-    if (huart->Instance == USART1)  // change USART instance
+    if (huart->Instance == USART1)
     {
     	tick1++;
 
@@ -101,9 +143,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
     }
 }
 
-float test1=roll_pid.out();
-int duplicates = 0;
-int duplicatesCounter = 0;
+int timCounter2 = 0;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   if (htim->Instance == TIM1) {
@@ -112,105 +152,57 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
   if (htim->Instance == TIM4)
   {
-	  buzz.run();
-	  BattMgmt.run();
-
-	  euler_x = icm.getEulerX();
-	  euler_y = icm.getEulerY();
-	  euler_z = icm.getEulerZ();
-
-	  test1=roll_pid.out();
-
-	  timCounter++;
-
-	  //if (remote_rx.isRxOk())
-	  {
-		/*
-	    	CR1    CR3
-	   	   	   \  /
-	   	   		\/
-	   	   		/\
-	   	   	   /  \
-	   		CR2    CR4
-		*/
-			float CCR1_value = 3000;// + remote_rx.throttle + roll_pid.out() + pitch_pid.out();
-			float CCR2_value = 3000;// + remote_rx.throttle + roll_pid.out() - pitch_pid.out();
-			float CCR3_value = 3000;// + remote_rx.throttle - roll_pid.out() + pitch_pid.out();
-			float CCR4_value = 3000;// + remote_rx.throttle - roll_pid.out() - pitch_pid.out();
-
-			if (CCR1_value<3300)
-				TIM3 -> CCR1 = 3300;
-			else
-				TIM3 -> CCR1 = CCR1_value;
-
-			if (CCR2_value<3300)
-				TIM3 -> CCR2 = 3300;
-			else
-				TIM3 -> CCR2 = CCR2_value;
-
-			if (CCR3_value<3300)
-				TIM3 -> CCR3 = 3300;
-			else
-				TIM3 -> CCR3 = CCR3_value;
-
-			if (CCR4_value<3300)
-				TIM3 -> CCR4 = 3300;
-			else
-				TIM3 -> CCR4 = CCR4_value;
-
-		// ... = base_throttle + alt_compensation + roll/pitch/yaw_pid;
-	  }
+	  timCounter2++;
   }
 }
 
 extern "C" void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	if (GPIO_Pin == GPIO_PIN_4)
-	{
-		senIndex=0;
-		portBASE_TYPE xHigherPriorityYaskWoken = pdFALSE;
-		xQueueSendToBackFromISR(SPI2_Gatekeeper,&senIndex,&xHigherPriorityYaskWoken);
-		icmCounter++;
-	}
+	portBASE_TYPE pxHigherPriorityTaskWoken = pdFALSE;
 
-	if (GPIO_Pin == GPIO_PIN_8)
+	switch (GPIO_Pin)
 	{
-		senIndex=1;
-		portBASE_TYPE xHigherPriorityYaskWoken = pdFALSE;
-		xQueueSendToBackFromISR(SPI2_Gatekeeper,&senIndex,&xHigherPriorityYaskWoken);
-		bmpCounter++;
-	}
+	case (GPIO_PIN_4):
+		xTaskNotifyFromISR(SensorsDataReadHandler, EnumSensorsInterrupt::ICM42688P_t, eSetBits, &pxHigherPriorityTaskWoken);
+		portYIELD_FROM_ISR(pxHigherPriorityTaskWoken);
+		icmCounter1++;
+		break;
 
-	if (GPIO_Pin == GPIO_PIN_2)
-	{
-		senIndex=2;
-		portBASE_TYPE xHigherPriorityYaskWoken = pdFALSE;
-		xQueueSendToBackFromISR(SPI2_Gatekeeper,&senIndex,&xHigherPriorityYaskWoken);
-		lisCounter++;
+	case (GPIO_PIN_8):
+		xTaskNotifyFromISR(SensorsDataReadHandler, EnumSensorsInterrupt::BMP390_t, eSetBits, &pxHigherPriorityTaskWoken);
+		if (pxHigherPriorityTaskWoken)
+		portYIELD_FROM_ISR(pxHigherPriorityTaskWoken);
+		bmpCounter1++;
+		break;
+
+	case (GPIO_PIN_2):
+		xTaskNotifyFromISR(SensorsDataReadHandler, EnumSensorsInterrupt::LIS3MDLTR_t, eSetBits, &pxHigherPriorityTaskWoken);
+		portYIELD_FROM_ISR(pxHigherPriorityTaskWoken);
+		lisCounter1++;
+		break;
 	}
 }
 
-void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
+	portBASE_TYPE pxHigherPriorityTaskWoken = pdFALSE;
+
 	if (huart->Instance == USART2)
 	{
-		__HAL_UART_FLUSH_DRREGISTER(&huart2);
-		pmw.update();
-		pmwCounter++;
-	}
-
-	if (huart->Instance == USART3)
+		xTaskNotifyFromISR(SensorsDataReadHandler, EnumSensorsInterrupt::PMW_t, eSetBits, &pxHigherPriorityTaskWoken);
+		portYIELD_FROM_ISR(pxHigherPriorityTaskWoken);
+		pmwCounter1++;
+	} else if (huart->Instance == USART3)
 	{
-		__HAL_UART_FLUSH_DRREGISTER(&huart3);
-		remote_rx.update();
-		remoteCounter++;
-	}
-
-	if (huart->Instance == UART4)
+		xTaskNotifyFromISR(SensorsDataReadHandler, EnumSensorsInterrupt::REMOTERX_t, eSetBits, &pxHigherPriorityTaskWoken);
+		portYIELD_FROM_ISR(pxHigherPriorityTaskWoken);
+		remoteCounter1++;
+	} else if (huart->Instance == UART4)
 	{
-	   __HAL_UART_FLUSH_DRREGISTER(&huart4);
-	   sonar.update();
-	   sonarCounter++;
+		xTaskNotifyFromISR(SensorsDataReadHandler, EnumSensorsInterrupt::SONAR_t, eSetBits, &pxHigherPriorityTaskWoken);
+		portYIELD_FROM_ISR(pxHigherPriorityTaskWoken);
+		sonarCounter1++;
+
 	}
 }
 
@@ -237,35 +229,29 @@ int main(void)
   bt.addSensor(&sonar);
   bt.addSensor(&pmw);
   bt.addSensor(&icm);
-  bt.addSensorParameter(HC05::SENSOR_DATA_PARAMETER::ICM_GX);
-  bt.addSensorParameter(HC05::SENSOR_DATA_PARAMETER::ICM_GY);
-  bt.addSensorParameter(HC05::SENSOR_DATA_PARAMETER::ICM_GZ);
-  bt.addSensorParameter(HC05::SENSOR_DATA_PARAMETER::ICM_AX);
-  bt.addSensorParameter(HC05::SENSOR_DATA_PARAMETER::ICM_AY);
-  bt.addSensorParameter(HC05::SENSOR_DATA_PARAMETER::ICM_AZ);
 
-  remote_rx.begin();
-  sonar.begin();
-  pmw.begin();
+  bt.addSensorParameter(HC05::SENSOR_DATA_PARAMETER::BMP_RAW_PRESS);
+  //bt.addSensorParameter(HC05::SENSOR_DATA_PARAMETER::PMW_POS_X);
+  //bt.addSensorParameter(HC05::SENSOR_DATA_PARAMETER::PMW_POS_Y);
+  //bt.addSensorParameter(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_GX);
+  //bt.addSensorParameter(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_GY);
+  //bt.addSensorParameter(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_GZ);
+  //bt.addSensorParameter(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_AX);
+  //bt.addSensorParameter(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_AY);
+  //bt.addSensorParameter(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_AZ);
+  bt.printfSensorsValues();
 
-  TIM3 -> CCR1 = 3000;
-  TIM3 -> CCR2 = 3000;
-  TIM3 -> CCR3 = 3000;
-  TIM3 -> CCR4 = 3000;
+  TIM3 -> CCR1 = 0;
+  TIM3 -> CCR2 = 0;
+  TIM3 -> CCR3 = 0;
+  TIM3 -> CCR4 = 0;
 
   HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_2);
   HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_3);
   HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_4);
 
-
-	char c[50];
-	strcpy(c,"pula mea\n\r");
-	int len = strlen(c);
-	bt.send(c, len);
-
-  xTaskCreate(testTask,"test",100,NULL,tskIDLE_PRIORITY+3,NULL);
-  SPI2_Gatekeeper = xQueueCreate(3,sizeof(int32_t));
+  xTaskCreate(SensorsDataReadTask,"SensorsDataReadTask",256,NULL,tskIDLE_PRIORITY+3, &SensorsDataReadHandler);
   vTaskStartScheduler();
 
   while (1)
@@ -273,12 +259,8 @@ int main(void)
   }
 }
 
-float roll, pitch, heading;
-int test;
-void testTask(void *pvParameters)
+void SensorsDataReadTask(void *pvParameters)
 {
-	//HAL_NVIC_SetPriority(TIM4_IRQn, 5, 0);
-	//HAL_NVIC_EnableIRQ(TIM4_IRQn);
 	HAL_TIM_Base_Start_IT(&htim4);
 	HAL_NVIC_SetPriority(EXTI2_IRQn, 5, 0);
 	HAL_NVIC_EnableIRQ(EXTI2_IRQn);
@@ -288,8 +270,7 @@ void testTask(void *pvParameters)
 	HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 	NVIC_SetPriorityGrouping(0);
 
-	bool startup=true;
-
+	bool startup;
 	if(!lis.defaultInit())
 	  startup = false;
 	lis.update();
@@ -302,25 +283,156 @@ void testTask(void *pvParameters)
 	  startup = false;
 	bmp.update();
 
+	remote_rx.begin();
+	sonar.begin();
+	pmw.begin();
+
+	uint32_t currentSensor = 0;
+	xTaskCreate(DynamicsProcessTask,"DynamicsProcessTask",256,NULL,tskIDLE_PRIORITY+2, &DynamicsProcessHandler);
+	xTaskCreate(FaultsCheckTask,"FaultsCheckTask",256,NULL,tskIDLE_PRIORITY+2, &FaultsCheckHandler);
+
 	while (1)
 	{
-		xQueueReceive(SPI2_Gatekeeper, &test, portMAX_DELAY);
+		if (xTaskNotifyWait(0x00, 0xFFFFFFFFUL, &currentSensor, portMAX_DELAY) == pdTRUE)
+		{
+			if (currentSensor & EnumSensorsInterrupt::ICM42688P_t)
+			{
+				icm.update();
+				icmCounter++;
+				icmCouter2++;
+				int testt = icm.getAccX();
+				if (testt==duplicates)
+					duplicatesCounter++;
+				duplicates = testt;
+			}
 
-		if (test == 0){
-			icm.update();
+			if (currentSensor & EnumSensorsInterrupt::BMP390_t)
+			{
+				bmp.update();
+				bmpCounter++;
+			}
 
-			int testt = icm.getAccX();
-			if (testt==duplicates)
-				duplicatesCounter++;
-			duplicates = testt;
+			if (currentSensor & EnumSensorsInterrupt::LIS3MDLTR_t)
+			{
+				lis.update();
+				lisCounter++;
+			}
+
+			if (currentSensor & EnumSensorsInterrupt::PMW_t)
+			{
+				__HAL_UART_FLUSH_DRREGISTER(&huart2);
+				pmw.update();
+				pmwCounter++;
+			}
+
+			if (currentSensor & EnumSensorsInterrupt::REMOTERX_t)
+			{
+				__HAL_UART_FLUSH_DRREGISTER(&huart3);
+				remote_rx.update();
+				remoteCounter++;
+			}
+
+			if (currentSensor & EnumSensorsInterrupt::SONAR_t)
+			{
+			   __HAL_UART_FLUSH_DRREGISTER(&huart4);
+			   sonar.update();
+			   sonarCounter++;
+			}
+
+			taskCounter++;
+		}
+	}
+}
+
+void FaultsCheckTask(void *pvParameters)
+{
+	TickType_t xLastWakeTime;
+	const TickType_t xFrequency = 1;
+
+	xLastWakeTime = xTaskGetTickCount();
+
+	for( ;; )
+	{
+		pmw.incrementTimeoutCounter();
+		remote_rx.incrementTimeoutCounter();
+		sonar.incrementTimeoutCounter();
+
+		buzz.run();
+		BattMgmt.run();
+
+		if (remote_rx.getCurrentState() == FrSkyRXState::READY)
+		{
+			currentFaultsStatus = FaultsStatus::OKAY;
 		}
 
-		if (test == 1)
-			bmp.update();
-		if (test == 2)
-			lis.update();
+		vTaskDelayUntil( &xLastWakeTime, xFrequency);
+	}
+}
 
-		taskCounter++;
+void DynamicsProcessTask(void *pvParameters)
+{
+	TickType_t xLastWakeTime;
+	const TickType_t xFrequency = 1;
+
+	xLastWakeTime = xTaskGetTickCount();
+
+	for( ;; )
+	{
+		euler_x = icm.getEulerX();
+		euler_y = icm.getEulerY();
+		euler_z = icm.getEulerZ();
+
+		test1=yaw_pid.out();
+
+		timCounter++;
+
+		if (currentFaultsStatus == FaultsStatus::OKAY)
+		{
+			/*
+			CR1    CR3
+			   \  /
+				\/
+				/\
+			   /  \
+			CR2    CR4
+			 */
+			float CCR1_value = 3000 + remote_rx.throttle + roll_pid.out() + pitch_pid.out() - yaw_pid.out();
+			float CCR2_value = 3000 + remote_rx.throttle + roll_pid.out() - pitch_pid.out() + yaw_pid.out();
+			float CCR3_value = 3000 + remote_rx.throttle - roll_pid.out() + pitch_pid.out() + yaw_pid.out();
+			float CCR4_value = 3000 + remote_rx.throttle - roll_pid.out() - pitch_pid.out() - yaw_pid.out();
+
+			if (CCR1_value<3300)
+				TIM3 -> CCR1 = 3300;
+			else
+				TIM3 -> CCR1 = CCR1_value;
+
+			if (CCR2_value<3300)
+				TIM3 -> CCR2 = 3300;
+			else
+				TIM3 -> CCR2 = CCR2_value;
+
+			if (CCR3_value<3300)
+				TIM3 -> CCR3 = 3300;
+			else
+				TIM3 -> CCR3 = CCR3_value;
+
+			if (CCR4_value<3300)
+				TIM3 -> CCR4 = 3300;
+			else
+				TIM3 -> CCR4 = CCR4_value;
+
+		// ... = base_throttle + alt_compensation + roll/pitch/yaw_pid;
+		}
+
+		if (currentFaultsStatus == FaultsStatus::FAILURE)
+		{
+
+		}
+
+		if (currentFaultsStatus == FaultsStatus::CRITICAL)
+
+
+		vTaskDelayUntil( &xLastWakeTime, xFrequency);
 	}
 }
 
