@@ -5,9 +5,11 @@
  *      Author: Asus
  */
 
-#include "PMW3901UY.h"
+#include "PMW3901UY.hpp"
+//#include "utils_functions.hpp"
 
-PMW3901UY::PMW3901UY(UART_HandleTypeDef *uart_port,DMA_HandleTypeDef *uart_port_dma,uint8_t timeout)
+PMW3901UY::PMW3901UY(UART_HandleTypeDef *uart_port,DMA_HandleTypeDef *uart_port_dma,uint8_t timeout,ICM42688P& icm):
+	icm(icm)
 {
 	PMW3901UY::uart_port = uart_port;
 	PMW3901UY::uart_port_dma=uart_port_dma;
@@ -17,39 +19,67 @@ PMW3901UY::PMW3901UY(UART_HandleTypeDef *uart_port,DMA_HandleTypeDef *uart_port_
 
 void PMW3901UY::begin()
 {
-	HAL_UARTEx_ReceiveToIdle_DMA(uart_port, rx_buff, buff_len);
+	HAL_UART_Receive_DMA (uart_port, rx_buff, packet_length);
 }
 
 void PMW3901UY::update()
 {
-	if (rx_buff[0]==BEGIN_BIT && rx_buff[1]==DATA_LEN_BIT && rx_buff[8]==END_BIT)
+	if (this->rx_buff[0]==this->BEGIN_BIT && this->rx_buff[1]==this->DATA_LEN_BIT && this->rx_buff[8]==this->END_BIT)
 	{
-		flow_x = (int16_t)(rx_buff[3]<<8 | rx_buff[2]);
-		flow_y = (int16_t)(rx_buff[5]<<8 | rx_buff[4]);
-		quality = rx_buff[7];
+		this->flow_x = (int16_t)(this->rx_buff[3]<<8 | this->rx_buff[2]);
+		this->flow_y = (int16_t)(this->rx_buff[5]<<8 | this->rx_buff[4]);
+		this->quality = this->rx_buff[7];
 
-		x_pos += flow_x;
-		y_pos += flow_y;
+		this->x_pos += this->flow_x;
+		this->y_pos += this->flow_y;
 
-		resetTimeoutCounter();
-
-		HAL_UARTEx_ReceiveToIdle_DMA(uart_port, rx_buff, buff_len);
-		__HAL_DMA_DISABLE_IT(uart_port_dma, DMA_IT_HT);
-
-		/*char s1[20];
-		char s2[20];
-		sprintf(s1,"%ld", x_pos);
-		sprintf(s2,"%ld", y_pos);
-		strcat(s1,",");
-		strcat(s1,s2);
-		strcat(s1,"\n\r");
-
-		*/
-		//std::string s1 = std::to_string(flow_x);
-		//std::string s2 = std::to_string(flow_y);
-		//s1 = s1 + "," + s2 + "\n\r";
-		//int len = s1.length();
+		this->process();
+		this->resetTimeoutCounter();
 	}
+	else if (this->wrongDataReceived==false)
+	{
+		for (uint iter=0;iter<this->packet_length-1U;iter++)
+		{
+			if ((this->rx_buff[iter]==this->END_BIT) && (this->rx_buff[iter+1U]==this->BEGIN_BIT))
+			{
+				HAL_UART_Receive_DMA (this->uart_port, this->rx_buff, this->packet_length+iter+1);
+				this->wrongDataReceived = true;
+				return;
+			}
+		}
+	}
+
+	if (this->wrongDataReceived == true)
+		this->wrongDataReceived = false;
+
+	HAL_UART_Receive_DMA (this->uart_port, this->rx_buff, this->packet_length);
+	__HAL_DMA_DISABLE_IT(this->uart_port_dma, DMA_IT_HT);
+}
+
+void PMW3901UY::process()
+{
+	_mini.flow_x = static_cast<float>(this->flow_x);
+	_mini.flow_x = static_cast<float>(this->flow_y);
+
+	_mini.flow_x_i += _mini.flow_x;
+	_mini.flow_y_i += _mini.flow_y;
+
+	_pixel_flow.fix_x_i += (_mini.flow_x_i - _pixel_flow.fix_x_i) * 0.2F;
+	_pixel_flow.fix_y_i += (_mini.flow_y_i - _pixel_flow.fix_y_i) * 0.2F;
+
+	_pixel_flow.ang_x += (600.0F * tan(icm.getEulerX()*0.0174F) - _pixel_flow.ang_x) * 0.2F;
+	_pixel_flow.ang_y += (600.0F * tan(icm.getEulerY()*0.0174F) - _pixel_flow.ang_y) * 0.2F;
+
+	_pixel_flow.out_x_i = _pixel_flow.fix_x_i - _pixel_flow.ang_x;
+	_pixel_flow.out_x_i = _pixel_flow.fix_y_i - _pixel_flow.ang_y;
+
+	_pixel_flow.x = (_pixel_flow.out_x_i - _pixel_flow.out_x_i_o);// / dT;
+	_pixel_flow.out_x_i_o = _pixel_flow.out_x_i;
+	_pixel_flow.y = (_pixel_flow.out_y_i - _pixel_flow.out_y_i_o);// / dT;
+	_pixel_flow.out_y_i_o = _pixel_flow.out_y_i;
+
+	_pixel_flow.fit_x += (_pixel_flow.x - _pixel_flow.fix_x) * 0.1;
+	_pixel_flow.fit_y += (_pixel_flow.y - _pixel_flow.fix_y) * 0.1;
 }
 
 const char* PMW3901UY::getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER> &senorsList)

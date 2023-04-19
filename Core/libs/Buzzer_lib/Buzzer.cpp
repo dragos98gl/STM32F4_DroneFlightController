@@ -7,15 +7,15 @@
 
 #include "Buzzer.hpp"
 
-bool Buzzer::beep(int duration_ms,int freq_ms,int repetition_count,int pause_ms)
+bool Buzzer::beep(int duration_ms,int freq_ms,int repetition_count)
 {
-	if (!busy)
+	if (!this->busy)
 	{
-		busy = true;
+		this->busy = true;
 
-		pause_tick = msToTick(pause_ms);
-		counter_end = msToTick((duration_ms+pause_ms)*(repetition_count));
-		freq_tick = msToTick(freq_ms);
+		this->counterEnd = this->msToTick(duration_ms);
+		this->freqTick = this->msToTick(freq_ms);
+		this->repetitions = this->freqTick * repetition_count * 2U - 1U;
 
 		Buzz_on();
 
@@ -27,30 +27,38 @@ bool Buzzer::beep(int duration_ms,int freq_ms,int repetition_count,int pause_ms)
 
 void Buzzer::run()
 {
-	if (busy)
+	if (this->busy)
 	{
-		counter_start++;
+		this->counterStart++;
 
-		if (!((counter_start/pause_tick)%2))
+		if ((this->repetitions > 0U) && (this->freqTick!=0U))
 		{
-			if (freq_tick!=0)
+			if (!((this->counterStart/this->freqTick) % 2U))
 			{
-				if ((counter_start/freq_tick)%2)
-					Buzz_on();
-				else
-					Buzz_off();
+				this->Buzz_on();
 			}
+			else
+			{
+				this->Buzz_off();
+			}
+			this->repetitions--;
 		} else
-			Buzz_off();
-
-		if (counter_start>=counter_end)
 		{
-			busy = false;
-			counter_start=0;
-			freq_tick = 0;
-			Buzz_off();
+			this->Buzz_off();
+		}
+
+		if (this->counterStart >= this->counterEnd)
+		{
+			this->stop();
 		}
 	}
+}
+
+void Buzzer::stop()
+{
+	this->busy = false;
+	this->counterStart = 0U;
+	this->Buzz_off();
 }
 
 bool Buzzer::isBusy()
@@ -65,9 +73,9 @@ uint16_t Buzzer::msToTick(uint16_t ms)
 
 void Buzzer::Buzz_on()
 {
-#if DISABLE_ALL_BEEPS == 5
+//#if DISABLE_ALL_BEEPS == 5
   HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_SET);
-#endif
+//#endif
 }
 
 void Buzzer::Buzz_off()

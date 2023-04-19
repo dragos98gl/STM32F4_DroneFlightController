@@ -20,7 +20,7 @@ void BatteryManagement::run()
 
 		if (batteryVal<=BATERRY_MIN_3V2)
 		{
-			buzz->beep(100,1,1,100);
+			//buzz->beep(100,1,1,100);
 		}
 
 		tick_counter = 0;

@@ -1,8 +1,7 @@
 Core/libs/LIS3MDLTR_lib/LIS3MDLTR.o: \
  ../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.cpp \
- ../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.h \
- C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/Interfaces/Interfaces.hpp \
- ../Core/libs/LIS3MDLTR_lib/LIS3MDLTR_reg.h \
+ ../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.hpp \
+ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -40,10 +39,10 @@ Core/libs/LIS3MDLTR_lib/LIS3MDLTR.o: \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/HC05_lib/HC05.h
-../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.h:
-C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/Interfaces/Interfaces.hpp:
-../Core/libs/LIS3MDLTR_lib/LIS3MDLTR_reg.h:
+ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp \
+ ../Core/libs/LIS3MDLTR_lib/LIS3MDLTR_reg.h
+../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.hpp:
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h:
@@ -81,4 +80,5 @@ C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/Inte
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h:
-C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/HC05_lib/HC05.h:
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp:
+../Core/libs/LIS3MDLTR_lib/LIS3MDLTR_reg.h:

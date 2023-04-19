@@ -5,9 +5,10 @@
  *      Author: DragosDarie
  */
 
-#include "FrSkyRX.h"
+#include "FrSkyRX.hpp"
 
-FrSkyRX::FrSkyRX(UART_HandleTypeDef *uart_port,DMA_HandleTypeDef *uart_port_dma,Buzzer *buzz,uint8_t timeout)
+FrSkyRX::FrSkyRX(UART_HandleTypeDef *uart_port,DMA_HandleTypeDef *uart_port_dma,Buzzer *buzz,uint8_t timeout):
+	currentState {FrSkyRXState::NOT_CONNECTED}
 {
 	FrSkyRX::uart_port = uart_port;
 	FrSkyRX::uart_port_dma=uart_port_dma;
@@ -18,73 +19,179 @@ FrSkyRX::FrSkyRX(UART_HandleTypeDef *uart_port,DMA_HandleTypeDef *uart_port_dma,
 
 void FrSkyRX::begin()
 {
-	HAL_UARTEx_ReceiveToIdle_DMA(uart_port, rx_frame, frame_length);
+	HAL_UART_Receive_DMA(this->uart_port, this->rx_buff, this->packet_length);
 }
 
 void FrSkyRX::update()
 {
-    channels[0]  = static_cast<int16_t>(rx_frame[1] | rx_frame[2] << 8 & 0x07FF);
-    channels[1]  = static_cast<int16_t>(rx_frame[2] >> 3 | rx_frame[3] << 5 & 0x07FF);
-    channels[2]  = static_cast<int16_t>(rx_frame[3] >> 6 | rx_frame[4] << 2 | rx_frame[5] << 10 & 0x07FF);
-    channels[3]  = static_cast<int16_t>(rx_frame[5] >> 1 | rx_frame[6] << 7 & 0x07FF);
-    channels[4]  = static_cast<int16_t>(rx_frame[6] >> 4 | rx_frame[7] << 4 & 0x07FF);
-    channels[5]  = static_cast<int16_t>(rx_frame[7] >> 7 | rx_frame[8] << 1 | rx_frame[9] << 9 & 0x07FF);
-    channels[6]  = static_cast<int16_t>(rx_frame[9] >> 2 | rx_frame[10] << 6 & 0x07FF);
-    channels[7]  = static_cast<int16_t>(rx_frame[10] >> 5 | rx_frame[11] << 3 & 0x07FF);
+	const bool isPacketOk = (this->rx_buff[0] == this->BEGIN_BIT) && (this->rx_buff[24]==this->END_BIT);
 
-    channels[8]  = static_cast<int16_t>(rx_frame[12] | rx_frame[13] << 8 & 0x07FF);
-    channels[9]  = static_cast<int16_t>(rx_frame[13] >> 3 | rx_frame[14] << 5 & 0x07FF);
-    channels[10] = static_cast<int16_t>(rx_frame[14] >> 6 | rx_frame[15] << 2 | rx_frame[16] << 10 & 0x07FF);
-    channels[11] = static_cast<int16_t>(rx_frame[16] >> 1 | rx_frame[17] << 7 & 0x07FF);
-    channels[12] = static_cast<int16_t>(rx_frame[17] >> 4 | rx_frame[18] << 4 & 0x07FF);
-    channels[13] = static_cast<int16_t>(rx_frame[18] >> 7 | rx_frame[19] << 1 | rx_frame[20] << 9 & 0x07FF);
-    channels[14] = static_cast<int16_t>(rx_frame[20] >> 2 | rx_frame[21] << 6 & 0x07FF);
-    channels[15] = static_cast<int16_t>(rx_frame[21] >> 5 | rx_frame[22] << 3 & 0x07FF);
-
-	throttle = channels[2];
-	roll = channels[0];
-	pitch = channels[1];
-	yaw = channels[3];
-
-	if (channels[4]<1000)
-		lb=0;
-	else
-		lb=1;
-
-	if (channels[7]<1000)
-		rb=0;
-	else
-		rb=1;
-
-	if (channels[5]<500)
-		lu = 0;
-	else if(channels[5]<1500)
-		lu = 1;
-	else
-		lu = 2;
-
-	if (channels[6]<500)
-		ru = 0;
-	else if(channels[6]<1500)
-		ru = 1;
-	else
-		ru = 2;
-
-	if (rx_ok == 0 && throttle > 1500)
+	if(isPacketOk)
 	{
-		rx_ok = 1;
-		buzz->beep(100,1,1,100);
+		this->updateValues();
+		this->processStateMachine();
+
+		if (this->isDisconnected())
+			this->currentState = FrSkyRXState::TIMEOUT;
+	}
+	else if (this->wrongDataReceived==false)
+	{
+		for (uint8_t iter=0;iter<this->packet_length-1U;iter++)
+		{
+			if ((this->rx_buff[iter]==this->END_BIT) && (this->rx_buff[iter+1U]==this->BEGIN_BIT))
+			{
+				HAL_UART_Receive_DMA (this->uart_port, this->rx_buff, this->packet_length+iter+1);
+				this->wrongDataReceived = true;
+				return;
+			}
+		}
 	}
 
-	if (rx_ok == 1 && throttle < 200)
-	{
-		rx_ok = 2;
-		buzz->beep(100,1,3,100);
-	}
-	resetTimeoutCounter();
+	if (this->wrongDataReceived == true)
+		this->wrongDataReceived = false;
 
-	HAL_UARTEx_ReceiveToIdle_DMA(uart_port, rx_frame, frame_length);
-	__HAL_DMA_DISABLE_IT(uart_port_dma, DMA_IT_HT);
+	HAL_UART_Receive_DMA(this->uart_port, this->rx_buff, this->packet_length);
+	__HAL_DMA_DISABLE_IT(this->uart_port_dma, DMA_IT_HT);
+}
+
+void FrSkyRX::processStateMachine()
+{
+	switch (this->currentState)
+	{
+	case FrSkyRXState::NOT_CONNECTED:
+		if ((this->lu == 0U) && (this->throttle < 300U))
+		{
+			this->currentState = FrSkyRXState::CONNECTED;
+			buzz->stop();
+			buzz->beep(600U,100U,3U);
+		}
+		else
+		{
+			buzz->beep(3000U,100U,2U);
+		}
+		break;
+	case FrSkyRXState::CONNECTED:
+		if (this->lu == 1U)
+		{
+			TIM3 -> CCR1 = 3000;
+			TIM3 -> CCR2 = 3000;
+			TIM3 -> CCR3 = 3000;
+			TIM3 -> CCR4 = 3000;
+			this->currentState = FrSkyRXState::ARMED;
+		}
+		break;
+	case FrSkyRXState::ARMED:
+		if (this->lu == 2U)
+		{
+			TIM3 -> CCR1 = 3300;
+			TIM3 -> CCR2 = 3300;
+			TIM3 -> CCR3 = 3300;
+			TIM3 -> CCR4 = 3300;
+			buzz->beep(200U,100U,1U);
+			this->currentState = FrSkyRXState::READY;
+		}
+		break;
+	case FrSkyRXState::READY:
+		target_roll = -static_cast<float>(mid_position - raw_roll) * roll_scaleFactor;
+		target_pitch = static_cast<float>(mid_position - raw_pitch) * pitch_scaleFactor;
+		target_yaw = static_cast<float>(mid_position - raw_yaw) * yaw_scaleFactor;
+
+		target_roll = ((target_roll > 2.0F) || (target_roll < -2.0F)) ? target_roll : 0.0F;
+		target_pitch = ((target_pitch > 2.0F) || (target_pitch < -2.0F)) ? target_pitch : 0.0F;
+		break;
+	case FrSkyRXState::TIMEOUT:
+		break;
+	}
+}
+
+FrSkyRXState FrSkyRX::getCurrentState() const
+{
+	return this->currentState;
+}
+
+void FrSkyRX::updateValues()
+{
+	this->channels[0]  = static_cast<int16_t>(rx_buff[1] | (rx_buff[2] << 8 & 0x07FF));
+	this->channels[1]  = static_cast<int16_t>(rx_buff[2] >> 3 | (rx_buff[3] << 5 & 0x07FF));
+	this->channels[2]  = static_cast<int16_t>(rx_buff[3] >> 6 | (rx_buff[4] << 2 | (rx_buff[5] << 10 & 0x07FF)));
+	this->channels[3]  = static_cast<int16_t>(rx_buff[5] >> 1 | (rx_buff[6] << 7 & 0x07FF));
+	this->channels[4]  = static_cast<int16_t>(rx_buff[6] >> 4 | (rx_buff[7] << 4 & 0x07FF));
+	this->channels[5]  = static_cast<int16_t>(rx_buff[7] >> 7 | (rx_buff[8] << 1 | (rx_buff[9] << 9 & 0x07FF)));
+	this->channels[6]  = static_cast<int16_t>(rx_buff[9] >> 2 | (rx_buff[10] << 6 & 0x07FF));
+	this->channels[7]  = static_cast<int16_t>(rx_buff[10] >> 5 | (rx_buff[11] << 3 & 0x07FF));
+
+	this->channels[8]  = static_cast<int16_t>(rx_buff[12] | (rx_buff[13] << 8 & 0x07FF));
+	this->channels[9]  = static_cast<int16_t>(rx_buff[13] >> 3 | (rx_buff[14] << 5 & 0x07FF));
+	this->channels[10] = static_cast<int16_t>(rx_buff[14] >> 6 | (rx_buff[15] << 2 | (rx_buff[16] << 10 & 0x07FF)));
+	this->channels[11] = static_cast<int16_t>(rx_buff[16] >> 1 | (rx_buff[17] << 7 & 0x07FF));
+	this->channels[12] = static_cast<int16_t>(rx_buff[17] >> 4 | (rx_buff[18] << 4 & 0x07FF));
+	this->channels[13] = static_cast<int16_t>(rx_buff[18] >> 7 | (rx_buff[19] << 1 | (rx_buff[20] << 9 & 0x07FF)));
+	this->channels[14] = static_cast<int16_t>(rx_buff[20] >> 2 | (rx_buff[21] << 6 & 0x07FF));
+	this->channels[15] = static_cast<int16_t>(rx_buff[21] >> 5 | (rx_buff[22] << 3 & 0x07FF));
+
+	this->throttle = static_cast<float>(channels[2]);
+	this->raw_roll = this->channels[0];
+	this->raw_pitch = this->channels[1];
+	this->raw_yaw = this->channels[3];
+
+	if (this->channels[4]<1000)
+		this->lb=0;
+	else
+		this->lb=1;
+
+	if (this->channels[7]<1000)
+		this->rb=0;
+	else
+		this->rb=1;
+
+	if (this->channels[5]<500)
+		this->lu = 0;
+	else if(this->channels[5]<1500)
+		this->lu = 1;
+	else
+		this->lu = 2;
+
+	if (this->channels[6]<500)
+		this->ru = 0;
+	else if(this->channels[6]<1500)
+		this->ru = 1;
+	else
+		this->ru = 2;
+}
+
+bool FrSkyRX::isDisconnected() const
+{
+	const bool failsafe =
+			(this->rb == 0) &&
+			(this->ru == 0) &&
+			(this->lb == 0) &&
+			(this->lu == 0) &&
+			(this->throttle > 1800) &&
+			(this->raw_roll > 1800) &&
+			(this->raw_pitch > 1800) &&
+			(this->raw_yaw > 1800);
+
+	return failsafe;
+}
+
+float FrSkyRX::getThrottle()
+{
+	return this->throttle;
+}
+
+float FrSkyRX::getTargetRoll()
+{
+	return this->target_roll;
+}
+
+float FrSkyRX::getTargetPitch()
+{
+	return this->target_pitch;
+}
+
+float FrSkyRX::getTargetYaw()
+{
+	return this->target_yaw;
 }
 
 bool FrSkyRX::isRxOk()
@@ -97,10 +204,10 @@ bool FrSkyRX::isRxOk()
 
 uint8_t* FrSkyRX::getBuffer_ptr()
 {
-	return rx_frame;
+	return this->rx_buff;
 }
 
 uint8_t FrSkyRX::getFrameLength()
 {
-	return frame_length;
+	return this->packet_length;
 }

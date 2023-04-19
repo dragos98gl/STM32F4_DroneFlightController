@@ -29,6 +29,7 @@ RM := rm -rf
 -include Core/libs/BatteryManagement_lib/subdir.mk
 -include Core/libs/BMP390_lib/subdir.mk
 -include Core/Startup/subdir.mk
+-include Core/Src/Implementation/subdir.mk
 -include Core/Src/subdir.mk
 -include objects.mk
 
@@ -93,8 +94,8 @@ all: main-build
 main-build: flightController_v3.elf secondary-outputs
 
 # Tool invocations
-flightController_v3.elf flightController_v3.map: $(OBJS) $(USER_OBJS) C:\Users\DDarie\STM32CubeIDE\workspace_1.10.1\flightController_v3\STM32F405RGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-g++ -o "flightController_v3.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\DDarie\STM32CubeIDE\workspace_1.10.1\flightController_v3\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="flightController_v3.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+flightController_v3.elf flightController_v3.map: $(OBJS) $(USER_OBJS) C:\Users\DDarie\STM32F4_DroneFlightController\STM32F405RGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-g++ -o "flightController_v3.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\DDarie\STM32F4_DroneFlightController\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="flightController_v3.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

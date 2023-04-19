@@ -1,4 +1,4 @@
-../Core/libs/BatteryManagement_lib/BatteryManagement.cpp:12:6:void BatteryManagement::run()	24	static
+../Core/libs/BatteryManagement_lib/BatteryManagement.cpp:12:6:void BatteryManagement::run()	16	static
 ../Core/libs/BatteryManagement_lib/BatteryManagement.cpp:30:6:void BatteryManagement::toPercentage()	24	static
 ../Core/libs/BatteryManagement_lib/BatteryManagement.cpp:49:7:float BatteryManagement::getBatteryPercentage()	16	static
 ../Core/libs/BatteryManagement_lib/BatteryManagement.cpp:54:10:uint16_t BatteryManagement::msToTick(uint16_t)	16	static

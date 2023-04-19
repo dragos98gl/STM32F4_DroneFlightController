@@ -5,7 +5,7 @@
  *      Author: DragosDarie
  */
 
-#include "HC05.h"
+#include "HC05.hpp"
 
 HC05::HC05(UART_HandleTypeDef *uart_port)
 {

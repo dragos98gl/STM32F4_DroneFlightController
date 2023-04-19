@@ -5,7 +5,7 @@
  *      Author: Asus
  */
 
-#include "BMP390.h"
+#include "BMP390.hpp"
 
 BMP390::BMP390(SPI_HandleTypeDef *spi_port)
 {
