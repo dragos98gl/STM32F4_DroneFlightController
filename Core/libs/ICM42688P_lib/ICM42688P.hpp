@@ -8,9 +8,9 @@
 #ifndef INC_ICM42688P_H_
 #define INC_ICM42688P_H_
 
-#include <HC05.hpp>
+#include "HC05.hpp"
+#include "ICM42688P_reg.hpp"
 #include <Interfaces.hpp>
-#include "ICM42688P_reg.h"
 #include "FlashReadWrite.hpp"
 #include "stm32f4xx_hal.h"
 #include "math.h"

@@ -1,5 +1,5 @@
 Core/libs/HC05_lib/HC05.o: ../Core/libs/HC05_lib/HC05.cpp \
- ../Core/libs/HC05_lib/HC05.h \
+ ../Core/libs/HC05_lib/HC05.hpp \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -37,8 +37,8 @@ Core/libs/HC05_lib/HC05.o: ../Core/libs/HC05_lib/HC05.cpp \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/Interfaces/Interfaces.hpp
-../Core/libs/HC05_lib/HC05.h:
+ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp
+../Core/libs/HC05_lib/HC05.hpp:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h:
@@ -76,4 +76,4 @@ Core/libs/HC05_lib/HC05.o: ../Core/libs/HC05_lib/HC05.cpp \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h:
-C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/Interfaces/Interfaces.hpp:
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp:

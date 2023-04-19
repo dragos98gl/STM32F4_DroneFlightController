@@ -5,7 +5,7 @@
  *      Author: Asus
  */
 
-#include "ICM42688P.h"
+#include "ICM42688P.hpp"
 
 ICM42688P::ICM42688P(SPI_HandleTypeDef *spi_port)
 {
@@ -67,37 +67,37 @@ const char* ICM42688P::getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER>
 {
 	strcpy(packet,"");
 
-	//if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_GX)!=senorsList.end())
+	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_GX)!=senorsList.end())
 	{
 		strcat(packet,toCharArray(euler_x));
 		strcat(packet,",");
 	}
 
-	//if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_GY)!=senorsList.end())
+	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_GY)!=senorsList.end())
 	{
 		strcat(packet,toCharArray(euler_y));
 		strcat(packet,",");
 	}
 
-	//if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_GZ)!=senorsList.end())
+	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_GZ)!=senorsList.end())
 	{
 		strcat(packet,toCharArray(euler_z));
 		strcat(packet,",");
 	}
 
-	//if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_AX)!=senorsList.end())
+	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_AX)!=senorsList.end())
 	{
 		strcat(packet,toCharArray(-ax));
 		strcat(packet,",");
 	}
 
-	//if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_AY)!=senorsList.end())
+	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_AY)!=senorsList.end())
 	{
 		strcat(packet,toCharArray(ay));
 		strcat(packet,",");
 	}
 
-	//if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_AZ)!=senorsList.end())
+	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_AZ)!=senorsList.end())
 	{
 		strcat(packet,toCharArray(az));
 		strcat(packet,",");
@@ -154,14 +154,14 @@ void ICM42688P::toEuler()
 
 	ax = atan2(raw_ax,sqrt(raw_ay*raw_ay + raw_az*raw_az))*RADIANS_TO_DEGREES;
 	ay = atan2(raw_ay,sqrt(raw_ax*raw_ax + raw_az*raw_az))*RADIANS_TO_DEGREES;
-	az = atan2(raw_az,sqrt(raw_ax*raw_ax + raw_ay*raw_ay))* RADIANS_TO_DEGREES;
+	az = atan2(raw_az,sqrt(raw_ax*raw_ax + raw_ay*raw_ay))*RADIANS_TO_DEGREES;
 
 	euler_x = euler_x*0.9999+ay*0.0001;
 	euler_y = euler_y*0.9999-ax*0.0001;
 	euler_z = euler_z*0.9999+az*0.0001;
 }
 
-void ICM42688P::computeGyroDrift(uint16_t count)
+void ICM42688P::computeGyroDrift(uint32_t count)
 {
 	uint8_t axH;
 	uint8_t axL;

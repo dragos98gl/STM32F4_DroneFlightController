@@ -1,7 +1,7 @@
 Core/libs/BatteryManagement_lib/BatteryManagement.o: \
  ../Core/libs/BatteryManagement_lib/BatteryManagement.cpp \
  ../Core/libs/BatteryManagement_lib/BatteryManagement.hpp \
- C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/Buzzer_lib/Buzzer.hpp \
+ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Buzzer_lib/Buzzer.hpp \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -40,7 +40,7 @@ Core/libs/BatteryManagement_lib/BatteryManagement.o: \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h
 ../Core/libs/BatteryManagement_lib/BatteryManagement.hpp:
-C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/Buzzer_lib/Buzzer.hpp:
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Buzzer_lib/Buzzer.hpp:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h:

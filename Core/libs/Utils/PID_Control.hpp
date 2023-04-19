@@ -17,14 +17,19 @@ private:
 	float pid_p = 0;
 	float pid_i = 0;
 	float pid_d = 0;
+	float pid = 0;
 
-	float reference = 0;
-	float error = 0;
 	float &signal;
+	float &reference;
+	float error = 0;
 	float last_signal = 0;
 public:
-	PID_Control(float &signal,float Kp,float Ki,float Kd):
-		signal(signal),Kp(Kp),Ki(Ki),Kd(Kd)
+	PID_Control(float &signal, float &reference,float Kp,float Ki,float Kd):
+		signal(signal),
+		reference(reference),
+		Kp(Kp),
+		Ki(Ki),
+		Kd(Kd)
 	{
 		last_signal = signal;
 	};

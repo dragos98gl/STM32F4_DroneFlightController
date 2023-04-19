@@ -55,23 +55,24 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h \
  ../USB_DEVICE/App/usb_device.h \
  ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h \
- ../USB_DEVICE/Target/usbd_conf.h \
- C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/BMP390_lib/BMP390.h \
- C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/Interfaces/Interfaces.hpp \
- C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/BMP390_lib/BMP390_reg.h \
- C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/HC05_lib/HC05.h \
- C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/ICM42688P_lib/ICM42688P.h \
- C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/ICM42688P_lib/ICM42688P_reg.h \
- C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/Utils/FlashReadWrite.hpp \
- C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/LIS3MDLTR_lib/LIS3MDLTR.h \
- C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/LIS3MDLTR_lib/LIS3MDLTR_reg.h \
- C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/PMW3901UY_lib/PMW3901UY.h \
- C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/Interfaces/Timeout.h \
- C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/MB1043_lib/MB1043.h \
- C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/FrSkyRX_lib/FrSkyRX.h \
- C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/Buzzer_lib/Buzzer.hpp \
- C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/Utils/PID_Control.hpp \
- C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/BatteryManagement_lib/BatteryManagement.hpp \
+ ../USB_DEVICE/Target/usbd_conf.h ../Core/Src/interrupts.h \
+ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/Enums.hpp \
+ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/BMP390_lib/BMP390.hpp \
+ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp \
+ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp \
+ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/BMP390_lib/BMP390_reg.hpp \
+ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/ICM42688P_lib/ICM42688P.hpp \
+ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/ICM42688P_lib/ICM42688P_reg.hpp \
+ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/FlashReadWrite.hpp \
+ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/LIS3MDLTR_lib/LIS3MDLTR.hpp \
+ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/LIS3MDLTR_lib/LIS3MDLTR_reg.h \
+ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/PMW3901UY_lib/PMW3901UY.hpp \
+ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Timeout.hpp \
+ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/MB1043_lib/MB1043.hpp \
+ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/FrSkyRX_lib/FrSkyRX.hpp \
+ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Buzzer_lib/Buzzer.hpp \
+ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/PID_Control.hpp \
+ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/BatteryManagement_lib/BatteryManagement.hpp \
  ../Core/Src/MadgwickAHRS.h
 ../Core/Inc/main.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
@@ -131,20 +132,22 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
 ../USB_DEVICE/App/usb_device.h:
 ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h:
 ../USB_DEVICE/Target/usbd_conf.h:
-C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/BMP390_lib/BMP390.h:
-C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/Interfaces/Interfaces.hpp:
-C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/BMP390_lib/BMP390_reg.h:
-C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/HC05_lib/HC05.h:
-C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/ICM42688P_lib/ICM42688P.h:
-C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/ICM42688P_lib/ICM42688P_reg.h:
-C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/Utils/FlashReadWrite.hpp:
-C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/LIS3MDLTR_lib/LIS3MDLTR.h:
-C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/LIS3MDLTR_lib/LIS3MDLTR_reg.h:
-C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/PMW3901UY_lib/PMW3901UY.h:
-C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/Interfaces/Timeout.h:
-C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/MB1043_lib/MB1043.h:
-C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/FrSkyRX_lib/FrSkyRX.h:
-C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/Buzzer_lib/Buzzer.hpp:
-C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/Utils/PID_Control.hpp:
-C:/Users/DDarie/STM32CubeIDE/workspace_1.10.1/flightController_v3/Core/libs/BatteryManagement_lib/BatteryManagement.hpp:
+../Core/Src/interrupts.h:
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/Enums.hpp:
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/BMP390_lib/BMP390.hpp:
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp:
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp:
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/BMP390_lib/BMP390_reg.hpp:
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/ICM42688P_lib/ICM42688P.hpp:
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/ICM42688P_lib/ICM42688P_reg.hpp:
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/FlashReadWrite.hpp:
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/LIS3MDLTR_lib/LIS3MDLTR.hpp:
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/LIS3MDLTR_lib/LIS3MDLTR_reg.h:
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/PMW3901UY_lib/PMW3901UY.hpp:
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Timeout.hpp:
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/MB1043_lib/MB1043.hpp:
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/FrSkyRX_lib/FrSkyRX.hpp:
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Buzzer_lib/Buzzer.hpp:
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/PID_Control.hpp:
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/BatteryManagement_lib/BatteryManagement.hpp:
 ../Core/Src/MadgwickAHRS.h:

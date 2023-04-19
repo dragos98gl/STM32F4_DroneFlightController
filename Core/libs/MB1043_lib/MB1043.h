@@ -10,8 +10,8 @@
 
 #include "stm32f4xx_hal.h"
 #include <stdint.h>
-#include "Timeout.h"
-#include "HC05.h"
+#include "Timeout.hpp"
+#include "HC05.hpp"
 
 class MB1043:public Timeout ,public PrintableSensor//: UART_Conn
 {

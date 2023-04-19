@@ -5,7 +5,7 @@
  *      Author: Asus
  */
 
-#include "LIS3MDLTR.h"
+#include "LIS3MDLTR.hpp"
 
 LIS3MDLTR::LIS3MDLTR(SPI_HandleTypeDef *spi_port)
 {
@@ -28,9 +28,9 @@ void LIS3MDLTR::update()
 	uint8_t temp_high=SPI_read(TEMP_OUT_H);
 	uint8_t temp_low=SPI_read(TEMP_OUT_L);
 
-	X_val = ((int16_t)x_high)<<8 | x_low;
-	Y_val = ((int16_t)y_high)<<8 | y_low;
-	Z_val = ((int16_t)z_high)<<8 | z_low;
+	x_raw = ((int16_t)x_high)<<8 | x_low;
+	y_raw = ((int16_t)y_high)<<8 | y_low;
+	z_raw = ((int16_t)z_high)<<8 | z_low;
 	TEMP_val = ((int16_t)temp_high)<<8 | temp_low;
 }
 
@@ -40,19 +40,19 @@ const char* LIS3MDLTR::getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER>
 
 	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::LIS_RAW_MAG_X)!=senorsList.end())
 	{
-		strcat(packet,toCharArray(X_val));
+		strcat(packet,toCharArray(x_raw));
 		strcat(packet,",");
 	}
 
 	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::LIS_RAW_MAG_Y)!=senorsList.end())
 	{
-		strcat(packet,toCharArray(Y_val));
+		strcat(packet,toCharArray(y_raw));
 		strcat(packet,",");
 	}
 
 	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::LIS_RAW_MAG_Z)!=senorsList.end())
 	{
-		strcat(packet,toCharArray(Z_val));
+		strcat(packet,toCharArray(z_raw));
 		strcat(packet,",");
 	}
 
@@ -139,17 +139,17 @@ uint8_t LIS3MDLTR::SPI_read(uint8_t reg)
 
 int16_t LIS3MDLTR::getX()
 {
-	return X_val;
+	return x_raw;
 }
 
 int16_t LIS3MDLTR::getY()
 {
-	return Y_val;
+	return y_raw;
 }
 
 int16_t LIS3MDLTR::getZ()
 {
-	return Z_val;
+	return z_raw;
 }
 
 int16_t LIS3MDLTR::getTEMP()
