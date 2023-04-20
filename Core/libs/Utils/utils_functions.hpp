@@ -19,7 +19,7 @@ namespace utils
 
 	namespace functions
 	{
-		int16_t concatBytes(uint8_t msb, uint8_t lsb)
+		static int16_t concatBytes(uint8_t msb, uint8_t lsb)
 		{
 			return (((int16_t)msb << 8) | (int16_t)lsb);
 		}
