@@ -61,6 +61,7 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
  C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp \
  C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp \
  C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/BMP390_lib/BMP390_reg.hpp \
+ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/utils_functions.hpp \
  C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/ICM42688P_lib/ICM42688P.hpp \
  C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/ICM42688P_lib/ICM42688P_reg.hpp \
  C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/FlashReadWrite.hpp \
@@ -138,6 +139,7 @@ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/BMP390_lib/BMP390.hpp:
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp:
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp:
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/BMP390_lib/BMP390_reg.hpp:
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/utils_functions.hpp:
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/ICM42688P_lib/ICM42688P.hpp:
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/ICM42688P_lib/ICM42688P_reg.hpp:
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/FlashReadWrite.hpp:

@@ -13,6 +13,7 @@
 #include "BMP390_reg.hpp"
 #include "stm32f4xx_hal.h"
 #include "math.h"
+#include "utils_functions.hpp"
 
 class BMP390: SPI_Conn,public PrintableSensor
 {
@@ -27,36 +28,36 @@ private:
 		uint16_t par_t1 = 0;
 		uint16_t par_t2 = 0;
 		int8_t par_t3 = 0;
-		uint16_t par_p1 = 0;
-		uint16_t par_p2 = 0;
+		int16_t par_p1 = 0;
+		int16_t par_p2 = 0;
 		int8_t par_p3 = 0;
 		int8_t par_p4 = 0;
 		uint16_t par_p5 = 0;
 		uint16_t par_p6 = 0;
 		int8_t par_p7 = 0;
 		int8_t par_p8 = 0;
-		uint16_t par_p9 = 0;
+		int16_t par_p9 = 0;
 		int8_t par_p10 = 0;
 		int8_t par_p11 = 0;
 	} calibCoef;
 
 	struct quantized_calib_data
 	{
-	    double par_t1;
-	    double par_t2;
-	    double par_t3;
-	    double par_p1;
-	    double par_p2;
-	    double par_p3;
-	    double par_p4;
-	    double par_p5;
-	    double par_p6;
-	    double par_p7;
-	    double par_p8;
-	    double par_p9;
-	    double par_p10;
-	    double par_p11;
-	    double t_lin;
+	    double par_t1 = 0;
+	    double par_t2 = 0;
+	    double par_t3 = 0;
+	    double par_p1 = 0;
+	    double par_p2 = 0;
+	    double par_p3 = 0;
+	    double par_p4 = 0;
+	    double par_p5 = 0;
+	    double par_p6 = 0;
+	    double par_p7 = 0;
+	    double par_p8 = 0;
+	    double par_p9 = 0;
+	    double par_p10 = 0;
+	    double par_p11 = 0;
+	    double t_lin = 0;
 	} quantizedCalibCoef;
 
 	void SPI_write(uint8_t reg,uint8_t data);
@@ -65,13 +66,13 @@ private:
 
 	void read_calib_data();
 	void compensate_data();
-	double compensate_temperature();
-	double compensate_pressure();
+	void compensate_temperature();
+	void compensate_pressure();
 
-	double pressure;
-	double temp;
-	int32_t raw_pressure;
-	int32_t raw_temp;
+	double pressure{0};
+	double temp{0};
+	uint32_t raw_pressure{0};
+	uint32_t raw_temp{0};
 public:
 	BMP390(SPI_HandleTypeDef *spi_port);
 	bool defaultInit();

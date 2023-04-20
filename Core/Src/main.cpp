@@ -202,7 +202,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		xTaskNotifyFromISR(SensorsDataReadHandler, EnumSensorsInterrupt::SONAR_t, eSetBits, &pxHigherPriorityTaskWoken);
 		portYIELD_FROM_ISR(pxHigherPriorityTaskWoken);
 		sonarCounter1++;
-
 	}
 }
 

@@ -39,7 +39,8 @@ Core/libs/BMP390_lib/BMP390.o: ../Core/libs/BMP390_lib/BMP390.cpp \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
  C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp \
- ../Core/libs/BMP390_lib/BMP390_reg.hpp
+ ../Core/libs/BMP390_lib/BMP390_reg.hpp \
+ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/utils_functions.hpp
 ../Core/libs/BMP390_lib/BMP390.hpp:
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
@@ -81,3 +82,4 @@ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h:
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp:
 ../Core/libs/BMP390_lib/BMP390_reg.hpp:
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/utils_functions.hpp:
