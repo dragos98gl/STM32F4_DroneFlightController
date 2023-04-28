@@ -8,7 +8,7 @@
 #ifndef LIBS_MB1043_LIB_MB1043_H_
 #define LIBS_MB1043_LIB_MB1043_H_
 
-#include <HC05.hpp>
+#include "HC05.hpp"
 #include "stm32f4xx_hal.h"
 #include <stdint.h>
 #include "Timeout.hpp"

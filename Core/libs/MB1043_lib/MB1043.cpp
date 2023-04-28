@@ -5,7 +5,7 @@
  *      Author: DragosDarie
  */
 
-#include "MB1043.h"
+#include "MB1043.hpp"
 #include <stdlib.h>
 
 MB1043::MB1043(UART_HandleTypeDef *uart_port,DMA_HandleTypeDef *uart_port_dma,uint8_t timeout)
@@ -18,12 +18,14 @@ MB1043::MB1043(UART_HandleTypeDef *uart_port,DMA_HandleTypeDef *uart_port_dma,ui
 
 void MB1043::begin()
 {
-	HAL_UARTEx_ReceiveToIdle_DMA(uart_port, rx_buff, buff_len);
+	HAL_UART_Receive_DMA(this->uart_port, this->rx_buff, this->packet_length);
 }
 
 void MB1043::update()
 {
-	if (rx_buff[0]==BEGIN_BIT && rx_buff[5]==END_BIT)
+	const bool isPacketOk = (this->rx_buff[0] == this->BEGIN_BIT) && (this->rx_buff[5]==this->END_BIT);
+
+	if (isPacketOk)
 	{
 		distance_str[0]=rx_buff[1];
 		distance_str[1]=rx_buff[2],
@@ -33,10 +35,25 @@ void MB1043::update()
 		distance = atoi(distance_str);
 
 		resetTimeoutCounter();
-
-		HAL_UARTEx_ReceiveToIdle_DMA(uart_port, rx_buff, buff_len);
-		__HAL_DMA_DISABLE_IT(uart_port_dma, DMA_IT_HT);
 	}
+	else if (this->wrongDataReceived==false)
+	{
+		for (uint8_t iter=0;iter<this->packet_length-1U;iter++)
+		{
+			if ((this->rx_buff[iter]==this->END_BIT) && (this->rx_buff[iter+1U]==this->BEGIN_BIT))
+			{
+				HAL_UART_Receive_DMA (this->uart_port, this->rx_buff, this->packet_length+iter+1);
+				this->wrongDataReceived = true;
+				return;
+			}
+		}
+	}
+
+	if (this->wrongDataReceived == true)
+		this->wrongDataReceived = false;
+
+	HAL_UART_Receive_DMA(this->uart_port, this->rx_buff, this->packet_length);
+	__HAL_DMA_DISABLE_IT(this->uart_port_dma, DMA_IT_HT);
 }
 
 const char* MB1043::getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER> &senorsList)

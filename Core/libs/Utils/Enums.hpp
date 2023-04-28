@@ -12,4 +12,12 @@ enum EnumSensorsInterrupt : uint32_t
 	SONAR_t = (1<<5)
 };
 
+enum class FaultsStatus
+{
+	OKAY,
+	NOT_READY,
+	FAILURE,
+	CRITICAL
+};
+
 #endif /* LIBS_ENUMS_HPP_ */
