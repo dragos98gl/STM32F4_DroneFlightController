@@ -8,32 +8,32 @@
 #include "BMP390.hpp"
 
 BMP390::BMP390(SPI_HandleTypeDef *spi_port)
+: spi_port {spi_port}
 {
-	BMP390::spi_port = spi_port;
 }
 
 bool BMP390::defaultInit()
 {
-	SPI_write(CMD,CMD_SOFTRESET);
+	this->SPI_write(CMD,CMD_SOFTRESET);
 	HAL_Delay(20);
 
 	int debug = SPI_read(STATUS);
 	while ((debug= SPI_read(STATUS))==0)
 		HAL_Delay(50);
 
-	if (!initAndCheck(OSR,OSR_OSR_P_X16|OSR_OSR_T_X2,10))
+	if (!this->initAndCheck(OSR,OSR_OSR_P_X16|OSR_OSR_T_X2,10))
 		return false;
 
-	if (!initAndCheck(CONFIG,CONFIG_COEF_3,10))
+	if (!this->initAndCheck(CONFIG,CONFIG_COEF_3,10))
 		return false;
 
-	if (!initAndCheck(ODR,ODR_ODR_25,10))
+	if (!this->initAndCheck(ODR,ODR_ODR_25,10))
 		return false;
 
-	if (!initAndCheck(INT_CTRL,INT_CTRL_DRDY_EN|INT_CTRL_INT_LEVEL,10))
+	if (!this->initAndCheck(INT_CTRL,INT_CTRL_DRDY_EN|INT_CTRL_INT_LEVEL,10))
 		return false;
 
-	if (!initAndCheck(PWR_CTRL,PWR_CTRL_PRESS_EN|PWR_CTRL_TEMP_EN|PWR_CTRL_MODE_NORMAL,10))
+	if (!this->initAndCheck(PWR_CTRL,PWR_CTRL_PRESS_EN|PWR_CTRL_TEMP_EN|PWR_CTRL_MODE_NORMAL,10))
 		return false;
 
 	return true;

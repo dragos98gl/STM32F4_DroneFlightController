@@ -108,200 +108,183 @@ const char* ICM42688P::getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER>
 
 void ICM42688P::update()
 {
-	axL = SPI_read(ACCEL_DATA_X0);
-	axH = SPI_read(ACCEL_DATA_X1);
+	uint8_t axL = SPI_read(ACCEL_DATA_X0);
+	uint8_t axH = SPI_read(ACCEL_DATA_X1);
+	uint8_t ayL = SPI_read(ACCEL_DATA_Y0);
+	uint8_t ayH = SPI_read(ACCEL_DATA_Y1);
+	uint8_t azL = SPI_read(ACCEL_DATA_Z0);
+	uint8_t azH = SPI_read(ACCEL_DATA_Z1);
 
-	ayL = SPI_read(ACCEL_DATA_Y0);
-	ayH = SPI_read(ACCEL_DATA_Y1);
+	uint8_t gxL = SPI_read(GYRO_DATA_X0);
+	uint8_t gxH = SPI_read(GYRO_DATA_X1);
+	uint8_t gyL = SPI_read(GYRO_DATA_Y0);
+	uint8_t gyH = SPI_read(GYRO_DATA_Y1);
+	uint8_t gzL = SPI_read(GYRO_DATA_Z0);
+	uint8_t gzH = SPI_read(GYRO_DATA_Z1);
 
-	azL = SPI_read(ACCEL_DATA_Z0);
-	azH = SPI_read(ACCEL_DATA_Z1);
+	uint8_t tempL = SPI_read(TEMP_DATA0);
+	uint8_t tempH = SPI_read(TEMP_DATA1);
 
-	gxL = SPI_read(GYRO_DATA_X0);
-	gxH = SPI_read(GYRO_DATA_X1);
+	this->raw_ax = (static_cast<float>(((int16_t)(((int16_t)axH<<8) | axL))) - this->axOffset) * this->axScale;
+	this->raw_ay = (static_cast<float>(((int16_t)(((int16_t)ayH<<8) | ayL))) - this->ayOffset) * this->ayScale;
+	this->raw_az = (static_cast<float>(((int16_t)(((int16_t)azH<<8) | azL))) - this->azOffset) * this->azScale;
+	this->raw_gx = static_cast<float>((int16_t)(((int16_t)gxH<<8) | gxL)) - this->gxDrift;
+	this->raw_gy = static_cast<float>((int16_t)(((int16_t)gyH<<8) | gyL)) - this->gyDrift;
+	this->raw_gz = static_cast<float>((int16_t)(((int16_t)gzH<<8) | gzL)) - this->gzDrift;
+	this->temp = static_cast<float>((int16_t)(((int16_t)tempH<<8) | tempL)) / 132.48F + 25.0F;
 
-	gyL = SPI_read(GYRO_DATA_Y0);
-	gyH = SPI_read(GYRO_DATA_Y1);
-
-	gzL = SPI_read(GYRO_DATA_Z0);
-	gzH = SPI_read(GYRO_DATA_Z1);
-
-	tempL = SPI_read(TEMP_DATA0);
-	tempH = SPI_read(TEMP_DATA1);
-
-	raw_ax = ((int16_t)(((int16_t)axH<<8) | axL) - axOffset)*axScale;
-	raw_ay = ((int16_t)(((int16_t)ayH<<8) | ayL) - ayOffset)*ayScale;
-	raw_az = ((int16_t)(((int16_t)azH<<8) | azL) - azOffset)*azScale;
-	raw_gx = (int16_t)(((int16_t)gxH<<8) | gxL) - gxDrift;
-	raw_gy = (int16_t)(((int16_t)gyH<<8) | gyL) - gyDrift;
-	raw_gz = (int16_t)(((int16_t)gzH<<8) | gzL) - gzDrift;
-	temp = (int16_t)(((int16_t)tempH<<8) | tempL)/132.48+25;
-
-	toEuler();
-
-	SPI_read(INT_STATUS);
+	this->toEuler();
+	//this->SPI_read(INT_STATUS);
 }
 
 void ICM42688P::toEuler()
 {
-	gx = gx + raw_gx*(DT/GYRO_FULLSCALE);
-	gy = gy + raw_gy*(DT/GYRO_FULLSCALE);
-	gz = gz + raw_gz*(DT/GYRO_FULLSCALE);
+	this->gx = this->gx + this->raw_gx*(DT/GYRO_FULLSCALE);
+	this->gy = this->gy + this->raw_gy*(DT/GYRO_FULLSCALE);
+	this->gz = this->gz + this->raw_gz*(DT/GYRO_FULLSCALE);
 
-	euler_x = euler_x + raw_gx*(DT/GYRO_FULLSCALE);
-	euler_y = euler_y + raw_gy*(DT/GYRO_FULLSCALE);
-	euler_z = euler_z + raw_gz*(DT/GYRO_FULLSCALE);
+	this->euler_x = this->euler_x + this->raw_gx*(DT/GYRO_FULLSCALE);
+	this->euler_y = this->euler_y + this->raw_gy*(DT/GYRO_FULLSCALE);
+	this->euler_z = this->euler_z + this->raw_gz*(DT/GYRO_FULLSCALE);
 
-	ax = atan2(raw_ax,sqrt(raw_ay*raw_ay + raw_az*raw_az))*RADIANS_TO_DEGREES;
-	ay = atan2(raw_ay,sqrt(raw_ax*raw_ax + raw_az*raw_az))*RADIANS_TO_DEGREES;
-	az = atan2(raw_az,sqrt(raw_ax*raw_ax + raw_ay*raw_ay))*RADIANS_TO_DEGREES;
+	this->ax = atan2(this->raw_ax,sqrt(this->raw_ay*this->raw_ay + this->raw_az*this->raw_az))*RADIANS_TO_DEGREES;
+	this->ay = atan2(this->raw_ay,sqrt(this->raw_ax*this->raw_ax + this->raw_az*this->raw_az))*RADIANS_TO_DEGREES;
+	this->az = atan2(this->raw_az,sqrt(this->raw_ax*this->raw_ax + this->raw_ay*this->raw_ay))*RADIANS_TO_DEGREES;
 
-	euler_x = euler_x*0.9999+ay*0.0001;
-	euler_y = euler_y*0.9999-ax*0.0001;
-	euler_z = euler_z*0.9999+az*0.0001;
+	this->euler_x = this->euler_x*0.9999+this->ay*0.0001;
+	this->euler_y = this->euler_y*0.9999-this->ax*0.0001;
+	this->euler_z = this->euler_z*0.9999+this->az*0.0001;
 }
 
 void ICM42688P::computeGyroDrift(uint32_t count)
 {
-	uint8_t axH;
-	uint8_t axL;
-	uint8_t ayH;
-	uint8_t ayL;
-	uint8_t azH;
-	uint8_t azL;
-	uint8_t gxH;
-	uint8_t gxL;
-	uint8_t gyH;
-	uint8_t gyL;
-	uint8_t gzH;
-	uint8_t gzL;
+	this->gxDrift = 0.0F;
+	this->gyDrift = 0.0F;
+	this->gzDrift = 0.0F;
 
-	for (int i=0;i<count;i++)
+	for (uint32_t i=0;i < count;i++)
 	{
-		gxL = SPI_read(GYRO_DATA_X0);
-		gxH = SPI_read(GYRO_DATA_X1);
-		gyL = SPI_read(GYRO_DATA_Y0);
-		gyH = SPI_read(GYRO_DATA_Y1);
-		gzL = SPI_read(GYRO_DATA_Z0);
-		gzH = SPI_read(GYRO_DATA_Z1);
+		uint8_t gxL = SPI_read(GYRO_DATA_X0);
+		uint8_t gxH = SPI_read(GYRO_DATA_X1);
+		uint8_t gyL = SPI_read(GYRO_DATA_Y0);
+		uint8_t gyH = SPI_read(GYRO_DATA_Y1);
+		uint8_t gzL = SPI_read(GYRO_DATA_Z0);
+		uint8_t gzH = SPI_read(GYRO_DATA_Z1);
 
-		axL = SPI_read(ACCEL_DATA_X0);
-		axH = SPI_read(ACCEL_DATA_X1);
-		ayL = SPI_read(ACCEL_DATA_Y0);
-		ayH = SPI_read(ACCEL_DATA_Y1);
-		azL = SPI_read(ACCEL_DATA_Z0);
-		azH = SPI_read(ACCEL_DATA_Z1);
+		this->raw_gx = static_cast<float>((int16_t)(((int16_t)gxH<<8) | gxL));
+		this->raw_gy = static_cast<float>((int16_t)(((int16_t)gyH<<8) | gyL));
+		this->raw_gz = static_cast<float>((int16_t)(((int16_t)gzH<<8) | gzL));
 
-		raw_ax = (((int16_t)axH<<8) | axL);
-		raw_ay = (((int16_t)ayH<<8) | ayL);
-		raw_az = (((int16_t)azH<<8) | azL);
-
-		gxDrift += (int16_t)(((int16_t)gxH<<8) | gxL);
-		gyDrift += (int16_t)(((int16_t)gyH<<8) | gyL);
-		gzDrift += (int16_t)(((int16_t)gzH<<8) | gzL);
+		this->gxDrift += this->raw_gx;
+		this->gyDrift += this->raw_gy;
+		this->gzDrift += this->raw_gz;
 	}
 
-	euler_x = atan2(raw_ax,raw_az)*RADIANS_TO_DEGREES;
-	euler_y = atan2(-raw_ax,sqrt(raw_ay*raw_ay + raw_az*raw_az))*RADIANS_TO_DEGREES;
-
-	gxDrift/=count;
-	gyDrift/=count;
-	gzDrift/=count;
+	this->gxDrift /= static_cast<float>(count);
+	this->gyDrift /= static_cast<float>(count);
+	this->gzDrift /= static_cast<float>(count);
 }
 
-bool ICM42688P::selfTest()
+void ICM42688P::computeAccOffset(uint32_t count)
 {
+	this->axOffset = 0.0F;
+	this->ayOffset = 0.0F;
+	this->azOffset = 0.0F;
 
-	if (!initAndCheck(SELF_TEST_CONFIG,0b1111111,10))
-		return false;
+	for (uint32_t i=0;i < count;i++)
+	{
+		uint8_t axL = SPI_read(ACCEL_DATA_X0);
+		uint8_t axH = SPI_read(ACCEL_DATA_X1);
+		uint8_t ayL = SPI_read(ACCEL_DATA_Y0);
+		uint8_t ayH = SPI_read(ACCEL_DATA_Y1);
+		uint8_t azL = SPI_read(ACCEL_DATA_Z0);
+		uint8_t azH = SPI_read(ACCEL_DATA_Z1);
 
-	HAL_Delay(500);
+		this->raw_ax = static_cast<float>(((int16_t)(((int16_t)axH<<8) | axL)));
+		this->raw_ay = static_cast<float>(((int16_t)(((int16_t)ayH<<8) | ayL)));
+		this->raw_az = static_cast<float>(((int16_t)(((int16_t)azH<<8) | azL)));
 
-	SPI_write(REG_BANK_SEL,0b001);
-	uint8_t xg_st_data = SPI_read(XG_ST_DATA);
-	SPI_write(REG_BANK_SEL,0b001);
-	uint8_t yg_st_data = SPI_read(YG_ST_DATA);
-	SPI_write(REG_BANK_SEL,0b001);
-	uint8_t zg_st_data = SPI_read(ZG_ST_DATA);
-	SPI_write(REG_BANK_SEL,0b001);
-	uint8_t xa_st_data = SPI_read(XA_ST_DATA);
-	SPI_write(REG_BANK_SEL,0b001);
-	uint8_t ya_st_data = SPI_read(YA_ST_DATA);
-	SPI_write(REG_BANK_SEL,0b001);
-	uint8_t za_st_data = SPI_read(ZA_ST_DATA);
+		this->axOffset += this->raw_ax;
+		this->ayOffset += this->raw_ay;
+		this->azOffset += this->raw_az;
+	}
 
-	SPI_write(REG_BANK_SEL,0b000);
-	if (!initAndCheck(SELF_TEST_CONFIG,0b0000000,10))
-		return false;
+	this->axOffset /= static_cast<float>(count);
+	this->ayOffset /= static_cast<float>(count);
+	this->azOffset = this->azOffset / static_cast<float>(count) - 8192.0F;
+}
 
-	return true;
+void ICM42688P::calibrate(uint32_t count)
+{
+	this->computeGyroDrift(count);
+	this->computeAccOffset(count);
 }
 
 float ICM42688P::getEulerX()
 {
-	return euler_x;
+	return this->euler_x;
 }
 
 float ICM42688P::getEulerY()
 {
-	return euler_y;
+	return this->euler_y;
 }
 
 float ICM42688P::getEulerZ()
 {
-	return euler_z;
+	return this->euler_z;
 }
 
 uint8_t ICM42688P::WhoAmI()
 {
-	return SPI_read(WHO_AM_I);
+	return this->SPI_read(WHO_AM_I);
 }
 
 int16_t ICM42688P::getGyroX()
 {
-	return gx;
+	return this->gx;
 }
 
 int16_t ICM42688P::getGyroY()
 {
-	return gy;
+	return this->gy;
 }
 
 int16_t ICM42688P::getGyroZ()
 {
-	return gz;
+	return this->gz;
 }
 
 int16_t ICM42688P::getAccX()
 {
-	return raw_ax;
+	return this->raw_ax;
 }
 
 int16_t ICM42688P::getAccY()
 {
-	return ay;
+	return this->ay;
 }
 
 int16_t ICM42688P::getAccZ()
 {
-	return az;
+	return this->az;
 }
 
 int16_t ICM42688P::getTempX()
 {
-	return temp;
+	return this->temp;
 }
 
 uint8_t ICM42688P::getIntStatus()
 {
-	return SPI_read(INT_STATUS);
+	return this->SPI_read(INT_STATUS);
 }
 
 void ICM42688P::SPI_write(uint8_t reg,uint8_t data)
 {
 	HAL_GPIO_WritePin(ICM_CS_PORT,ICM_CS_PIN,GPIO_PIN_RESET);
-	spiTxBuff[0] = reg;
-	spiTxBuff[1] = data;
+	this->spiTxBuff[0] = reg;
+	this->spiTxBuff[1] = data;
 	HAL_SPI_Transmit_DMA(spi_port, (uint8_t*)spiTxBuff,2);
 	HAL_GPIO_WritePin(ICM_CS_PORT,ICM_CS_PIN,GPIO_PIN_SET);
 }
@@ -309,11 +292,11 @@ void ICM42688P::SPI_write(uint8_t reg,uint8_t data)
 uint8_t ICM42688P::SPI_read(uint8_t reg)
 {
 	HAL_GPIO_WritePin(ICM_CS_PORT, ICM_CS_PIN, GPIO_PIN_RESET);
-	spiTxBuff[0]=reg|0x80;
+	this->spiTxBuff[0]=reg|0x80;
 
-	HAL_SPI_Transmit_DMA(spi_port, (uint8_t*)spiTxBuff, 1);
-	HAL_SPI_Receive_DMA(spi_port, (uint8_t*)spiRxBuff, 1);
+	HAL_SPI_Transmit_DMA(this->spi_port, (uint8_t*)spiTxBuff, 1);
+	HAL_SPI_Receive_DMA(this->spi_port, (uint8_t*)spiRxBuff, 1);
 	HAL_GPIO_WritePin(ICM_CS_PORT, ICM_CS_PIN, GPIO_PIN_SET);
 
-	return spiRxBuff[0];
+	return this->spiRxBuff[0];
 }

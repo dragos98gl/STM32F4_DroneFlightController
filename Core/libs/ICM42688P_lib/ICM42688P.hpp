@@ -22,50 +22,35 @@ class ICM42688P: SPI_Conn,public PrintableSensor
 private:
 	SPI_HandleTypeDef *spi_port;
 
-	uint8_t spiTxBuff[2]={0,0};
-	uint8_t spiRxBuff[2]={0,0};
+	uint8_t spiTxBuff[2]={0U,0U};
+	uint8_t spiRxBuff[2]={0U,0U};
 
 	uint8_t SPI_read(uint8_t reg);
 
 	bool initAndCheck(uint8_t addr,uint8_t val,uint8_t numberOfTries,bool read_only = false);
 
-	const float RADIANS_TO_DEGREES = 180.0 / M_PI;
-	const float GYRO_FULLSCALE = 32768.0/2000.0;
-	const float DT = 1.0/1000.0;
+	const float RADIANS_TO_DEGREES = 180.0F / M_PI;
+	const float GYRO_FULLSCALE = 32768.0F / 2000.0F;
+	const float DT = 1.0F / 1000.0F;
 
-	uint8_t axH;
-	uint8_t axL;
-	uint8_t ayH;
-	uint8_t ayL;
-	uint8_t azH;
-	uint8_t azL;
-	uint8_t gxH;
-	uint8_t gxL;
-	uint8_t gyH;
-	uint8_t gyL;
-	uint8_t gzH;
-	uint8_t gzL;
-	uint8_t tempH;
-	uint8_t tempL;
+	float gx = 0.0F;
+	float gy = 0.0F;
+	float gz = 0.0F;
+	float ax = 0.0F;
+	float ay = 0.0F;
+	float az = 0.0F;
 
-	float gx = 0;
-	float gy = 0;
-	float gz = 0;
-	float ax = 0;
-	float ay = 0;
-	float az = 0;
+	float raw_gx=0.0F;
+	float raw_gy=0.0F;
+	float raw_gz=0.0F;
+	float raw_ax=0.0F;
+	float raw_ay=0.0F;
+	float raw_az=0.0F;
+	float temp=0.0F;
 
-	float raw_gx=0;
-	float raw_gy=0;
-	float raw_gz=0;
-	float raw_ax=0;
-	float raw_ay=0;
-	float raw_az=0;
-	float temp=0;
-
-	float euler_x = 0;
-	float euler_y = 0;
-	float euler_z = 0;
+	float euler_x = 0.0F;
+	float euler_y = 0.0F;
+	float euler_z = 0.0F;
 
 	float gxDrift = -9.3F;
 	float gyDrift = -11.3F;
@@ -96,7 +81,6 @@ public:
 	float getEulerX();
 	float getEulerY();
 	float getEulerZ();
-	bool selfTest();
 	void computeGyroDrift(uint32_t count);
 	void computeAccOffset(uint32_t count);
 	void calibrate(uint32_t count);
