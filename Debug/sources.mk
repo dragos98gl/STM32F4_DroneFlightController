@@ -44,6 +44,7 @@ Core/libs/LIS3MDLTR_lib \
 Core/libs/MB1043_lib \
 Core/libs/PMW3901UY_lib \
 Core/libs/Utils \
+Core/libs/nvm \
 Drivers/STM32F4xx_HAL_Driver/Src \
 Middlewares/ST/STM32_USB_Device_Library/Class/MSC/Src \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src \

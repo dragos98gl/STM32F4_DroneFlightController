@@ -5,7 +5,8 @@ c:\st\stm32cubeide_1.10.1\stm32cubeide\plugins\com.st.stm32cube.ide.mcu.external
 c:\st\stm32cubeide_1.10.1\stm32cubeide\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.0.202111181127\tools\arm-none-eabi\include\c++\10.3.1\cmath:463:3:constexpr float std::sqrt(float)	16	static
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp:14:7:constexpr SPI_Conn::SPI_Conn()	16	static
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp:67:7:constexpr PrintableSensor::PrintableSensor()	16	static
-../Core/libs/ICM42688P_lib/ICM42688P.cpp:10:1:ICM42688P::ICM42688P(SPI_HandleTypeDef*)	16	static
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp:51:2:constexpr CallsCounter::CallsCounter()	16	static
+../Core/libs/ICM42688P_lib/ICM42688P.cpp:10:1:ICM42688P::ICM42688P(SPI_HandleTypeDef*, Buzzer*)	24	static
 ../Core/libs/ICM42688P_lib/ICM42688P.cpp:15:6:bool ICM42688P::defaultInit()	24	static
 ../Core/libs/ICM42688P_lib/ICM42688P.cpp:54:6:bool ICM42688P::initAndCheck(uint8_t, uint8_t, uint8_t, bool)	24	static
 ../Core/libs/ICM42688P_lib/ICM42688P.cpp:66:13:virtual const char* ICM42688P::getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER>&)	96	static
@@ -14,20 +15,23 @@ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp:67:7:c
 ../Core/libs/ICM42688P_lib/ICM42688P.cpp:159:6:void ICM42688P::computeGyroDrift(uint32_t)	32	static
 ../Core/libs/ICM42688P_lib/ICM42688P.cpp:188:6:void ICM42688P::computeAccOffset(uint32_t)	32	static
 ../Core/libs/ICM42688P_lib/ICM42688P.cpp:217:6:void ICM42688P::calibrate(uint32_t)	16	static
-../Core/libs/ICM42688P_lib/ICM42688P.cpp:223:7:float ICM42688P::getEulerX()	16	static
-../Core/libs/ICM42688P_lib/ICM42688P.cpp:228:7:float ICM42688P::getEulerY()	16	static
-../Core/libs/ICM42688P_lib/ICM42688P.cpp:233:7:float ICM42688P::getEulerZ()	16	static
-../Core/libs/ICM42688P_lib/ICM42688P.cpp:238:9:uint8_t ICM42688P::WhoAmI()	16	static
-../Core/libs/ICM42688P_lib/ICM42688P.cpp:243:9:int16_t ICM42688P::getGyroX()	16	static
-../Core/libs/ICM42688P_lib/ICM42688P.cpp:248:9:int16_t ICM42688P::getGyroY()	16	static
-../Core/libs/ICM42688P_lib/ICM42688P.cpp:253:9:int16_t ICM42688P::getGyroZ()	16	static
-../Core/libs/ICM42688P_lib/ICM42688P.cpp:258:9:int16_t ICM42688P::getAccX()	16	static
-../Core/libs/ICM42688P_lib/ICM42688P.cpp:263:9:int16_t ICM42688P::getAccY()	16	static
-../Core/libs/ICM42688P_lib/ICM42688P.cpp:268:9:int16_t ICM42688P::getAccZ()	16	static
-../Core/libs/ICM42688P_lib/ICM42688P.cpp:273:9:int16_t ICM42688P::getTempX()	16	static
-../Core/libs/ICM42688P_lib/ICM42688P.cpp:278:9:uint8_t ICM42688P::getIntStatus()	16	static
-../Core/libs/ICM42688P_lib/ICM42688P.cpp:283:6:virtual void ICM42688P::SPI_write(uint8_t, uint8_t)	16	static
-../Core/libs/ICM42688P_lib/ICM42688P.cpp:292:9:virtual uint8_t ICM42688P::SPI_read(uint8_t)	16	static
+../Core/libs/ICM42688P_lib/ICM42688P.cpp:225:7:float ICM42688P::getEulerX()	16	static
+../Core/libs/ICM42688P_lib/ICM42688P.cpp:230:8:float& ICM42688P::getEulerXref()	16	static
+../Core/libs/ICM42688P_lib/ICM42688P.cpp:235:7:float ICM42688P::getEulerY()	16	static
+../Core/libs/ICM42688P_lib/ICM42688P.cpp:240:8:float& ICM42688P::getEulerYref()	16	static
+../Core/libs/ICM42688P_lib/ICM42688P.cpp:245:7:float ICM42688P::getEulerZ()	16	static
+../Core/libs/ICM42688P_lib/ICM42688P.cpp:250:8:float& ICM42688P::getEulerZref()	16	static
+../Core/libs/ICM42688P_lib/ICM42688P.cpp:255:9:uint8_t ICM42688P::WhoAmI()	16	static
+../Core/libs/ICM42688P_lib/ICM42688P.cpp:260:9:int16_t ICM42688P::getGyroX()	16	static
+../Core/libs/ICM42688P_lib/ICM42688P.cpp:265:9:int16_t ICM42688P::getGyroY()	16	static
+../Core/libs/ICM42688P_lib/ICM42688P.cpp:270:9:int16_t ICM42688P::getGyroZ()	16	static
+../Core/libs/ICM42688P_lib/ICM42688P.cpp:275:9:int16_t ICM42688P::getAccX()	16	static
+../Core/libs/ICM42688P_lib/ICM42688P.cpp:280:9:int16_t ICM42688P::getAccY()	16	static
+../Core/libs/ICM42688P_lib/ICM42688P.cpp:285:9:int16_t ICM42688P::getAccZ()	16	static
+../Core/libs/ICM42688P_lib/ICM42688P.cpp:290:9:int16_t ICM42688P::getTempX()	16	static
+../Core/libs/ICM42688P_lib/ICM42688P.cpp:295:9:uint8_t ICM42688P::getIntStatus()	16	static
+../Core/libs/ICM42688P_lib/ICM42688P.cpp:300:6:virtual void ICM42688P::SPI_write(uint8_t, uint8_t)	16	static
+../Core/libs/ICM42688P_lib/ICM42688P.cpp:309:9:virtual uint8_t ICM42688P::SPI_read(uint8_t)	16	static
 c:\st\stm32cubeide_1.10.1\stm32cubeide\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.0.202111181127\tools\arm-none-eabi\include\c++\10.3.1\bits\charconv.h:47:5:constexpr unsigned int std::__detail::__to_chars_len(_Tp, int) [with _Tp = unsigned int]	32	static
 c:\st\stm32cubeide_1.10.1\stm32cubeide\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.0.202111181127\tools\arm-none-eabi\include\c++\10.3.1\bits\charconv.h:72:5:void std::__detail::__to_chars_10_impl(char*, unsigned int, _Tp) [with _Tp = unsigned int]	40	static
 c:\st\stm32cubeide_1.10.1\stm32cubeide\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.0.202111181127\tools\arm-none-eabi\include\c++\10.3.1\bits\stl_set.h:794:7:std::set<_Key, _Compare, _Alloc>::iterator std::set<_Key, _Compare, _Alloc>::find(const key_type&) [with _Key = HC05::SENSOR_DATA_PARAMETER; _Compare = std::less<HC05::SENSOR_DATA_PARAMETER>; _Alloc = std::allocator<HC05::SENSOR_DATA_PARAMETER>]	24	static

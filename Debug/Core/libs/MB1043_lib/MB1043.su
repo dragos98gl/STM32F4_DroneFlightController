@@ -5,6 +5,7 @@ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Timeout.hpp:2
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Timeout.hpp:42:7:void Timeout::setTimeoutValue(uint8_t)	16	static
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Timeout.hpp:17:7:constexpr Timeout::Timeout()	16	static
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp:67:7:constexpr PrintableSensor::PrintableSensor()	16	static
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp:51:2:constexpr CallsCounter::CallsCounter()	16	static
 ../Core/libs/MB1043_lib/MB1043.cpp:11:1:MB1043::MB1043(UART_HandleTypeDef*, DMA_HandleTypeDef*, uint8_t)	24	static
 ../Core/libs/MB1043_lib/MB1043.cpp:19:6:void MB1043::begin()	16	static
 ../Core/libs/MB1043_lib/MB1043.cpp:24:6:void MB1043::update()	24	static

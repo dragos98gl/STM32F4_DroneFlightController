@@ -4,6 +4,14 @@
  *  Created on: Apr 27, 2023
  *      Author: DDarie
  */
+/*
+	CR1    CR3
+	   \  /
+		\/
+		/\
+	   /  \
+	CR2    CR4
+ */
 
 #ifndef SRC_IMPLEMENTATION_TASKS_DYNAMICPROCESSTASK_HPP_
 #define SRC_IMPLEMENTATION_TASKS_DYNAMICPROCESSTASK_HPP_
@@ -14,11 +22,6 @@ void DynamicsProcessTask(void *pvParameters)
 {
 	FlightControllorImplementation *flightControllerInstance = FlightControllorImplementation::getInstance();
 
-	float euler_x;
-	float euler_y;
-	float euler_z;
-
-
 	TickType_t xLastWakeTime;
 	const TickType_t xFrequency = 1;
 
@@ -27,29 +30,21 @@ void DynamicsProcessTask(void *pvParameters)
 	for( ;; )
 	{
 		FaultsStatus currentFaultsStatus = flightControllerInstance->getCurrentFaultsStatus();
-
-		euler_x = flightControllerInstance->getICM42688Pinstance().getEulerX();
-		euler_y = flightControllerInstance->getICM42688Pinstance().getEulerY();
-		euler_z = flightControllerInstance->getICM42688Pinstance().getEulerZ();
+		float rollPidOutput = flightControllerInstance->getRollPidInstance().out();
+		float pitchPidOutput = flightControllerInstance->getPitchPidInstance().out();
+		float yawPidOutput = flightControllerInstance->getYawPidInstance().out();
 
 		//timCounter++;
 
 		if (currentFaultsStatus == FaultsStatus::OKAY)
 		{
-			/*
-			CR1    CR3
-			   \  /
-				\/
-				/\
-			   /  \
-			CR2    CR4
-			 */
-			//float CCR1_value = 3000 + flightController->getFrSkyRXinstance().throttle + roll_pid.out() + pitch_pid.out() - yaw_pid.out();
-			//float CCR2_value = 3000 + flightController->getFrSkyRXinstance().throttle + roll_pid.out() - pitch_pid.out() + yaw_pid.out();
-			//float CCR3_value = 3000 + flightController->getFrSkyRXinstance().throttle - roll_pid.out() + pitch_pid.out() + yaw_pid.out();
-			//float CCR4_value = 3000 + flightController->getFrSkyRXinstance().throttle - roll_pid.out() - pitch_pid.out() - yaw_pid.out();
 
-			/*if (CCR1_value<3300)
+			float CCR1_value = 3000 + flightControllerInstance->getFrSkyRXinstance().throttle + rollPidOutput + pitchPidOutput - yawPidOutput;
+			float CCR2_value = 3000 + flightControllerInstance->getFrSkyRXinstance().throttle + rollPidOutput - pitchPidOutput + yawPidOutput;
+			float CCR3_value = 3000 + flightControllerInstance->getFrSkyRXinstance().throttle - rollPidOutput + pitchPidOutput + yawPidOutput;
+			float CCR4_value = 3000 + flightControllerInstance->getFrSkyRXinstance().throttle - rollPidOutput - pitchPidOutput - yawPidOutput;
+
+			if (CCR1_value<3300)
 				TIM3 -> CCR1 = 3300;
 			else
 				TIM3 -> CCR1 = CCR1_value;
@@ -67,9 +62,7 @@ void DynamicsProcessTask(void *pvParameters)
 			if (CCR4_value<3300)
 				TIM3 -> CCR4 = 3300;
 			else
-				TIM3 -> CCR4 = CCR4_value;*/
-
-		// ... = base_throttle + alt_compensation + roll/pitch/yaw_pid;
+				TIM3 -> CCR4 = CCR4_value;
 		}
 
 		if (currentFaultsStatus == FaultsStatus::FAILURE)
@@ -78,6 +71,9 @@ void DynamicsProcessTask(void *pvParameters)
 		}
 
 		if (currentFaultsStatus == FaultsStatus::CRITICAL)
+		{
+
+		}
 
 
 		vTaskDelayUntil( &xLastWakeTime, xFrequency);

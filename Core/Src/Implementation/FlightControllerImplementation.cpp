@@ -7,6 +7,26 @@
 
 #include "FlightControllerImplementation.hpp"
 
+nvm& FlightControllorImplementation::getNvmInstance()
+{
+	return this->nvmInstance;
+}
+
+PID_Control& FlightControllorImplementation::getRollPidInstance()
+{
+	return this->roll_pid;
+}
+
+PID_Control& FlightControllorImplementation::getPitchPidInstance()
+{
+	return this->pitch_pid;
+}
+
+PID_Control& FlightControllorImplementation::getYawPidInstance()
+{
+	return this->yaw_pid;
+}
+
 LIS3MDLTR& FlightControllorImplementation::getLIS3MDLTRinstance()
 {
 	return this->lis;

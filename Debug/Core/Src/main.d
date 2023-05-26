@@ -64,18 +64,18 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
  C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/utils_functions.hpp \
  C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/ICM42688P_lib/ICM42688P.hpp \
  C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/ICM42688P_lib/ICM42688P_reg.hpp \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/FlashReadWrite.hpp \
+ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Buzzer_lib/Buzzer.hpp \
  C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/LIS3MDLTR_lib/LIS3MDLTR.hpp \
  C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/LIS3MDLTR_lib/LIS3MDLTR_reg.h \
  C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/PMW3901UY_lib/PMW3901UY.hpp \
  C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Timeout.hpp \
  C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/MB1043_lib/MB1043.hpp \
  C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/FrSkyRX_lib/FrSkyRX.hpp \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Buzzer_lib/Buzzer.hpp \
  C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/PID_Control.hpp \
  C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/BatteryManagement_lib/BatteryManagement.hpp \
  ../Core/Src/MadgwickAHRS.h \
  C:/Users/DDarie/STM32F4_DroneFlightController/Core/Src/Implementation/FlightControllerImplementation.hpp \
+ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/nvm/FlashReadWrite.hpp \
  C:/Users/DDarie/STM32F4_DroneFlightController/Core/Src/Implementation/tasks/SensorsDataReadTask.hpp \
  C:/Users/DDarie/STM32F4_DroneFlightController/Core/Src/Implementation/tasks/DynamicProcessTask.hpp \
  C:/Users/DDarie/STM32F4_DroneFlightController/Core/Src/Implementation/tasks/FaultsCheckTask.hpp \
@@ -146,18 +146,18 @@ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/BMP390_lib/BMP390_reg.hp
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/utils_functions.hpp:
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/ICM42688P_lib/ICM42688P.hpp:
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/ICM42688P_lib/ICM42688P_reg.hpp:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/FlashReadWrite.hpp:
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Buzzer_lib/Buzzer.hpp:
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/LIS3MDLTR_lib/LIS3MDLTR.hpp:
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/LIS3MDLTR_lib/LIS3MDLTR_reg.h:
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/PMW3901UY_lib/PMW3901UY.hpp:
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Timeout.hpp:
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/MB1043_lib/MB1043.hpp:
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/FrSkyRX_lib/FrSkyRX.hpp:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Buzzer_lib/Buzzer.hpp:
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/PID_Control.hpp:
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/BatteryManagement_lib/BatteryManagement.hpp:
 ../Core/Src/MadgwickAHRS.h:
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/Src/Implementation/FlightControllerImplementation.hpp:
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/nvm/FlashReadWrite.hpp:
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/Src/Implementation/tasks/SensorsDataReadTask.hpp:
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/Src/Implementation/tasks/DynamicProcessTask.hpp:
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/Src/Implementation/tasks/FaultsCheckTask.hpp:

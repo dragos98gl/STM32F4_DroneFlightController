@@ -20,7 +20,7 @@
 /*
  * TODO:Add timeout
  */
-class PMW3901UY final:public Timeout ,public PrintableSensor //: UART_Conn f
+class PMW3901UY final:public Timeout ,public PrintableSensor, public CallsCounter //: UART_Conn f
 {
 private:
 	static constexpr const int packet_length = 9U;

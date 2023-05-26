@@ -3,6 +3,7 @@ c:\st\stm32cubeide_1.10.1\stm32cubeide\plugins\com.st.stm32cube.ide.mcu.external
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp:75:14:const char* PrintableSensor::toCharArray(int)	48	static
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp:14:7:constexpr SPI_Conn::SPI_Conn()	16	static
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp:67:7:constexpr PrintableSensor::PrintableSensor()	16	static
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp:51:2:constexpr CallsCounter::CallsCounter()	16	static
 ../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.cpp:10:1:LIS3MDLTR::LIS3MDLTR(SPI_HandleTypeDef*)	16	static
 ../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.cpp:15:9:uint8_t LIS3MDLTR::whoAmI()	16	static
 ../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.cpp:20:6:void LIS3MDLTR::update()	24	static

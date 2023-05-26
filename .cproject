@@ -50,6 +50,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/flightController_v3/Core/Src/Implementation/tasks}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/flightController_v3/Core/Src/Implementation/interrupts}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/flightController_v3/Core/Src/Implementation/ISRs}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/flightController_v3/Core/libs/nvm}&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input.423721575" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input"/>
 							</tool>
@@ -89,6 +90,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/flightController_v3/Core/Src/Implementation/tasks}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/flightController_v3/Core/Src/Implementation/interrupts}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/flightController_v3/Core/Src/Implementation/ISRs}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/flightController_v3/Core/libs/nvm}&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.477263089" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
@@ -128,6 +130,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/flightController_v3/Core/Src/Implementation/tasks}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/flightController_v3/Core/Src/Implementation/interrupts}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/flightController_v3/Core/Src/Implementation/ISRs}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/flightController_v3/Core/libs/nvm}&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.input.cpp.239098188" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.input.cpp"/>
 							</tool>
@@ -211,6 +214,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/flightController_v3/Core/Src/Implementation/tasks}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/flightController_v3/Core/Src/Implementation/interrupts}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/flightController_v3/Core/Src/Implementation/ISRs}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/flightController_v3/Core/libs/nvm}&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input.1143753827" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input"/>
 							</tool>
@@ -250,6 +254,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/flightController_v3/Core/Src/Implementation/tasks}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/flightController_v3/Core/Src/Implementation/interrupts}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/flightController_v3/Core/Src/Implementation/ISRs}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/flightController_v3/Core/libs/nvm}&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.1731166398" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
@@ -289,6 +294,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/flightController_v3/Core/Src/Implementation/tasks}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/flightController_v3/Core/Src/Implementation/interrupts}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/flightController_v3/Core/Src/Implementation/ISRs}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/flightController_v3/Core/libs/nvm}&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.input.cpp.355622277" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.input.cpp"/>
 							</tool>

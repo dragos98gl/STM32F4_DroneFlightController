@@ -59,8 +59,8 @@ void sensorsDataReadTask(void *pvParameters)
 			if (currentSensor & EnumSensorsInterrupt::ICM42688P_t)
 			{
 				flightControllerInstance->getICM42688Pinstance().update();
-				/*icmCounter++;
-				icmCouter2++;
+				flightControllerInstance->getICM42688Pinstance().incrementTaskCounter();
+				/*icmCouter2++;
 				float testt = flightController->getICM42688Pinstance().getAccX();
 				if (testt==duplicates)
 					duplicatesCounter++;
@@ -70,34 +70,34 @@ void sensorsDataReadTask(void *pvParameters)
 			if (currentSensor & EnumSensorsInterrupt::BMP390_t)
 			{
 				flightControllerInstance->getBMP390instance().update();
-				//bmpCounter++;
+				flightControllerInstance->getBMP390instance().incrementTaskCounter();
 			}
 
 			if (currentSensor & EnumSensorsInterrupt::LIS3MDLTR_t)
 			{
 				flightControllerInstance->getLIS3MDLTRinstance().update();
-				//lisCounter++;
+				flightControllerInstance->getLIS3MDLTRinstance().incrementTaskCounter();
 			}
 
 			if (currentSensor & EnumSensorsInterrupt::PMW_t)
 			{
 				__HAL_UART_FLUSH_DRREGISTER(&huart2);
 				flightControllerInstance->getPMW3901UYinstance().update();
-				//pmwCounter++;
+				flightControllerInstance->getPMW3901UYinstance().incrementTaskCounter();
 			}
 
 			if (currentSensor & EnumSensorsInterrupt::REMOTERX_t)
 			{
 				__HAL_UART_FLUSH_DRREGISTER(&huart3);
 				flightControllerInstance->getFrSkyRXinstance().update();
-				//remoteCounter++;
+				flightControllerInstance->getFrSkyRXinstance().incrementTaskCounter();
 			}
 
 			if (currentSensor & EnumSensorsInterrupt::SONAR_t)
 			{
 			   __HAL_UART_FLUSH_DRREGISTER(&huart4);
 			   flightControllerInstance->getMB1043instance().update();
-			   //sonarCounter++;
+			   flightControllerInstance->getMB1043instance().incrementTaskCounter();
 			}
 
 			//taskCounter++;

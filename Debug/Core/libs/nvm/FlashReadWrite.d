@@ -1,5 +1,5 @@
-Core/libs/FrSkyRX_lib/FrSkyRX.o: ../Core/libs/FrSkyRX_lib/FrSkyRX.cpp \
- ../Core/libs/FrSkyRX_lib/FrSkyRX.hpp \
+Core/libs/nvm/FlashReadWrite.o: ../Core/libs/nvm/FlashReadWrite.cpp \
+ ../Core/libs/nvm/FlashReadWrite.hpp \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -36,20 +36,8 @@ Core/libs/FrSkyRX_lib/FrSkyRX.o: ../Core/libs/FrSkyRX_lib/FrSkyRX.cpp \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
- ../Core/Inc/FreeRTOSConfig.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Timeout.hpp \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Buzzer_lib/Buzzer.hpp
-../Core/libs/FrSkyRX_lib/FrSkyRX.hpp:
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h
+../Core/libs/nvm/FlashReadWrite.hpp:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h:
@@ -87,15 +75,3 @@ Core/libs/FrSkyRX_lib/FrSkyRX.o: ../Core/libs/FrSkyRX_lib/FrSkyRX.cpp \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h:
-../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
-../Core/Inc/FreeRTOSConfig.h:
-../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h:
-../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h:
-../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h:
-../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h:
-../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h:
-../Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
-../Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Timeout.hpp:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Buzzer_lib/Buzzer.hpp:

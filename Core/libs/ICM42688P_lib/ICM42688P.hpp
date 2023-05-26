@@ -10,17 +10,18 @@
 
 #include "HC05.hpp"
 #include "ICM42688P_reg.hpp"
-#include <Interfaces.hpp>
-#include "FlashReadWrite.hpp"
+#include "Interfaces.hpp"
+#include "Buzzer.hpp"
 #include "stm32f4xx_hal.h"
 #include "math.h"
 #include "string.h"
 #include <set>
 
-class ICM42688P: SPI_Conn,public PrintableSensor
+class ICM42688P: SPI_Conn,public PrintableSensor, public CallsCounter
 {
 private:
 	SPI_HandleTypeDef *spi_port;
+	Buzzer *buzz;
 
 	uint8_t spiTxBuff[2]={0U,0U};
 	uint8_t spiRxBuff[2]={0U,0U};
@@ -65,7 +66,7 @@ public:
 
 	void SPI_write(uint8_t reg,uint8_t data);
 	const char* getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER> &senorsList);
-	ICM42688P(SPI_HandleTypeDef *spi_port);
+	ICM42688P(SPI_HandleTypeDef *spi_port,Buzzer *buzz);
 	bool defaultInit();
 	void update();
 	uint8_t WhoAmI();
@@ -78,6 +79,9 @@ public:
 	int16_t getTempX();
 	uint8_t getIntStatus();
 	void toEuler();
+	float& getEulerXref();
+	float& getEulerYref();
+	float& getEulerZref();
 	float getEulerX();
 	float getEulerY();
 	float getEulerZ();

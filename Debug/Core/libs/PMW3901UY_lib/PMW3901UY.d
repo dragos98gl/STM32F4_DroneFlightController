@@ -52,7 +52,7 @@ Core/libs/PMW3901UY_lib/PMW3901UY.o: \
  C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Timeout.hpp \
  C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/ICM42688P_lib/ICM42688P.hpp \
  C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/ICM42688P_lib/ICM42688P_reg.hpp \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/FlashReadWrite.hpp
+ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Buzzer_lib/Buzzer.hpp
 ../Core/libs/PMW3901UY_lib/PMW3901UY.hpp:
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
@@ -105,4 +105,4 @@ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hp
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Timeout.hpp:
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/ICM42688P_lib/ICM42688P.hpp:
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/ICM42688P_lib/ICM42688P_reg.hpp:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/FlashReadWrite.hpp:
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Buzzer_lib/Buzzer.hpp:

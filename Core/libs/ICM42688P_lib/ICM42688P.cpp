@@ -7,7 +7,7 @@
 
 #include "ICM42688P.hpp"
 
-ICM42688P::ICM42688P(SPI_HandleTypeDef *spi_port)
+ICM42688P::ICM42688P(SPI_HandleTypeDef *spi_port, Buzzer *buzz)
 {
 	ICM42688P::spi_port = spi_port;
 }
@@ -216,11 +216,18 @@ void ICM42688P::computeAccOffset(uint32_t count)
 
 void ICM42688P::calibrate(uint32_t count)
 {
+	this->buzz->beep(3000U,100U,2U);
 	this->computeGyroDrift(count);
 	this->computeAccOffset(count);
+	this->buzz->beep(200U,100U,1U);
 }
 
 float ICM42688P::getEulerX()
+{
+	return this->euler_x;
+}
+
+float& ICM42688P::getEulerXref()
 {
 	return this->euler_x;
 }
@@ -230,7 +237,17 @@ float ICM42688P::getEulerY()
 	return this->euler_y;
 }
 
+float& ICM42688P::getEulerYref()
+{
+	return this->euler_y;
+}
+
 float ICM42688P::getEulerZ()
+{
+	return this->euler_z;
+}
+
+float& ICM42688P::getEulerZref()
 {
 	return this->euler_z;
 }

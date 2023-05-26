@@ -1,5 +1,6 @@
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Timeout.hpp:42:7:void Timeout::setTimeoutValue(uint8_t)	16	static
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Timeout.hpp:17:7:constexpr Timeout::Timeout()	16	static
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp:51:2:constexpr CallsCounter::CallsCounter()	16	static
 ../Core/libs/FrSkyRX_lib/FrSkyRX.cpp:10:1:FrSkyRX::FrSkyRX(UART_HandleTypeDef*, DMA_HandleTypeDef*, Buzzer*, uint8_t)	24	static
 ../Core/libs/FrSkyRX_lib/FrSkyRX.cpp:20:6:void FrSkyRX::begin()	16	static
 ../Core/libs/FrSkyRX_lib/FrSkyRX.cpp:25:6:void FrSkyRX::update()	24	static

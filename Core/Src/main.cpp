@@ -60,29 +60,6 @@ static void MX_USART6_UART_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_TIM3_Init();
 
-
-//PID_Control roll_pid(euler_y, 10, 0.001, 5000);
-/*PID_Control roll_pid(
-		euler_y,
-		flightController->getFrSkyRXinstance().target_roll,
-		10,
-		0,
-		0);*/
-//PID_Control pitch_pid(euler_x, 10, 0.001, 5000);
-/*PID_Control pitch_pid(
-		euler_x,
-		flightController->getFrSkyRXinstance().target_pitch,
-		10,
-		0,
-		0);*/
-/*PID_Control yaw_pid(
-		euler_z,
-		flightController->getFrSkyRXinstance().target_yaw,
-		0,
-		0,
-		0);*/
-
-
 int main(void)
 {
   HAL_Init();
@@ -101,23 +78,24 @@ int main(void)
   MX_TIM4_Init();
   MX_TIM3_Init();
 
-	FlightControllorImplementation *flightControllerInstance = FlightControllorImplementation::getInstance();
+  FlightControllorImplementation *flightControllerInstance = FlightControllorImplementation::getInstance();
+  nvm nvmInstance = flightControllerInstance->getNvmInstance();
+  float RxVal;
+  float RxVal1;
+  int val = 32001;
+  float val1 = 5.1;
 
-  //flightController->getHC05instance().addSensor(&bmp);
+  nvmInstance.massEraseSector(0x080E0000);
+  nvmInstance.write(MemoryDescriptor::PID_ROLL_P, val);
+  RxVal = nvmInstance.Flash_Read_NUM(0x080E0000);
+
+  flightControllerInstance->getHC05instance().addSensor(&flightControllerInstance->getBMP390instance());
   //flightController->getHC05instance().addSensor(&lis);
   //flightController->getHC05instance().addSensor(&sonar);
   //flightController->getHC05instance().addSensor(&pmw);
   //flightController->getHC05instance().addSensor(&icm);
 
-	flightControllerInstance->getHC05instance().addSensorParameter(HC05::SENSOR_DATA_PARAMETER::BMP_RAW_PRESS);
-  //flightController->getHC05instance().addSensorParameter(HC05::SENSOR_DATA_PARAMETER::PMW_POS_X);
-  //flightController->getHC05instance().addSensorParameter(HC05::SENSOR_DATA_PARAMETER::PMW_POS_Y);
-  //flightController->getHC05instance().addSensorParameter(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_GX);
-  //flightController->getHC05instance().addSensorParameter(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_GY);
-  //flightController->getHC05instance().addSensorParameter(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_GZ);
-  //flightController->getHC05instance().addSensorParameter(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_AX);
-  //flightController->getHC05instance().addSensorParameter(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_AY);
-  //flightController->getHC05instance().addSensorParameter(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_AZ);
+  flightControllerInstance->getHC05instance().addSensorParameter(HC05::SENSOR_DATA_PARAMETER::BMP_RAW_PRESS);
   flightControllerInstance->getHC05instance().printfSensorsValues();
 
   TIM3 -> CCR1 = 0;

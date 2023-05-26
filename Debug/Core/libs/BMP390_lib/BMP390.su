@@ -4,6 +4,7 @@ C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp:75:14:
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/utils_functions.hpp:22:18:int16_t drone::utils::functions::concatBytes(uint8_t, uint8_t)	16	static
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp:14:7:constexpr SPI_Conn::SPI_Conn()	16	static
 C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp:67:7:constexpr PrintableSensor::PrintableSensor()	16	static
+C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp:51:2:constexpr CallsCounter::CallsCounter()	16	static
 ../Core/libs/BMP390_lib/BMP390.hpp:26:9:constexpr BMP390::calib_coef::calib_coef()	16	static
 ../Core/libs/BMP390_lib/BMP390.hpp:44:9:constexpr BMP390::quantized_calib_data::quantized_calib_data()	16	static
 ../Core/libs/BMP390_lib/BMP390.cpp:10:1:BMP390::BMP390(SPI_HandleTypeDef*)	16	static

@@ -22,6 +22,7 @@
 #include "stm32f4xx_hal.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "Interfaces.hpp"
 #include "Timeout.hpp"
 #include "Buzzer.hpp"
 #include <stdint.h>
@@ -35,7 +36,7 @@ enum class FrSkyRXState: uint8_t
 	TIMEOUT = 4U
 };
 
-class FrSkyRX:public Timeout//: UART_Conn
+class FrSkyRX:public Timeout, public CallsCounter//: UART_Conn
 {
 private:
 	static constexpr const uint16_t mid_position = 992U;
