@@ -25,5 +25,34 @@ private:
 	virtual void UART_write()=0;
 };
 
+class CallsCounter
+{
+public:
+	void incrementInterruptCounter()
+	{
+		this->interruptCounter++;
+	}
+
+	void incrementTaskCounter()
+	{
+		this->taskCounter++;
+	}
+
+	uint64_t getInterruptCounterValue()
+	{
+		return this->interruptCounter;
+	}
+
+	uint64_t getTaskCounterValue()
+	{
+		return this->interruptCounter;
+	}
+protected:
+	CallsCounter() = default;
+
+private:
+	uint64_t interruptCounter{0};
+	uint64_t taskCounter{0};
+};
 
 #endif /* INTERFACES_INTERFACES_H_ */

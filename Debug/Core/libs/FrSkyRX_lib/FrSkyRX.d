@@ -46,8 +46,10 @@ Core/libs/FrSkyRX_lib/FrSkyRX.o: ../Core/libs/FrSkyRX_lib/FrSkyRX.cpp \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Timeout.hpp \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Buzzer_lib/Buzzer.hpp
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Interfaces/Timeout.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Buzzer_lib/Buzzer.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp
 ../Core/libs/FrSkyRX_lib/FrSkyRX.hpp:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
@@ -95,5 +97,7 @@ Core/libs/FrSkyRX_lib/FrSkyRX.o: ../Core/libs/FrSkyRX_lib/FrSkyRX.cpp \
 ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Timeout.hpp:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Buzzer_lib/Buzzer.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Interfaces/Timeout.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Buzzer_lib/Buzzer.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp:

@@ -31,7 +31,7 @@ void FrSkyRX::update()
 		this->updateValues();
 		this->processStateMachine();
 
-		if (this->isDisconnected())
+		if (this->isDisconnected() || this->rb == 0U)
 			this->currentState = FrSkyRXState::TIMEOUT;
 	}
 	else if (this->wrongDataReceived==false)
@@ -59,7 +59,7 @@ void FrSkyRX::processStateMachine()
 	switch (this->currentState)
 	{
 	case FrSkyRXState::NOT_CONNECTED:
-		if ((this->lu == 0U) && (this->throttle < 300U))
+		if ((this->lu == 0U) && (this->throttle < 300U) && (this->rb == 1U))
 		{
 			this->currentState = FrSkyRXState::CONNECTED;
 			buzz->stop();
@@ -92,14 +92,18 @@ void FrSkyRX::processStateMachine()
 		}
 		break;
 	case FrSkyRXState::READY:
-		target_roll = -static_cast<float>(mid_position - raw_roll) * roll_scaleFactor;
-		target_pitch = static_cast<float>(mid_position - raw_pitch) * pitch_scaleFactor;
-		target_yaw = static_cast<float>(mid_position - raw_yaw) * yaw_scaleFactor;
+		if (raw_roll > 1150 || raw_roll < 800 || raw_pitch > 1150 || raw_pitch < 800)
+		{
+			target_roll += -static_cast<float>(mid_position - raw_roll) * roll_scaleFactor;
+			target_pitch += static_cast<float>(mid_position - raw_pitch) * pitch_scaleFactor;
+			target_yaw = static_cast<float>(mid_position - raw_yaw) * yaw_scaleFactor;
 
-		target_roll = ((target_roll > 2.0F) || (target_roll < -2.0F)) ? target_roll : 0.0F;
-		target_pitch = ((target_pitch > 2.0F) || (target_pitch < -2.0F)) ? target_pitch : 0.0F;
+			//target_roll = ((target_roll > 2.0F) || (target_roll < -2.0F)) ? target_roll : 0.0F;
+			//target_pitch = ((target_pitch > 2.0F) || (target_pitch < -2.0F)) ? target_pitch : 0.0F;
+		}
 		break;
 	case FrSkyRXState::TIMEOUT:
+
 		break;
 	}
 }
@@ -174,22 +178,35 @@ bool FrSkyRX::isDisconnected() const
 	return failsafe;
 }
 
-float FrSkyRX::getThrottle()
+const char* FrSkyRX::getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER> &senorsList)
+{
+	strcpy(packet,"");
+
+	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::FRSKY_THROTTLE)!=senorsList.end())
+	{
+		strcat(packet,toCharArray(this->throttle));
+		strcat(packet,",");
+	}
+
+	return packet;
+}
+
+float& FrSkyRX::getThrottle()
 {
 	return this->throttle;
 }
 
-float FrSkyRX::getTargetRoll()
+float& FrSkyRX::getTargetRoll()
 {
 	return this->target_roll;
 }
 
-float FrSkyRX::getTargetPitch()
+float& FrSkyRX::getTargetPitch()
 {
 	return this->target_pitch;
 }
 
-float FrSkyRX::getTargetYaw()
+float& FrSkyRX::getTargetYaw()
 {
 	return this->target_yaw;
 }

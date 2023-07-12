@@ -56,30 +56,37 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
  ../USB_DEVICE/App/usb_device.h \
  ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h \
  ../USB_DEVICE/Target/usbd_conf.h \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/Enums.hpp \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/BMP390_lib/BMP390.hpp \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/BMP390_lib/BMP390_reg.hpp \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/utils_functions.hpp \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/ICM42688P_lib/ICM42688P.hpp \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/ICM42688P_lib/ICM42688P_reg.hpp \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/FlashReadWrite.hpp \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/LIS3MDLTR_lib/LIS3MDLTR.hpp \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/LIS3MDLTR_lib/LIS3MDLTR_reg.h \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/PMW3901UY_lib/PMW3901UY.hpp \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Timeout.hpp \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/MB1043_lib/MB1043.hpp \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/FrSkyRX_lib/FrSkyRX.hpp \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Buzzer_lib/Buzzer.hpp \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/PID_Control.hpp \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/BatteryManagement_lib/BatteryManagement.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/Enums.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/BMP390_lib/BMP390.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/BMP390_lib/BMP390_reg.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/utils_functions.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/ICM42688P_lib/ICM42688P.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/ICM42688P_lib/ICM42688P_reg.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Buzzer_lib/Buzzer.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/PID_Control.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/LIS3MDLTR_lib/LIS3MDLTR.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/LIS3MDLTR_lib/LIS3MDLTR_reg.h \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/PMW3901UY_lib/PMW3901UY.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Interfaces/Timeout.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/VL53L0X_lib/VL53L0X.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/MPC_Controller.hpp \
+ ../Core/Inc/arm_math.h \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/MB1043_lib/MB1043.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/FrSkyRX_lib/FrSkyRX.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/BatteryManagement_lib/BatteryManagement.hpp \
  ../Core/Src/MadgwickAHRS.h \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/Src/Implementation/FlightControllerImplementation.hpp \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/Src/Implementation/tasks/SensorsDataReadTask.hpp \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/Src/Implementation/tasks/DynamicProcessTask.hpp \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/Src/Implementation/tasks/FaultsCheckTask.hpp \
- C:/Users/DDarie/STM32F4_DroneFlightController/Core/Src/Implementation/ISRs/ISRs.hpp
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/Src/Implementation/FlightControllerImplementation.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/nvm/FlashMemoryBlock.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/nvm/nvmUtils.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/nvm/nvmTypes.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/Src/Implementation/tasks/SensorsDataReadTask.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/Src/Implementation/tasks/DynamicProcessTask.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/failsafe_functions.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/Constants.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/Src/Implementation/tasks/FaultsCheckTask.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/Src/Implementation/ISRs/ISRs.hpp
 ../Core/Inc/main.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
@@ -138,27 +145,34 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
 ../USB_DEVICE/App/usb_device.h:
 ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h:
 ../USB_DEVICE/Target/usbd_conf.h:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/Enums.hpp:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/BMP390_lib/BMP390.hpp:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/BMP390_lib/BMP390_reg.hpp:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/utils_functions.hpp:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/ICM42688P_lib/ICM42688P.hpp:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/ICM42688P_lib/ICM42688P_reg.hpp:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/FlashReadWrite.hpp:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/LIS3MDLTR_lib/LIS3MDLTR.hpp:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/LIS3MDLTR_lib/LIS3MDLTR_reg.h:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/PMW3901UY_lib/PMW3901UY.hpp:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Interfaces/Timeout.hpp:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/MB1043_lib/MB1043.hpp:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/FrSkyRX_lib/FrSkyRX.hpp:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Buzzer_lib/Buzzer.hpp:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/Utils/PID_Control.hpp:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/libs/BatteryManagement_lib/BatteryManagement.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/Enums.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/BMP390_lib/BMP390.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/BMP390_lib/BMP390_reg.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/utils_functions.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/ICM42688P_lib/ICM42688P.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/ICM42688P_lib/ICM42688P_reg.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Buzzer_lib/Buzzer.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/PID_Control.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/LIS3MDLTR_lib/LIS3MDLTR.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/LIS3MDLTR_lib/LIS3MDLTR_reg.h:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/PMW3901UY_lib/PMW3901UY.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Interfaces/Timeout.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/VL53L0X_lib/VL53L0X.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/MPC_Controller.hpp:
+../Core/Inc/arm_math.h:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/MB1043_lib/MB1043.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/FrSkyRX_lib/FrSkyRX.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/BatteryManagement_lib/BatteryManagement.hpp:
 ../Core/Src/MadgwickAHRS.h:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/Src/Implementation/FlightControllerImplementation.hpp:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/Src/Implementation/tasks/SensorsDataReadTask.hpp:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/Src/Implementation/tasks/DynamicProcessTask.hpp:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/Src/Implementation/tasks/FaultsCheckTask.hpp:
-C:/Users/DDarie/STM32F4_DroneFlightController/Core/Src/Implementation/ISRs/ISRs.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/Src/Implementation/FlightControllerImplementation.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/nvm/FlashMemoryBlock.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/nvm/nvmUtils.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/nvm/nvmTypes.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/Src/Implementation/tasks/SensorsDataReadTask.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/Src/Implementation/tasks/DynamicProcessTask.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/failsafe_functions.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/Constants.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/Src/Implementation/tasks/FaultsCheckTask.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/Src/Implementation/ISRs/ISRs.hpp:

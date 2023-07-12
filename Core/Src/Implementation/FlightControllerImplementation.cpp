@@ -7,6 +7,36 @@
 
 #include "FlightControllerImplementation.hpp"
 
+MemoryManagement& FlightControllorImplementation::getNvmInstance()
+{
+	return this->nvmInstance;
+}
+
+PID_Control& FlightControllorImplementation::getRollPidInstance()
+{
+	return this->roll_pid;
+}
+
+PID_Control& FlightControllorImplementation::getPitchPidInstance()
+{
+	return this->pitch_pid;
+}
+
+PID_Control& FlightControllorImplementation::getYawPidInstance()
+{
+	return this->yaw_pid;
+}
+
+PID_Control& FlightControllorImplementation::getXPositionPidInstance()
+{
+	return this->xPosition_pid;
+}
+
+PID_Control& FlightControllorImplementation::getYPositionPidInstance()
+{
+	return this->yPosition_pid;
+}
+
 LIS3MDLTR& FlightControllorImplementation::getLIS3MDLTRinstance()
 {
 	return this->lis;
@@ -45,6 +75,11 @@ FrSkyRX& FlightControllorImplementation::getFrSkyRXinstance()
 MB1043& FlightControllorImplementation::getMB1043instance()
 {
 	return this->sonar;
+}
+
+VL53L0X& FlightControllorImplementation::getVL53L0Xinstance()
+{
+	return this->vl53;
 }
 
 BatteryManagement& FlightControllorImplementation::getBatteryManagementinstance()

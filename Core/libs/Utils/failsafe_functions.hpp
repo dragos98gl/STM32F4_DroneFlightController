@@ -8,18 +8,34 @@
 #ifndef LIBS_UTILS_FAILSAFE_FUNCTIONS_HPP_
 #define LIBS_UTILS_FAILSAFE_FUNCTIONS_HPP_
 
+#include "stm32f4xx_hal.h"
+#include "Constants.hpp"
+
 namespace drone
 {
 	namespace failsafe
 	{
-		static void slowlyLanding()
+		inline void slowlyLanding(FlightControllorImplementation& flightControllerInstance)
 		{
-			uint16_t starting_throttle = 1050U;
+			static float failSafeDownStartingThrottleValue = constFailSafeDownStartingThrottleValue;
+
+			flightControllerInstance.getFrSkyRXinstance().getThrottle() = failSafeDownStartingThrottleValue;
+			flightControllerInstance.getFrSkyRXinstance().getTargetRoll() = 0.0F;
+			flightControllerInstance.getFrSkyRXinstance().getTargetPitch() = 0.0F;
+
+			failSafeDownStartingThrottleValue -= 0.1F;
+
+			if (failSafeDownStartingThrottleValue <= 0.0F)
+			{
+				flightControllerInstance.setCurrentFaultsStatus(FaultsStatus::CRITICAL);
+			}
 		}
 
-		static void quickLanding()
+		inline void quickLanding(FlightControllorImplementation& flightControllerInstance)
 		{
-
+			flightControllerInstance.getFrSkyRXinstance().getThrottle() = 0.0F;
+			flightControllerInstance.getFrSkyRXinstance().getTargetRoll() = 0.0F;
+			flightControllerInstance.getFrSkyRXinstance().getTargetPitch() = 0.0F;
 		}
 	}
 }

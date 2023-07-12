@@ -18,9 +18,9 @@ void BatteryManagement::run()
 	{
 		HAL_ADC_Start_DMA(adc_port, &batteryVal,1);
 
-		if (batteryVal<=BATERRY_MIN_3V2)
+		if (batteryVal<=BATERRY_MIN_3V2 && batteryVal > BATTERY_CONNECTED_THRESHOLD)
 		{
-			//buzz->beep(100,1,1,100);
+			buzz->beep(2000U,200U,1U);
 		}
 
 		tick_counter = 0;

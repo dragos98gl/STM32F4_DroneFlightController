@@ -14,7 +14,7 @@
 #include "stm32f4xx_hal.h"
 #include <math.h>
 
-class LIS3MDLTR : SPI_Conn,public PrintableSensor
+class LIS3MDLTR : SPI_Conn,public PrintableSensor, public CallsCounter
 {
 private:
 	SPI_HandleTypeDef *spi_port;
