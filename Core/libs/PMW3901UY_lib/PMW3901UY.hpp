@@ -16,11 +16,10 @@
 #include "Timeout.hpp"
 #include <stdlib.h>
 #include "ICM42688P.hpp"
-///ICM42688P
-/*
- * TODO:Add timeout
- */
-class PMW3901UY final:public Timeout ,public PrintableSensor, public CallsCounter //: UART_Conn f
+#include "PID_Control.hpp"
+#include "VL53L0X.hpp"
+
+class PMW3901UY final:public Timeout ,public PrintableSensor, public CallsCounter//: UART_Conn f
 {
 private:
 	static constexpr const int packet_length = 9U;
@@ -30,53 +29,37 @@ private:
 
 	UART_HandleTypeDef *uart_port;
 	DMA_HandleTypeDef *uart_port_dma;
-	ICM42688P &icm;
+	ICM42688P& _icm;
+	VL53L0X& _vl53;
 
 	uint8_t rx_buff[2U * packet_length];
 	bool wrongDataReceived = false;
 	int16_t flow_x;
 	int16_t flow_y;
 	uint8_t quality;
-	int16_t x_pos=0;
-	int16_t y_pos=0;
+	float x_pos=0;
+	float y_pos=0;
+	float x_cm_pos=0;
+	float y_cm_pos=0;
+	float target_x=0;
+	float target_y=0;
+	float lastAngleX = 0;
+	float lastAngleY = 0;
+	PID_Control& _pidX;
+	PID_Control& _pidY;
 
-	struct mini
-	{
-		float flow_x;
-		float flow_y;
-		float flow_x_i;
-		float flow_y_i;
-	} _mini;
-
-	struct pixel_flow
-	{
-		float flow_x;
-		float flow_y;
-		float fix_x_i;
-		float fix_y_i;
-		float ang_x;
-		float ang_y;
-		float out_x_i;
-		float out_y_i;
-		float x;
-		float y;
-		float fit_x;
-		float fit_y;
-		float out_x_i_o;
-		float out_y_i_o;
-		float fix_x;
-		float fix_y;
-	} _pixel_flow;
 	void process();
 public:
-	PMW3901UY(UART_HandleTypeDef *uart_port,DMA_HandleTypeDef *uart_port_dma, uint8_t timeout ,ICM42688P& icm);
+	PMW3901UY(UART_HandleTypeDef *uart_port,DMA_HandleTypeDef *uart_port_dma, uint8_t timeout ,ICM42688P& icm,VL53L0X& vl53, PID_Control& pidX,PID_Control& pidY);
 	void begin(void);
 	void update(void);
 	uint16_t getFlowX();
 	uint16_t getFlowY();
 	uint8_t getQuality();
-	uint16_t getXpos();
-	uint16_t getYpos();
+	float& getXpos();
+	float& getYpos();
+	float& getTargetX();
+	float& getTargetY();
 	const char* getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER> &senorsList);
 };
 

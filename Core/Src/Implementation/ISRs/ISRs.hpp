@@ -16,8 +16,6 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 	FlightControllorImplementation *flightControllerInstance = FlightControllorImplementation::getInstance();
     if (huart->Instance == USART1)
     {
-    	//tick1++;
-
     	flightControllerInstance->getHC05instance().printfSensorsValues();
     }
 }
@@ -85,6 +83,11 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		xTaskNotifyFromISR(*sensorsDataReadHandler, EnumSensorsInterrupt::SONAR_t, eSetBits, &pxHigherPriorityTaskWoken);
 		portYIELD_FROM_ISR(pxHigherPriorityTaskWoken);
 		flightControllerInstance->getMB1043instance().incrementInterruptCounter();
+	}else if (huart->Instance == USART6)
+	{
+		xTaskNotifyFromISR(*sensorsDataReadHandler, EnumSensorsInterrupt::VL53L0X_t, eSetBits, &pxHigherPriorityTaskWoken);
+		portYIELD_FROM_ISR(pxHigherPriorityTaskWoken);
+		flightControllerInstance->getVL53L0Xinstance().incrementInterruptCounter();
 	}
 }
 

@@ -25,6 +25,7 @@
 #include "Interfaces.hpp"
 #include "Timeout.hpp"
 #include "Buzzer.hpp"
+#include "HC05.hpp"
 #include <stdint.h>
 
 enum class FrSkyRXState: uint8_t
@@ -36,12 +37,12 @@ enum class FrSkyRXState: uint8_t
 	TIMEOUT = 4U
 };
 
-class FrSkyRX:public Timeout, public CallsCounter//: UART_Conn
+class FrSkyRX:public Timeout, public CallsCounter, public PrintableSensor//: UART_Conn
 {
 private:
 	static constexpr const uint16_t mid_position = 992U;
-	static constexpr const float roll_scaleFactor = 0.01F;
-	static constexpr const float pitch_scaleFactor = 0.01F;
+	static constexpr const float roll_scaleFactor = 0.00005F;
+	static constexpr const float pitch_scaleFactor = 0.00005F;
 	static constexpr const float yaw_scaleFactor = 0.001F;
 	static constexpr const uint8_t packet_length = 25U;
 	const uint8_t BEGIN_BIT = '\017';
@@ -62,25 +63,26 @@ private:
 	void updateValues();
 	void processStateMachine();
 public:
-	float throttle;
-	float target_roll;
-	float target_pitch;
-	float target_yaw;
+	float throttle = 0;
+	float target_roll = 0;
+	float target_pitch = 0;
+	float target_yaw = 0;
 
-	uint16_t raw_roll;
-	uint16_t raw_pitch;
-	uint16_t raw_yaw;
-	uint8_t lb;
-	uint8_t lu;
-	uint8_t rb;
-	uint8_t ru;
+	uint16_t raw_roll = 0;
+	uint16_t raw_pitch = 0;
+	uint16_t raw_yaw = 0;
+	uint8_t lb = 0;
+	uint8_t lu = 0;
+	uint8_t rb = 0;
+	uint8_t ru = 0;
 
 	FrSkyRX(UART_HandleTypeDef *uart_port,DMA_HandleTypeDef *uart_port_dma,Buzzer *buzz,uint8_t timeout);
-	float getThrottle();
-	float getTargetRoll();
-	float getTargetPitch();
-	float getTargetYaw();
+	float& getThrottle();
+	float& getTargetRoll();
+	float& getTargetPitch();
+	float& getTargetYaw();
 	FrSkyRXState getCurrentState() const;
+	const char* getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER> &senorsList);
 
 	void begin();
 	void update();

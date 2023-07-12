@@ -20,7 +20,7 @@
 "./Core/libs/MB1043_lib/MB1043.o"
 "./Core/libs/PMW3901UY_lib/PMW3901UY.o"
 "./Core/libs/Utils/PID_Control.o"
-"./Core/libs/nvm/FlashReadWrite.o"
+"./Core/libs/VL53L0X_lib/VL53L0X.o"
 "./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o"
 "./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.o"
 "./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.o"

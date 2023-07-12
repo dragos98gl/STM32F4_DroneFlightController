@@ -17,6 +17,7 @@ extern TIM_HandleTypeDef htim4;
 extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
 extern UART_HandleTypeDef huart4;
+extern UART_HandleTypeDef huart6;
 
 void sensorsDataReadTask(void *pvParameters)
 {
@@ -47,10 +48,11 @@ void sensorsDataReadTask(void *pvParameters)
 	flightControllerInstance->getFrSkyRXinstance().begin();
 	flightControllerInstance->getMB1043instance().begin();
 	flightControllerInstance->getPMW3901UYinstance().begin();
+	flightControllerInstance->getVL53L0Xinstance().begin();
 
 	uint32_t currentSensor = 0;
-	xTaskCreate(DynamicsProcessTask,"DynamicsProcessTask",256,NULL,tskIDLE_PRIORITY+2, flightControllerInstance->getDynamicsProcessHandlerPtr());
-	xTaskCreate(FaultsCheckTask,"FaultsCheckTask",256,NULL,tskIDLE_PRIORITY+2, flightControllerInstance->getFaultsCheckHandlerPtr());
+	xTaskCreate(DynamicsProcessTask,"DynamicsProcessTask",2048,NULL,tskIDLE_PRIORITY+2, flightControllerInstance->getDynamicsProcessHandlerPtr());
+	xTaskCreate(FaultsCheckTask,"FaultsCheckTask",1024,NULL,tskIDLE_PRIORITY+2, flightControllerInstance->getFaultsCheckHandlerPtr());
 
 	while (1)
 	{
@@ -88,9 +90,14 @@ void sensorsDataReadTask(void *pvParameters)
 
 			if (currentSensor & EnumSensorsInterrupt::REMOTERX_t)
 			{
-				__HAL_UART_FLUSH_DRREGISTER(&huart3);
-				flightControllerInstance->getFrSkyRXinstance().update();
-				flightControllerInstance->getFrSkyRXinstance().incrementTaskCounter();
+				FaultsStatus faultStatus = flightControllerInstance->getCurrentFaultsStatus();
+
+				if (faultStatus != FaultsStatus::FAILURE && faultStatus != FaultsStatus::CRITICAL)
+				{
+					__HAL_UART_FLUSH_DRREGISTER(&huart3);
+					flightControllerInstance->getFrSkyRXinstance().update();
+					flightControllerInstance->getFrSkyRXinstance().incrementTaskCounter();
+				}
 			}
 
 			if (currentSensor & EnumSensorsInterrupt::SONAR_t)
@@ -98,6 +105,13 @@ void sensorsDataReadTask(void *pvParameters)
 			   __HAL_UART_FLUSH_DRREGISTER(&huart4);
 			   flightControllerInstance->getMB1043instance().update();
 			   flightControllerInstance->getMB1043instance().incrementTaskCounter();
+			}
+
+			if (currentSensor & EnumSensorsInterrupt::VL53L0X_t)
+			{
+			   __HAL_UART_FLUSH_DRREGISTER(&huart6);
+			   flightControllerInstance->getVL53L0Xinstance().update();
+			   flightControllerInstance->getVL53L0Xinstance().incrementTaskCounter();
 			}
 
 			//taskCounter++;

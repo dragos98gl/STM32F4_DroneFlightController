@@ -6,8 +6,12 @@
  */
 
 #include "ICM42688P.hpp"
+#include "Constants.hpp"
 
-ICM42688P::ICM42688P(SPI_HandleTypeDef *spi_port, Buzzer *buzz)
+ICM42688P::ICM42688P(SPI_HandleTypeDef *spi_port, Buzzer *buzz, PID_Control& rollPID,PID_Control& pitchPID, PID_Control& yawPID):
+	_rollPID(rollPID),
+	_pitchPID(pitchPID),
+	_yawPID(yawPID)
 {
 	ICM42688P::spi_port = spi_port;
 }
@@ -38,7 +42,7 @@ bool ICM42688P::defaultInit()
 	if (!initAndCheck(GYRO_CONFIG0,GYRO_CONFIG0_GYRO_ODR_1KHZ|GYRO_CONFIG0_GYRO_FS_SEL_2000DPS,10))
 		return false;
 
-	if (!initAndCheck(ACCEL_CONFIG0,ACCEL_CONFIG0_ACCEL_ODR_1KHZ|ACCEL_CONFIG0_ACCEL_FS_SEL_2G,10))
+	if (!initAndCheck(ACCEL_CONFIG0,ACCEL_CONFIG0_ACCEL_ODR_1KHZ|ACCEL_CONFIG0_ACCEL_FS_SEL_4G,10))
 		return false;
 
 	if (!initAndCheck(PWR_MGMT0,0x0F,10))
@@ -46,7 +50,10 @@ bool ICM42688P::defaultInit()
 
 	HAL_Delay(50);
 
-	//computeGyroDrift(1000);
+	this->update();
+	this->euler_x = this->ay;
+	this->euler_y = this->ax;
+	this->euler_z = this->az;
 
 	return true;
 }
@@ -103,6 +110,24 @@ const char* ICM42688P::getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER>
 		strcat(packet,",");
 	}
 
+	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::ICM_AX)!=senorsList.end())
+	{
+		strcat(packet,toCharArray(max_ax_dt));
+		strcat(packet,",");
+	}
+
+	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::ICM_AY)!=senorsList.end())
+	{
+		strcat(packet,toCharArray(max_ay_dt));
+		strcat(packet,",");
+	}
+
+	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::ICM_AZ)!=senorsList.end())
+	{
+		strcat(packet,toCharArray(max_az_dt));
+		strcat(packet,",");
+	}
+
 	return packet;
 }
 
@@ -125,17 +150,78 @@ void ICM42688P::update()
 	uint8_t tempL = SPI_read(TEMP_DATA0);
 	uint8_t tempH = SPI_read(TEMP_DATA1);
 
-	this->raw_ax = (static_cast<float>(((int16_t)(((int16_t)axH<<8) | axL))) - this->axOffset) * this->axScale;
-	this->raw_ay = (static_cast<float>(((int16_t)(((int16_t)ayH<<8) | ayL))) - this->ayOffset) * this->ayScale;
-	this->raw_az = (static_cast<float>(((int16_t)(((int16_t)azH<<8) | azL))) - this->azOffset) * this->azScale;
+	this->raw_ax = (static_cast<float>(((int16_t)(((int16_t)axH<<8) | axL))) - this->axOffset);// * this->axScale;
+	this->raw_ay = (static_cast<float>(((int16_t)(((int16_t)ayH<<8) | ayL))) - this->ayOffset);// * this->ayScale;
+	this->raw_az = (static_cast<float>(((int16_t)(((int16_t)azH<<8) | azL))) - this->azOffset);// * this->azScale;
 	this->raw_gx = static_cast<float>((int16_t)(((int16_t)gxH<<8) | gxL)) - this->gxDrift;
 	this->raw_gy = static_cast<float>((int16_t)(((int16_t)gyH<<8) | gyL)) - this->gyDrift;
 	this->raw_gz = static_cast<float>((int16_t)(((int16_t)gzH<<8) | gzL)) - this->gzDrift;
 	this->temp = static_cast<float>((int16_t)(((int16_t)tempH<<8) | tempL)) / 132.48F + 25.0F;
 
 	this->toEuler();
-	//this->SPI_read(INT_STATUS);
+
+	this->checkCrashState();
+	this->checkCriticalState();
+
+	this->_rollPID.update();
+	this->_pitchPID.update();
+	this->_yawPID.update();
 }
+
+void ICM42688P::checkCriticalState()
+{
+	if (abs(this->euler_x) >=criticalStateAngleThreshold || abs(this->euler_y) >=criticalStateAngleThreshold)
+	{
+		this->criticalState = true;
+	}
+}
+
+void ICM42688P::checkCrashState()
+{
+	if (this->prev_raw_ax == 0.0F)
+		this->prev_raw_ax = this->raw_ax;
+
+	if (this->prev_raw_ay == 0.0F)
+		this->prev_raw_ay = this->raw_ay;
+
+	if (this->prev_raw_az == 0.0F)
+		this->prev_raw_az = this->raw_az;
+
+	float ax_dt = fabs(this->raw_ax-this->prev_raw_ax);
+	float ay_dt = fabs(this->raw_ay-this->prev_raw_ay);
+	float az_dt = fabs(this->raw_az-this->prev_raw_az);
+
+	if (ax_dt > constCrashAccDtThreshold ||
+			ay_dt > constCrashAccDtThreshold ||
+			az_dt > constCrashAccDtThreshold)
+	{
+		this->crashState = true;
+	}
+
+	if (ax_dt > max_ax_dt)
+		max_ax_dt = ax_dt;
+
+	if (ay_dt > max_ay_dt)
+		max_ay_dt = ay_dt;
+
+	if (az_dt > max_az_dt)
+		max_az_dt = az_dt;
+
+	this->prev_raw_ax=this->raw_ax;
+	this->prev_raw_ay=this->raw_ay;
+	this->prev_raw_az=this->raw_az;
+}
+
+bool ICM42688P::isCriticalStateDetected()
+{
+	return this->criticalState;
+}
+
+bool ICM42688P::isCrashDetected()
+{
+	return this->crashState;
+}
+
 
 void ICM42688P::toEuler()
 {
@@ -149,11 +235,10 @@ void ICM42688P::toEuler()
 
 	this->ax = atan2(this->raw_ax,sqrt(this->raw_ay*this->raw_ay + this->raw_az*this->raw_az))*RADIANS_TO_DEGREES;
 	this->ay = atan2(this->raw_ay,sqrt(this->raw_ax*this->raw_ax + this->raw_az*this->raw_az))*RADIANS_TO_DEGREES;
-	this->az = atan2(this->raw_az,sqrt(this->raw_ax*this->raw_ax + this->raw_ay*this->raw_ay))*RADIANS_TO_DEGREES;
+	this->az = atan2(this->raw_az,sqrt(this->raw_ax*this->raw_ax + this->raw_ay*this->raw_ay))*RADIANS_TO_DEGREES -90.0F;
 
 	this->euler_x = this->euler_x*0.9999+this->ay*0.0001;
 	this->euler_y = this->euler_y*0.9999-this->ax*0.0001;
-	this->euler_z = this->euler_z*0.9999+this->az*0.0001;
 }
 
 void ICM42688P::computeGyroDrift(uint32_t count)

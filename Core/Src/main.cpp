@@ -62,7 +62,7 @@ static void MX_TIM3_Init();
 
 int main(void)
 {
-  HAL_Init();
+  HAL_Init();//1.19 17 0.38 37 88.20
   SystemClock_Config();
 
   MX_GPIO_Init();
@@ -79,23 +79,13 @@ int main(void)
   MX_TIM3_Init();
 
   FlightControllorImplementation *flightControllerInstance = FlightControllorImplementation::getInstance();
-  nvm nvmInstance = flightControllerInstance->getNvmInstance();
-  float RxVal;
-  float RxVal1;
-  int val = 32001;
-  float val1 = 5.1;
 
-  nvmInstance.massEraseSector(0x080E0000);
-  nvmInstance.write(MemoryDescriptor::PID_ROLL_P, val);
-  RxVal = nvmInstance.Flash_Read_NUM(0x080E0000);
+  flightControllerInstance->getHC05instance().addSensor(&flightControllerInstance->getPMW3901UYinstance());
+  flightControllerInstance->getHC05instance().addSensor(&flightControllerInstance->getVL53L0Xinstance());
+  flightControllerInstance->getHC05instance().addSensor(&flightControllerInstance->getICM42688Pinstance());
 
-  flightControllerInstance->getHC05instance().addSensor(&flightControllerInstance->getBMP390instance());
-  //flightController->getHC05instance().addSensor(&lis);
-  //flightController->getHC05instance().addSensor(&sonar);
-  //flightController->getHC05instance().addSensor(&pmw);
-  //flightController->getHC05instance().addSensor(&icm);
-
-  flightControllerInstance->getHC05instance().addSensorParameter(HC05::SENSOR_DATA_PARAMETER::BMP_RAW_PRESS);
+  flightControllerInstance->getHC05instance().addSensorParameter(HC05::SENSOR_DATA_PARAMETER::PMW_POS_Y);
+  flightControllerInstance->getHC05instance().addSensorParameter(HC05::SENSOR_DATA_PARAMETER::PMW_POS_X);
   flightControllerInstance->getHC05instance().printfSensorsValues();
 
   TIM3 -> CCR1 = 0;
@@ -551,7 +541,7 @@ static void MX_USART6_UART_Init(void)
 
   /* USER CODE END USART6_Init 1 */
   huart6.Instance = USART6;
-  huart6.Init.BaudRate = 115200;
+  huart6.Init.BaudRate = 9600;
   huart6.Init.WordLength = UART_WORDLENGTH_8B;
   huart6.Init.StopBits = UART_STOPBITS_1;
   huart6.Init.Parity = UART_PARITY_NONE;

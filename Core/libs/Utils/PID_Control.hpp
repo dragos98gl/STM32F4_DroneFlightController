@@ -11,6 +11,11 @@
 class PID_Control
 {
 private:
+	float &signal;
+	float &reference;
+	float error = 0;
+	float last_signal = 0;
+
 	float Kp = 0;
 	float Ki = 0;
 	float Kd = 0;
@@ -18,11 +23,6 @@ private:
 	float pid_i = 0;
 	float pid_d = 0;
 	float pid = 0;
-
-	float &signal;
-	float &reference;
-	float error = 0;
-	float last_signal = 0;
 public:
 	PID_Control(float &signal, float &reference,float Kp,float Ki,float Kd):
 		signal(signal),
@@ -34,7 +34,8 @@ public:
 		last_signal = signal;
 	};
 
-	float out();
+	void update();
+	float getOut();
 };
 
 #endif /* LIBS_UTILS_PID_CONTROL_HPP_ */

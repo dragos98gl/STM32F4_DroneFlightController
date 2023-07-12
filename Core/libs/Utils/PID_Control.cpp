@@ -7,15 +7,20 @@
 
 #include "PID_Control.hpp"
 
-float PID_Control::out()
+void PID_Control::update()
 {
-	error = reference - signal;
+	this->error = this->reference - this->signal;
 
-	pid_p = error;
-	pid_i = pid_i + error;
-	pid_d = -(signal-last_signal);
+	this->pid_p = this->error;
+	this->pid_i = this->pid_i + this->error;
+	this->pid_d = -(this->signal-this->last_signal);
 
-	last_signal = signal;
+	this->last_signal = this->signal;
 
-	return Kp*pid_p + Ki*pid_i + Kd*pid_d;
+	this->pid =  this->Kp * this->pid_p + this->Ki * this->pid_i + this->Kd * this->pid_d;
+}
+
+float PID_Control::getOut()
+{
+	return this->pid;
 }
