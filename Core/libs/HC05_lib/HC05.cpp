@@ -43,5 +43,5 @@ void HC05::printfSensorsValues()
 
 void HC05::addSensorParameter(HC05::SENSOR_DATA_PARAMETER sen)
 {
-	this->senorsList.insert(sen);
+ 	this->senorsList.insert(sen);
 }

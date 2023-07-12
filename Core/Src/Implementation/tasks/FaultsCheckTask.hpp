@@ -10,6 +10,25 @@
 
 #include "FlightControllerImplementation.hpp"
 
+bool isFailureFaultDetected(FlightControllorImplementation& flightControllerInstance)
+{
+	const bool isRxDisconnected = flightControllerInstance.getFrSkyRXinstance().getCurrentState()==FrSkyRXState::TIMEOUT;
+	if (isRxDisconnected)
+		return true;
+
+	return false;
+}
+
+bool isCriticalFaultDetected(FlightControllorImplementation& flightControllerInstance)
+{
+
+	const bool isCrashDetected = flightControllerInstance.getICM42688Pinstance().isCriticalStateDetected();
+	if (isCrashDetected)
+		return true;
+
+	return false;
+}
+
 void FaultsCheckTask(void *pvParameters)
 {
 	FlightControllorImplementation *flightControllerInstance = FlightControllorImplementation::getInstance();
@@ -21,6 +40,8 @@ void FaultsCheckTask(void *pvParameters)
 
 	for( ;; )
 	{
+		FaultsStatus currentFaultsStatus = flightControllerInstance->getCurrentFaultsStatus();
+
 		flightControllerInstance->getPMW3901UYinstance().incrementTimeoutCounter();
 		flightControllerInstance->getFrSkyRXinstance().incrementTimeoutCounter();
 		flightControllerInstance->getMB1043instance().incrementTimeoutCounter();
@@ -28,7 +49,15 @@ void FaultsCheckTask(void *pvParameters)
 		flightControllerInstance->getBuzzerinstance().run();
 		flightControllerInstance->getBatteryManagementinstance().run();
 
-		if (flightControllerInstance->getFrSkyRXinstance().getCurrentState() == FrSkyRXState::READY)
+		if (isCriticalFaultDetected(*flightControllerInstance) || currentFaultsStatus==FaultsStatus::CRITICAL)
+		{
+			flightControllerInstance->setCurrentFaultsStatus(FaultsStatus::CRITICAL);
+		}
+		else if (isFailureFaultDetected(*flightControllerInstance) || currentFaultsStatus==FaultsStatus::FAILURE)
+		{
+			flightControllerInstance->setCurrentFaultsStatus(FaultsStatus::CRITICAL);
+		}
+		else if (flightControllerInstance->getFrSkyRXinstance().getCurrentState() == FrSkyRXState::READY)
 		{
 			flightControllerInstance->setCurrentFaultsStatus(FaultsStatus::OKAY);
 		}

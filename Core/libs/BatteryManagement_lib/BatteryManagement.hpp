@@ -24,6 +24,7 @@ class BatteryManagement
 private:
 	const uint16_t BATERRY_MAX_4V2 = 2850;
 	const uint16_t BATERRY_MIN_3V2 = 2400;
+	const uint16_t BATTERY_CONNECTED_THRESHOLD = 1500;
 
 	const float TIM_FREQ = (1.0/2000.0)*1000.0;
 

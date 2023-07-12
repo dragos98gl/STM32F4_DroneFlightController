@@ -13,7 +13,7 @@
 #include <stdint.h>
 #include "Timeout.hpp"
 
-class MB1043:public Timeout ,public PrintableSensor//: UART_Conn
+class MB1043:public Timeout ,public PrintableSensor, public CallsCounter //: UART_Conn
 {
 private:
 	static constexpr const int packet_length = 6U;

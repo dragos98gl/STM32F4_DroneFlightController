@@ -15,7 +15,7 @@
 #include "math.h"
 #include "utils_functions.hpp"
 
-class BMP390: SPI_Conn,public PrintableSensor
+class BMP390: SPI_Conn,public PrintableSensor, public CallsCounter
 {
 private:
 	SPI_HandleTypeDef *spi_port;

@@ -8,8 +8,11 @@
 #include "PMW3901UY.hpp"
 //#include "utils_functions.hpp"
 
-PMW3901UY::PMW3901UY(UART_HandleTypeDef *uart_port,DMA_HandleTypeDef *uart_port_dma,uint8_t timeout,ICM42688P& icm):
-	icm(icm)
+PMW3901UY::PMW3901UY(UART_HandleTypeDef *uart_port,DMA_HandleTypeDef *uart_port_dma,uint8_t timeout,ICM42688P& icm,VL53L0X& vl53, PID_Control& pidX,PID_Control& pidY):
+	_icm(icm),
+	_vl53(vl53),
+	_pidX(pidX),
+	_pidY(pidY)
 {
 	PMW3901UY::uart_port = uart_port;
 	PMW3901UY::uart_port_dma=uart_port_dma;
@@ -36,6 +39,10 @@ void PMW3901UY::update()
 		this->y_pos += this->flow_y;
 
 		this->process();
+
+		this->_pidX.update();
+		this->_pidY.update();
+
 		this->resetTimeoutCounter();
 	}
 	else if (this->wrongDataReceived==false)
@@ -60,28 +67,12 @@ void PMW3901UY::update()
 
 void PMW3901UY::process()
 {
-	_mini.flow_x = static_cast<float>(this->flow_x);
-	_mini.flow_x = static_cast<float>(this->flow_y);
+	float cpi = (this->_vl53.getAltitudeM() / 11.914F) * 2.54F;
+	this->x_cm_pos = this->x_cm_pos + static_cast<float>(this->flow_x)*cpi;// - this->lastAngleY * cpi * 10.0F;
+	this->y_cm_pos = this->y_cm_pos + static_cast<float>(this->flow_y)*cpi;// - this->lastAngleX * cpi * 10.0F;
 
-	_mini.flow_x_i += _mini.flow_x;
-	_mini.flow_y_i += _mini.flow_y;
-
-	_pixel_flow.fix_x_i += (_mini.flow_x_i - _pixel_flow.fix_x_i) * 0.2F;
-	_pixel_flow.fix_y_i += (_mini.flow_y_i - _pixel_flow.fix_y_i) * 0.2F;
-
-	_pixel_flow.ang_x += (600.0F * tan(icm.getEulerX()*0.0174F) - _pixel_flow.ang_x) * 0.2F;
-	_pixel_flow.ang_y += (600.0F * tan(icm.getEulerY()*0.0174F) - _pixel_flow.ang_y) * 0.2F;
-
-	_pixel_flow.out_x_i = _pixel_flow.fix_x_i - _pixel_flow.ang_x;
-	_pixel_flow.out_x_i = _pixel_flow.fix_y_i - _pixel_flow.ang_y;
-
-	_pixel_flow.x = (_pixel_flow.out_x_i - _pixel_flow.out_x_i_o);// / dT;
-	_pixel_flow.out_x_i_o = _pixel_flow.out_x_i;
-	_pixel_flow.y = (_pixel_flow.out_y_i - _pixel_flow.out_y_i_o);// / dT;
-	_pixel_flow.out_y_i_o = _pixel_flow.out_y_i;
-
-	_pixel_flow.fit_x += (_pixel_flow.x - _pixel_flow.fix_x) * 0.1;
-	_pixel_flow.fit_y += (_pixel_flow.y - _pixel_flow.fix_y) * 0.1;
+	lastAngleX = this->_icm.getEulerX();
+	lastAngleY = this->_icm.getEulerY();
 }
 
 const char* PMW3901UY::getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER> &senorsList)
@@ -90,13 +81,13 @@ const char* PMW3901UY::getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER>
 
 	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::PMW_POS_X)!=senorsList.end())
 	{
-		strcat(packet,toCharArray(x_pos));
+		strcat(packet,toCharArray(x_cm_pos));
 		strcat(packet,",");
 	}
 
 	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::PMW_POS_Y)!=senorsList.end())
 	{
-		strcat(packet,toCharArray(y_pos));
+		strcat(packet,toCharArray(y_cm_pos));
 		strcat(packet,",");
 	}
 
@@ -109,6 +100,12 @@ const char* PMW3901UY::getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER>
 	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::PMW_FLOW_Y)!=senorsList.end())
 	{
 		strcat(packet,toCharArray(flow_y));
+		strcat(packet,",");
+	}
+
+	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::PMW_QUALITY)!=senorsList.end())
+	{
+		strcat(packet,toCharArray(quality));
 		strcat(packet,",");
 	}
 
@@ -130,12 +127,22 @@ uint8_t PMW3901UY::getQuality()
 	return quality;
 }
 
-uint16_t PMW3901UY::getXpos()
+float& PMW3901UY::getXpos()
 {
-	return x_pos;
+	return x_cm_pos;
 }
 
-uint16_t PMW3901UY::getYpos()
+float& PMW3901UY::getYpos()
 {
-	return y_pos;
+	return y_cm_pos;
+}
+
+float& PMW3901UY::getTargetX()
+{
+	return target_x;
+}
+
+float& PMW3901UY::getTargetY()
+{
+	return target_y;
 }

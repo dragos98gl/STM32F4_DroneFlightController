@@ -10,17 +10,21 @@
 
 #include "HC05.hpp"
 #include "ICM42688P_reg.hpp"
-#include <Interfaces.hpp>
-#include "FlashReadWrite.hpp"
+#include "Interfaces.hpp"
+#include "Buzzer.hpp"
 #include "stm32f4xx_hal.h"
 #include "math.h"
 #include "string.h"
 #include <set>
+#include "PID_Control.hpp"
 
-class ICM42688P: SPI_Conn,public PrintableSensor
+class ICM42688P: SPI_Conn,public PrintableSensor, public CallsCounter
 {
 private:
+	static constexpr uint16_t criticalStateAngleThreshold = 20.0F;//10
+
 	SPI_HandleTypeDef *spi_port;
+	Buzzer *buzz;
 
 	uint8_t spiTxBuff[2]={0U,0U};
 	uint8_t spiRxBuff[2]={0U,0U};
@@ -28,6 +32,8 @@ private:
 	uint8_t SPI_read(uint8_t reg);
 
 	bool initAndCheck(uint8_t addr,uint8_t val,uint8_t numberOfTries,bool read_only = false);
+	void checkCriticalState();
+	void checkCrashState();
 
 	const float RADIANS_TO_DEGREES = 180.0F / M_PI;
 	const float GYRO_FULLSCALE = 32768.0F / 2000.0F;
@@ -52,20 +58,34 @@ private:
 	float euler_y = 0.0F;
 	float euler_z = 0.0F;
 
-	float gxDrift = -9.3F;
-	float gyDrift = -11.3F;
-	float gzDrift = 7.68F;
-	float axOffset = 2135.0F;//2125.0F;
-	float ayOffset = -850.0F;//-775.0F;
-	float azOffset = 2570.0F;//2550.0F;
+	float gxDrift = -12.0F;
+	float gyDrift = -13.0F;
+	float gzDrift = 7.00F;
+	float axOffset = 2135.0F / 2.0F;//2125.0F;
+	float ayOffset = -850.0F / 2.0F;//-775.0F;
+	float azOffset = 2570.0F / 2.0F;//2550.0F;
 	float axScale = 2.0F;
 	float ayScale = 2.0F;
 	float azScale = 2.0F;
+
+	float prev_raw_ax=0.0F;
+	float prev_raw_ay=0.0F;
+	float prev_raw_az=0.0F;
+
+	float max_ax_dt = 0.0F;
+	float max_ay_dt = 0.0F;
+	float max_az_dt = 0.0F;
+	bool crashState = false;
+	bool criticalState = false;
+
+	PID_Control& _rollPID;
+	PID_Control& _pitchPID;
+	PID_Control& _yawPID;
 public:
 
 	void SPI_write(uint8_t reg,uint8_t data);
 	const char* getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER> &senorsList);
-	ICM42688P(SPI_HandleTypeDef *spi_port);
+	ICM42688P(SPI_HandleTypeDef *spi_port,Buzzer *buzz, PID_Control& rollPID,PID_Control& pitchPID, PID_Control& yawPID);
 	bool defaultInit();
 	void update();
 	uint8_t WhoAmI();
@@ -78,12 +98,17 @@ public:
 	int16_t getTempX();
 	uint8_t getIntStatus();
 	void toEuler();
+	float& getEulerXref();
+	float& getEulerYref();
+	float& getEulerZref();
 	float getEulerX();
 	float getEulerY();
 	float getEulerZ();
 	void computeGyroDrift(uint32_t count);
 	void computeAccOffset(uint32_t count);
 	void calibrate(uint32_t count);
+	bool isCriticalStateDetected();
+	bool isCrashDetected();
 };
 
 #endif /* INC_ICM42688P_H_ */

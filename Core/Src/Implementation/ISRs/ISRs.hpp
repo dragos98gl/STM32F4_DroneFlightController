@@ -13,11 +13,10 @@
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
+	FlightControllorImplementation *flightControllerInstance = FlightControllorImplementation::getInstance();
     if (huart->Instance == USART1)
     {
-    	//tick1++;
-
-    	//flightController->getHC05instance().printfSensorsValues();
+    	flightControllerInstance->getHC05instance().printfSensorsValues();
     }
 }
 
@@ -37,27 +36,28 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 extern "C" void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	portBASE_TYPE pxHigherPriorityTaskWoken = pdFALSE;
-	TaskHandle_t* sensorsDataReadHandler = FlightControllorImplementation::getInstance()->getSensorsDataReadHandlerPtr();
+	FlightControllorImplementation *flightControllerInstance = FlightControllorImplementation::getInstance();
+	TaskHandle_t* sensorsDataReadHandler = flightControllerInstance->getSensorsDataReadHandlerPtr();
 
 	switch (GPIO_Pin)
 	{
 	case (GPIO_PIN_4):
 		xTaskNotifyFromISR(*sensorsDataReadHandler, EnumSensorsInterrupt::ICM42688P_t, eSetBits, &pxHigherPriorityTaskWoken);
 		portYIELD_FROM_ISR(pxHigherPriorityTaskWoken);
-		//icmCounter1++;
+		flightControllerInstance->getICM42688Pinstance().incrementInterruptCounter();
 		break;
 
 	case (GPIO_PIN_8):
 		xTaskNotifyFromISR(*sensorsDataReadHandler, EnumSensorsInterrupt::BMP390_t, eSetBits, &pxHigherPriorityTaskWoken);
 		if (pxHigherPriorityTaskWoken)
 		portYIELD_FROM_ISR(pxHigherPriorityTaskWoken);
-		//bmpCounter1++;
+		flightControllerInstance->getBMP390instance().incrementInterruptCounter();
 		break;
 
 	case (GPIO_PIN_2):
 		xTaskNotifyFromISR(*sensorsDataReadHandler, EnumSensorsInterrupt::LIS3MDLTR_t, eSetBits, &pxHigherPriorityTaskWoken);
 		portYIELD_FROM_ISR(pxHigherPriorityTaskWoken);
-		//lisCounter1++;
+		flightControllerInstance->getLIS3MDLTRinstance().incrementInterruptCounter();
 		break;
 	}
 }
@@ -65,23 +65,29 @@ extern "C" void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	portBASE_TYPE pxHigherPriorityTaskWoken = pdFALSE;
-	TaskHandle_t* sensorsDataReadHandler = FlightControllorImplementation::getInstance()->getSensorsDataReadHandlerPtr();
+	FlightControllorImplementation *flightControllerInstance = FlightControllorImplementation::getInstance();
+	TaskHandle_t* sensorsDataReadHandler = flightControllerInstance->getSensorsDataReadHandlerPtr();
 
 	if (huart->Instance == USART2)
 	{
 		xTaskNotifyFromISR(*sensorsDataReadHandler, EnumSensorsInterrupt::PMW_t, eSetBits, &pxHigherPriorityTaskWoken);
 		portYIELD_FROM_ISR(pxHigherPriorityTaskWoken);
-		//pmwCounter1++;
+		flightControllerInstance->getPMW3901UYinstance().incrementInterruptCounter();
 	} else if (huart->Instance == USART3)
 	{
 		xTaskNotifyFromISR(*sensorsDataReadHandler, EnumSensorsInterrupt::REMOTERX_t, eSetBits, &pxHigherPriorityTaskWoken);
 		portYIELD_FROM_ISR(pxHigherPriorityTaskWoken);
-		//remoteCounter1++;
+		flightControllerInstance->getFrSkyRXinstance().incrementInterruptCounter();
 	} else if (huart->Instance == UART4)
 	{
 		xTaskNotifyFromISR(*sensorsDataReadHandler, EnumSensorsInterrupt::SONAR_t, eSetBits, &pxHigherPriorityTaskWoken);
 		portYIELD_FROM_ISR(pxHigherPriorityTaskWoken);
-		//sonarCounter1++;
+		flightControllerInstance->getMB1043instance().incrementInterruptCounter();
+	}else if (huart->Instance == USART6)
+	{
+		xTaskNotifyFromISR(*sensorsDataReadHandler, EnumSensorsInterrupt::VL53L0X_t, eSetBits, &pxHigherPriorityTaskWoken);
+		portYIELD_FROM_ISR(pxHigherPriorityTaskWoken);
+		flightControllerInstance->getVL53L0Xinstance().incrementInterruptCounter();
 	}
 }
 

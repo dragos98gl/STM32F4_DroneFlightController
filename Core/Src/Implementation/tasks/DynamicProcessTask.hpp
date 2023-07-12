@@ -4,20 +4,26 @@
  *  Created on: Apr 27, 2023
  *      Author: DDarie
  */
+/*
+	CR1    CR3
+	   \  /
+		\/
+		/\
+	   /  \
+	CR2    CR4
+ */
 
 #ifndef SRC_IMPLEMENTATION_TASKS_DYNAMICPROCESSTASK_HPP_
 #define SRC_IMPLEMENTATION_TASKS_DYNAMICPROCESSTASK_HPP_
 
 #include "FlightControllerImplementation.hpp"
+#include "failsafe_functions.hpp"
+
+float testttt = 0;
 
 void DynamicsProcessTask(void *pvParameters)
 {
 	FlightControllorImplementation *flightControllerInstance = FlightControllorImplementation::getInstance();
-
-	float euler_x;
-	float euler_y;
-	float euler_z;
-
 
 	TickType_t xLastWakeTime;
 	const TickType_t xFrequency = 1;
@@ -28,57 +34,68 @@ void DynamicsProcessTask(void *pvParameters)
 	{
 		FaultsStatus currentFaultsStatus = flightControllerInstance->getCurrentFaultsStatus();
 
-		euler_x = flightControllerInstance->getICM42688Pinstance().getEulerX();
-		euler_y = flightControllerInstance->getICM42688Pinstance().getEulerY();
-		euler_z = flightControllerInstance->getICM42688Pinstance().getEulerZ();
-
-		//timCounter++;
-
-		if (currentFaultsStatus == FaultsStatus::OKAY)
+		if (currentFaultsStatus != FaultsStatus::NOT_READY)
 		{
-			/*
-			CR1    CR3
-			   \  /
-				\/
-				/\
-			   /  \
-			CR2    CR4
-			 */
-			//float CCR1_value = 3000 + flightController->getFrSkyRXinstance().throttle + roll_pid.out() + pitch_pid.out() - yaw_pid.out();
-			//float CCR2_value = 3000 + flightController->getFrSkyRXinstance().throttle + roll_pid.out() - pitch_pid.out() + yaw_pid.out();
-			//float CCR3_value = 3000 + flightController->getFrSkyRXinstance().throttle - roll_pid.out() + pitch_pid.out() + yaw_pid.out();
-			//float CCR4_value = 3000 + flightController->getFrSkyRXinstance().throttle - roll_pid.out() - pitch_pid.out() - yaw_pid.out();
+			float rollPidOutput = flightControllerInstance->getRollPidInstance().getOut();
+			float pitchPidOutput = flightControllerInstance->getPitchPidInstance().getOut();
+			float yawPidOutput = flightControllerInstance->getYawPidInstance().getOut();
+			float xPositionPidOutput = flightControllerInstance->getXPositionPidInstance().getOut();
+			float yPositionPidOutput = flightControllerInstance->getYPositionPidInstance().getOut();
+			float altitudeMpcOutput = flightControllerInstance->getVL53L0Xinstance().getMPCout();
 
-			/*if (CCR1_value<3300)
-				TIM3 -> CCR1 = 3300;
-			else
-				TIM3 -> CCR1 = CCR1_value;
+			testttt = yPositionPidOutput;
 
-			if (CCR2_value<3300)
-				TIM3 -> CCR2 = 3300;
-			else
-				TIM3 -> CCR2 = CCR2_value;
+			if (currentFaultsStatus == FaultsStatus::FAILURE)
+			{
+				drone::failsafe::slowlyLanding(*flightControllerInstance);
+			}
 
-			if (CCR3_value<3300)
-				TIM3 -> CCR3 = 3300;
-			else
-				TIM3 -> CCR3 = CCR3_value;
+			if (currentFaultsStatus == FaultsStatus::CRITICAL)
+			{
+				drone::failsafe::quickLanding(*flightControllerInstance);
+			}
 
-			if (CCR4_value<3300)
-				TIM3 -> CCR4 = 3300;
-			else
-				TIM3 -> CCR4 = CCR4_value;*/
+			float CCR1_value = 3000.0F + flightControllerInstance->getFrSkyRXinstance().throttle + altitudeMpcOutput + rollPidOutput + pitchPidOutput + yawPidOutput - xPositionPidOutput - yPositionPidOutput;
+			float CCR2_value = 3000.0F + flightControllerInstance->getFrSkyRXinstance().throttle + altitudeMpcOutput + rollPidOutput - pitchPidOutput - yawPidOutput - xPositionPidOutput + yPositionPidOutput;
+			float CCR3_value = 3000.0F + flightControllerInstance->getFrSkyRXinstance().throttle + altitudeMpcOutput - rollPidOutput + pitchPidOutput - yawPidOutput + xPositionPidOutput - yPositionPidOutput;
+			float CCR4_value = 3000.0F + flightControllerInstance->getFrSkyRXinstance().throttle + altitudeMpcOutput - rollPidOutput - pitchPidOutput + yawPidOutput + xPositionPidOutput + yPositionPidOutput;
 
-		// ... = base_throttle + alt_compensation + roll/pitch/yaw_pid;
+			if (currentFaultsStatus == FaultsStatus::OKAY)
+			{
+				if (CCR1_value<3300.0F)
+					CCR1_value = 3300.0F;
+				if (CCR1_value>6000.0F)
+					CCR1_value = 6000.0F;
+
+				if (CCR2_value<3300.0F)
+					CCR2_value = 3300.0F;
+				if (CCR2_value>6000.0F)
+					CCR2_value = 6000.0F;
+
+				if (CCR3_value<3300.0F)
+					CCR3_value = 3300.0F;
+				if (CCR3_value>6000.0F)
+					CCR3_value = 6000.0F;
+
+				if (CCR4_value<3300.0F)
+					CCR4_value = 3300.0F;
+				if (CCR4_value>6000.0F)
+					CCR4_value = 6000.0F;
+			}
+
+			if (currentFaultsStatus == FaultsStatus::CRITICAL)
+			{
+				CCR1_value = 3000.0F;
+				CCR2_value = 3000.0F;
+				CCR3_value = 3000.0F;
+				CCR4_value = 3000.0F;
+			}
+
+			TIM3 -> CCR1 = static_cast<uint32_t>(CCR1_value);
+			TIM3 -> CCR2 = static_cast<uint32_t>(CCR2_value);
+			TIM3 -> CCR3 = static_cast<uint32_t>(CCR3_value);
+			TIM3 -> CCR4 = static_cast<uint32_t>(CCR4_value);
 		}
-
-		if (currentFaultsStatus == FaultsStatus::FAILURE)
-		{
-
-		}
-
-		if (currentFaultsStatus == FaultsStatus::CRITICAL)
-
 
 		vTaskDelayUntil( &xLastWakeTime, xFrequency);
 	}

@@ -18,6 +18,7 @@ RM := rm -rf
 -include Middlewares/ST/STM32_USB_Device_Library/Core/Src/subdir.mk
 -include Middlewares/ST/STM32_USB_Device_Library/Class/MSC/Src/subdir.mk
 -include Drivers/STM32F4xx_HAL_Driver/Src/subdir.mk
+-include Core/libs/VL53L0X_lib/subdir.mk
 -include Core/libs/Utils/subdir.mk
 -include Core/libs/PMW3901UY_lib/subdir.mk
 -include Core/libs/MB1043_lib/subdir.mk
@@ -94,8 +95,8 @@ all: main-build
 main-build: flightController_v3.elf secondary-outputs
 
 # Tool invocations
-flightController_v3.elf flightController_v3.map: $(OBJS) $(USER_OBJS) C:\Users\DDarie\STM32F4_DroneFlightController\STM32F405RGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-g++ -o "flightController_v3.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\DDarie\STM32F4_DroneFlightController\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="flightController_v3.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+flightController_v3.elf flightController_v3.map: $(OBJS) $(USER_OBJS) C:\Users\Dragos\STM32F4_DroneFlightController\STM32F405RGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-g++ -o "flightController_v3.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\Dragos\STM32F4_DroneFlightController\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="flightController_v3.map" -Wl,--gc-sections -static -L"C:\Users\Dragos\STM32F4_DroneFlightController\Core\libs" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
