@@ -8,11 +8,17 @@
 #include "MB1043.hpp"
 #include <stdlib.h>
 
-MB1043::MB1043(UART_HandleTypeDef *uart_port,DMA_HandleTypeDef *uart_port_dma,uint8_t timeout)
+MB1043::MB1043(
+		UART_HandleTypeDef *uart_port,
+		DMA_HandleTypeDef *uart_port_dma,
+		uint8_t timeout):
+	uart_port {uart_port}
+	,uart_port_dma {uart_port_dma}
+	,wrongDataReceived {false}
+	,rx_buff {}
+	,distance_str {}
+	,distance {}
 {
-	MB1043::uart_port = uart_port;
-	MB1043::uart_port_dma=uart_port_dma;
-
 	setTimeoutValue(timeout);
 }
 

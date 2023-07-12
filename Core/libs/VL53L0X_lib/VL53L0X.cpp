@@ -7,12 +7,18 @@
 
 #include "VL53L0X.hpp"
 
-VL53L0X::VL53L0X(UART_HandleTypeDef *uart_port,DMA_HandleTypeDef *uart_port_dma, uint8_t timeout):
-	mpc {}
+VL53L0X::VL53L0X(
+		UART_HandleTypeDef *uart_port,
+		DMA_HandleTypeDef *uart_port_dma,
+		uint8_t timeout):
+	uart_port {uart_port}
+	,uart_port_dma {uart_port_dma}
+	,mpc {}
+	,mpc_out {0}
+	,rx_buff {}
+	,wrongDataReceived {false}
+	,distance {0}
 {
-	VL53L0X::uart_port = uart_port;
-	VL53L0X::uart_port_dma=uart_port_dma;
-
 	setTimeoutValue(timeout);
 }
 

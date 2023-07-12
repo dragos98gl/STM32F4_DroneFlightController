@@ -17,18 +17,27 @@ private:
 	GPIO_TypeDef* BUZZ_PORT = GPIOA;
 	const float TIM_FREQ = (1.0/1000.0)*1000.0;
 
-
-	uint16_t freqTick = 0;
-	uint16_t pauseTick = 0;
-	uint16_t counterStart = 0;
-	uint16_t counterEnd = 0;
-	uint16_t repetitions = 0;
+	uint16_t freqTick;
+	uint16_t pauseTick;
+	uint16_t counterStart;
+	uint16_t counterEnd;
+	uint16_t repetitions;
 	bool busy=false;
 
 	void Buzz_on();
 	void Buzz_off();
 	uint16_t msToTick(uint16_t ms);
 public:
+	Buzzer():
+		freqTick {0U}
+		,pauseTick {0U}
+		,counterStart {0U}
+		,counterEnd {0U}
+		,repetitions {0U}
+		,busy {false}
+	{
+	}
+
 	bool beep(int duration_ms,int freq_hz=0,int repetition_count=1);
 	bool isBusy();
 	void run();

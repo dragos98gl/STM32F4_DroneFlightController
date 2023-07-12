@@ -31,22 +31,22 @@ private:
 	DMA_HandleTypeDef *uart_port_dma;
 	ICM42688P& _icm;
 	VL53L0X& _vl53;
+	PID_Control& _pidX;
+	PID_Control& _pidY;
 
 	uint8_t rx_buff[2U * packet_length];
 	bool wrongDataReceived = false;
 	int16_t flow_x;
 	int16_t flow_y;
 	uint8_t quality;
-	float x_pos=0;
-	float y_pos=0;
-	float x_cm_pos=0;
-	float y_cm_pos=0;
-	float target_x=0;
-	float target_y=0;
-	float lastAngleX = 0;
-	float lastAngleY = 0;
-	PID_Control& _pidX;
-	PID_Control& _pidY;
+	float x_pos;
+	float y_pos;
+	float x_cm_pos;
+	float y_cm_pos;
+	float target_x;
+	float target_y;
+	float lastAngleX;
+	float lastAngleY;
 
 	void process();
 public:

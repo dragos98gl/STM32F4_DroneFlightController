@@ -46,20 +46,18 @@ private:
 	Buzzer buzz;
 	LIS3MDLTR lis;
 	BMP390 bmp;
-	ICM42688P icm;
 	HC05 bt;
-	PMW3901UY pmw;
 	FrSkyRX remote_rx;
 	MB1043 sonar;
 	VL53L0X vl53;
 	BatteryManagement battMgmt;
-
 	PID_Control roll_pid;
 	PID_Control pitch_pid;
 	PID_Control yaw_pid;
 	PID_Control xPosition_pid;
 	PID_Control yPosition_pid;
-
+	ICM42688P icm;
+	PMW3901UY pmw;
 	FaultsStatus _currentFaultsStatus;
 
 	TaskHandle_t _faultsCheckHandler = NULL;
@@ -111,7 +109,7 @@ public:
 	{
 
 	}
-//0.75
+
 	MemoryManagement& getNvmInstance();
 	Buzzer& getBuzzerinstance();
 	LIS3MDLTR& getLIS3MDLTRinstance();

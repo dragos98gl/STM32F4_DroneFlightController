@@ -19,17 +19,13 @@ private:
 	static constexpr const int packet_length = 8U;
 	const uint8_t FIRST_BIT = 0x5A;
 	const uint8_t SECOND_BIT = 0x5A;
-
 	UART_HandleTypeDef *uart_port;
 	DMA_HandleTypeDef *uart_port_dma;
-
 	MPC_Controller mpc;
 	float32_t mpc_out;
-
 	uint8_t rx_buff[2U * packet_length];
 	bool wrongDataReceived = false;
-
-	uint32_t distance=0;
+	uint32_t distance;
 public:
 	VL53L0X(UART_HandleTypeDef *uart_port,DMA_HandleTypeDef *uart_port_dma, uint8_t timeout);
 	void begin(void);

@@ -25,10 +25,8 @@ void DynamicsProcessTask(void *pvParameters)
 {
 	FlightControllorImplementation *flightControllerInstance = FlightControllorImplementation::getInstance();
 
-	TickType_t xLastWakeTime;
 	const TickType_t xFrequency = 1;
-
-	xLastWakeTime = xTaskGetTickCount();
+	TickType_t xLastWakeTime = xTaskGetTickCount();
 
 	for( ;; )
 	{

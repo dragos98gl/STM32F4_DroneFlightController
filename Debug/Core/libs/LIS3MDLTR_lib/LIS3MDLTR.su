@@ -1,21 +1,21 @@
 c:\st\stm32cubeide_1.10.1\stm32cubeide\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.0.202111181127\tools\bin\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include/c++/10.3.1/arm-none-eabi/thumb/v7e-m+fp/hard/bits/gthr-default.h:229:1:int __gthread_key_delete(__gthread_key_t)	16	static
 c:\st\stm32cubeide_1.10.1\stm32cubeide\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.0.202111181127\tools\arm-none-eabi\include\c++\10.3.1\bits\basic_string.h:6609:3:std::string std::__cxx11::to_string(int)	40	static
-C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp:78:14:const char* PrintableSensor::toCharArray(int)	48	static
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp:77:14:const char* PrintableSensor::toCharArray(int)	48	static
 C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp:14:7:constexpr SPI_Conn::SPI_Conn()	16	static
-C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp:70:7:constexpr PrintableSensor::PrintableSensor()	16	static
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp:69:7:constexpr PrintableSensor::PrintableSensor()	16	static
 C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp:51:2:constexpr CallsCounter::CallsCounter()	16	static
 ../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.cpp:10:1:LIS3MDLTR::LIS3MDLTR(SPI_HandleTypeDef*)	16	static
-../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.cpp:15:9:uint8_t LIS3MDLTR::whoAmI()	16	static
-../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.cpp:20:6:void LIS3MDLTR::update()	24	static
-../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.cpp:37:13:virtual const char* LIS3MDLTR::getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER>&)	64	static
-../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.cpp:63:6:bool LIS3MDLTR::defaultInit()	24	static
-../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.cpp:107:6:bool LIS3MDLTR::initAndCheck(uint8_t, uint8_t, uint8_t, bool)	24	static
-../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.cpp:120:6:virtual void LIS3MDLTR::SPI_write(uint8_t, uint8_t)	16	static
-../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.cpp:129:9:virtual uint8_t LIS3MDLTR::SPI_read(uint8_t)	16	static
-../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.cpp:140:9:int16_t LIS3MDLTR::getX()	16	static
-../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.cpp:145:9:int16_t LIS3MDLTR::getY()	16	static
-../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.cpp:150:9:int16_t LIS3MDLTR::getZ()	16	static
-../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.cpp:155:9:int16_t LIS3MDLTR::getTEMP()	16	static
+../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.cpp:25:9:uint8_t LIS3MDLTR::whoAmI()	16	static
+../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.cpp:30:6:void LIS3MDLTR::update()	24	static
+../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.cpp:47:13:virtual const char* LIS3MDLTR::getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER>&)	64	static
+../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.cpp:73:6:bool LIS3MDLTR::defaultInit()	24	static
+../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.cpp:117:6:bool LIS3MDLTR::initAndCheck(uint8_t, uint8_t, uint8_t, bool)	24	static
+../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.cpp:130:6:virtual void LIS3MDLTR::SPI_write(uint8_t, uint8_t)	16	static
+../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.cpp:139:9:virtual uint8_t LIS3MDLTR::SPI_read(uint8_t)	16	static
+../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.cpp:150:9:int16_t LIS3MDLTR::getX()	16	static
+../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.cpp:155:9:int16_t LIS3MDLTR::getY()	16	static
+../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.cpp:160:9:int16_t LIS3MDLTR::getZ()	16	static
+../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.cpp:165:9:int16_t LIS3MDLTR::getTEMP()	16	static
 c:\st\stm32cubeide_1.10.1\stm32cubeide\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.0.202111181127\tools\arm-none-eabi\include\c++\10.3.1\bits\charconv.h:47:5:constexpr unsigned int std::__detail::__to_chars_len(_Tp, int) [with _Tp = unsigned int]	32	static
 c:\st\stm32cubeide_1.10.1\stm32cubeide\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.0.202111181127\tools\arm-none-eabi\include\c++\10.3.1\bits\charconv.h:72:5:void std::__detail::__to_chars_10_impl(char*, unsigned int, _Tp) [with _Tp = unsigned int]	40	static
 c:\st\stm32cubeide_1.10.1\stm32cubeide\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.10.3-2021.10.win32_1.0.0.202111181127\tools\arm-none-eabi\include\c++\10.3.1\bits\stl_set.h:794:7:std::set<_Key, _Compare, _Alloc>::iterator std::set<_Key, _Compare, _Alloc>::find(const key_type&) [with _Key = HC05::SENSOR_DATA_PARAMETER; _Compare = std::less<HC05::SENSOR_DATA_PARAMETER>; _Alloc = std::allocator<HC05::SENSOR_DATA_PARAMETER>]	24	static

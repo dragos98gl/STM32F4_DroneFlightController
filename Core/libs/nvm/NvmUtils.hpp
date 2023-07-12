@@ -96,7 +96,7 @@ inline uint32_t GetSector(uint32_t Address)
 inline uint32_t massEraseSector(uint32_t sectorAddress)
 {
 	static FLASH_EraseInitTypeDef eraseInitStruct;
-	uint32_t sectorError;
+	uint32_t sectorError = 0U;
 
 	HAL_FLASH_Unlock();
 

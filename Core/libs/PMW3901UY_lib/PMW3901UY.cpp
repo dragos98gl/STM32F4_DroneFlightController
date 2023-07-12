@@ -6,17 +6,34 @@
  */
 
 #include "PMW3901UY.hpp"
-//#include "utils_functions.hpp"
 
-PMW3901UY::PMW3901UY(UART_HandleTypeDef *uart_port,DMA_HandleTypeDef *uart_port_dma,uint8_t timeout,ICM42688P& icm,VL53L0X& vl53, PID_Control& pidX,PID_Control& pidY):
-	_icm(icm),
-	_vl53(vl53),
-	_pidX(pidX),
-	_pidY(pidY)
+PMW3901UY::PMW3901UY(
+		UART_HandleTypeDef *uart_port,
+		DMA_HandleTypeDef *uart_port_dma,
+		uint8_t timeout,ICM42688P& icm,
+		VL53L0X& vl53,
+		PID_Control& pidX,
+		PID_Control& pidY):
+	uart_port {uart_port}
+	,uart_port_dma {uart_port_dma}
+	,_icm (icm)
+	,_vl53 (vl53)
+	,_pidX (pidX)
+	,_pidY (pidY)
+	,rx_buff {}
+	,wrongDataReceived {false}
+	,flow_x {0}
+	,flow_y {0}
+	,quality {0}
+	,x_pos {0}
+	,y_pos {0}
+	,x_cm_pos {0}
+	,y_cm_pos {0}
+	,target_x {0}
+	,target_y {0}
+	,lastAngleX {0}
+	,lastAngleY {0}
 {
-	PMW3901UY::uart_port = uart_port;
-	PMW3901UY::uart_port_dma=uart_port_dma;
-
 	setTimeoutValue(timeout);
 }
 

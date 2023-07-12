@@ -13,7 +13,7 @@ static constexpr uint8_t dataSize = 4U;
 union intObj {
 	using Type = int;
 
-	int value;
+	int value ;
 	uint32_t bytes;
 };
 

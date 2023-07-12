@@ -7,13 +7,30 @@
 
 #include "FrSkyRX.hpp"
 
-FrSkyRX::FrSkyRX(UART_HandleTypeDef *uart_port,DMA_HandleTypeDef *uart_port_dma,Buzzer *buzz,uint8_t timeout):
-	currentState {FrSkyRXState::NOT_CONNECTED}
+FrSkyRX::FrSkyRX(
+		UART_HandleTypeDef *uart_port,
+		DMA_HandleTypeDef *uart_port_dma,
+		Buzzer *buzz,uint8_t timeout):
+	uart_port {uart_port}
+	,uart_port_dma {uart_port_dma}
+	,buzz {buzz}
+	,rx_buff {}
+	,wrongDataReceived {false}
+	,channels {}
+	,rx_ok {0U}
+	,currentState {FrSkyRXState::NOT_CONNECTED}
+	,throttle {0.0F}
+	,target_roll {0.0F}
+	,target_pitch {0.0F}
+	,target_yaw {0.0F}
+	,raw_roll {0U}
+	,raw_pitch {0U}
+	,raw_yaw {0U}
+	,lb {0U}
+	,lu {0U}
+	,rb {0U}
+	,ru {0U}
 {
-	FrSkyRX::uart_port = uart_port;
-	FrSkyRX::uart_port_dma=uart_port_dma;
-	FrSkyRX::buzz=buzz;
-
 	setTimeoutValue(timeout);
 }
 

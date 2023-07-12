@@ -8,12 +8,53 @@
 #include "ICM42688P.hpp"
 #include "Constants.hpp"
 
-ICM42688P::ICM42688P(SPI_HandleTypeDef *spi_port, Buzzer *buzz, PID_Control& rollPID,PID_Control& pitchPID, PID_Control& yawPID):
-	_rollPID(rollPID),
-	_pitchPID(pitchPID),
-	_yawPID(yawPID)
+ICM42688P::ICM42688P(
+		SPI_HandleTypeDef *spi_port,
+		Buzzer *buzz,
+		PID_Control& rollPID,
+		PID_Control& pitchPID,
+		PID_Control& yawPID):
+	spi_port {spi_port}
+	,buzz {buzz}
+	,_rollPID (rollPID)
+	,_pitchPID (pitchPID)
+	,_yawPID (yawPID)
+	,spiTxBuff {0U,0U}
+	,spiRxBuff {0U,0U}
+	,gx {0.0F}
+	,gy {0.0F}
+	,gz {0.0F}
+	,ax {0.0F}
+	,ay {0.0F}
+	,az {0.0F}
+	,raw_gx {0.0F}
+	,raw_gy {0.0F}
+	,raw_gz {0.0F}
+	,raw_ax {0.0F}
+	,raw_ay {0.0F}
+	,raw_az {0.0F}
+	,temp {0.0F}
+	,euler_x {0.0F}
+	,euler_y {0.0F}
+	,euler_z {0.0F}
+	,gxDrift {-12.0F}
+	,gyDrift {-13.0F}
+	,gzDrift {7.00F}
+	,axOffset {2135.0F}
+	,ayOffset {-850.0F / 2.0F}
+	,azOffset {2570.0F / 2.0F}
+	,axScale {2.0F}
+	,ayScale {2.0F}
+	,azScale {2.0F}
+	,prev_raw_ax {0.0F}
+	,prev_raw_ay {0.0F}
+	,prev_raw_az {0.0F}
+	,max_ax_dt {0.0F}
+	,max_ay_dt {0.0F}
+	,max_az_dt {0.0F}
+	,crashState {false}
+	,criticalState {false}
 {
-	ICM42688P::spi_port = spi_port;
 }
 
 bool ICM42688P::defaultInit()

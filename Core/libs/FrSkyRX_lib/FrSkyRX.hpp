@@ -53,28 +53,27 @@ private:
 	Buzzer *buzz;
 
 	uint8_t rx_buff[2U * packet_length];
-	bool wrongDataReceived = false;
-
+	bool wrongDataReceived;
 	uint16_t channels[16];
-	uint8_t rx_ok = 0;
-
+	uint8_t rx_ok;
 	FrSkyRXState currentState;
+
 	bool isDisconnected() const;
 	void updateValues();
 	void processStateMachine();
 public:
-	float throttle = 0;
-	float target_roll = 0;
-	float target_pitch = 0;
-	float target_yaw = 0;
+	float throttle;
+	float target_roll;
+	float target_pitch;
+	float target_yaw;
 
-	uint16_t raw_roll = 0;
-	uint16_t raw_pitch = 0;
-	uint16_t raw_yaw = 0;
-	uint8_t lb = 0;
-	uint8_t lu = 0;
-	uint8_t rb = 0;
-	uint8_t ru = 0;
+	uint16_t raw_roll;
+	uint16_t raw_pitch;
+	uint16_t raw_yaw;
+	uint8_t lb;
+	uint8_t lu;
+	uint8_t rb;
+	uint8_t ru;
 
 	FrSkyRX(UART_HandleTypeDef *uart_port,DMA_HandleTypeDef *uart_port_dma,Buzzer *buzz,uint8_t timeout);
 	float& getThrottle();

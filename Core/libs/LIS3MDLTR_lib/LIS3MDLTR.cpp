@@ -7,9 +7,19 @@
 
 #include "LIS3MDLTR.hpp"
 
-LIS3MDLTR::LIS3MDLTR(SPI_HandleTypeDef *spi_port)
+LIS3MDLTR::LIS3MDLTR(SPI_HandleTypeDef *spi_port):
+	spi_port {spi_port}
+	,spiTxBuff {0,0}
+	,spiRxBuff {0,0}
+	,x_mag {0}
+	,y_mag {0}
+	,z_mag {0}
+	,z_angle {0}
+	,x_raw {0}
+	,y_raw {0}
+	,z_raw {0}
+	,TEMP_val {0}
 {
-	LIS3MDLTR::spi_port = spi_port;
 }
 
 uint8_t LIS3MDLTR::whoAmI()

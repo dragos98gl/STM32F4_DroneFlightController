@@ -17,9 +17,9 @@ enum Status
 class Timeout
 {
 private:
-	Status status = Status::OK;
-	uint8_t timeout_counter=0;
-	uint8_t timeout_value=0;
+	Status status {Status::OK};
+	uint8_t timeout_counter {0U};
+	uint8_t timeout_value {0U};
 public:
 	void resetTimeoutCounter()
 	{

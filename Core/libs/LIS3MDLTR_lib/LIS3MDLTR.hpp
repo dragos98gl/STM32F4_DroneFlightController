@@ -19,11 +19,8 @@ class LIS3MDLTR : SPI_Conn,public PrintableSensor, public CallsCounter
 private:
 	SPI_HandleTypeDef *spi_port;
 
-	uint8_t spiTxBuff[2]={0,0};
-	uint8_t spiRxBuff[2]={0,0};
-
-	bool initAndCheck(uint8_t addr,uint8_t val,uint8_t numberOfTries,bool read_only = false);
-
+	uint8_t spiTxBuff[2];
+	uint8_t spiRxBuff[2];
 	float x_mag;
 	float y_mag;
 	float z_mag;
@@ -32,6 +29,8 @@ private:
 	int16_t y_raw;
 	int16_t z_raw;
 	int16_t TEMP_val;
+
+	bool initAndCheck(uint8_t addr,uint8_t val,uint8_t numberOfTries,bool read_only = false);
 public:
 	void SPI_write(uint8_t reg,uint8_t data);
 	uint8_t SPI_read(uint8_t reg);

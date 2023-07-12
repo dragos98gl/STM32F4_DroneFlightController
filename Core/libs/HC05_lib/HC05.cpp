@@ -7,9 +7,11 @@
 
 #include "HC05.hpp"
 
-HC05::HC05(UART_HandleTypeDef *uart_port)
+HC05::HC05(UART_HandleTypeDef *uart_port):
+	uart_port {uart_port}
+	,senorsList {}
+	,USART1_TxBuffer {}
 {
-	HC05::uart_port = uart_port;
 }
 
 void HC05::send()

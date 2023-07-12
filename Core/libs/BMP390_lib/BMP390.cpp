@@ -7,8 +7,14 @@
 
 #include "BMP390.hpp"
 
-BMP390::BMP390(SPI_HandleTypeDef *spi_port)
-: spi_port {spi_port}
+BMP390::BMP390(SPI_HandleTypeDef *spi_port):
+	spi_port {spi_port}
+	,spiTxBuff {0U,0U}
+	,spiRxBuff {0U,0U}
+	,pressure {0.0}
+	,temp {0.0}
+	,raw_pressure {0U}
+	,raw_temp {0U}
 {
 }
 

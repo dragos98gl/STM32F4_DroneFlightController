@@ -52,12 +52,11 @@ public:
 	};
 
 private:
-	std::set<SENSOR_DATA_PARAMETER> senorsList;
-
 	UART_HandleTypeDef *uart_port;
 	std::vector<PrintableSensor*> senList;
-	char USART1_TxBuffer[100]={};
 
+	std::set<SENSOR_DATA_PARAMETER> senorsList;;
+	char USART1_TxBuffer[100];
 public:
 	HC05(UART_HandleTypeDef *uart_port);
 	void send();
