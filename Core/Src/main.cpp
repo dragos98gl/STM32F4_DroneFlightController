@@ -59,6 +59,7 @@ static void MX_USART2_UART_Init(void);
 static void MX_USART6_UART_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_TIM3_Init();
+static void MX_SDIO_SD_Init(void);
 
 int main(void)
 {
@@ -66,6 +67,7 @@ int main(void)
   SystemClock_Config();
 
   MX_GPIO_Init();
+  MX_USB_DEVICE_Init();
   MX_DMA_Init();
   MX_SPI2_Init();
   MX_USART1_UART_Init();

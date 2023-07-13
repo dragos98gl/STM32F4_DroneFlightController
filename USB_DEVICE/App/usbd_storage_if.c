@@ -62,7 +62,6 @@
   * @{
   */
 
-extern SD_HandleTypeDef hsd;
 #define STORAGE_LUN_NBR                  1
 #define STORAGE_BLK_NBR                  0x10000
 #define STORAGE_BLK_SIZ                  0x200
@@ -125,7 +124,7 @@ const int8_t STORAGE_Inquirydata_FS[] = {/* 36 */
   * @brief Public variables.
   * @{
   */
-
+extern SD_HandleTypeDef hsd;
 extern USBD_HandleTypeDef hUsbDeviceFS;
 
 /* USER CODE BEGIN EXPORTED_VARIABLES */
