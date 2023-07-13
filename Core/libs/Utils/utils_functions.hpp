@@ -8,6 +8,8 @@
 #ifndef LIBS_UTILS_UTILS_FUNCTIONS_HPP_
 #define LIBS_UTILS_UTILS_FUNCTIONS_HPP_
 
+#include <cstdint>
+
 namespace drone
 {
 namespace utils
@@ -19,9 +21,19 @@ namespace utils
 
 	namespace functions
 	{
-		static int16_t concatBytes(uint8_t msb, uint8_t lsb)
+		inline int16_t concatBytes(uint8_t msb, uint8_t lsb)
 		{
 			return (((int16_t)msb << 8) | (int16_t)lsb);
+		}
+
+		inline float HzToRads(float val)
+		{
+		  return val * 2 * M_PI;
+		}
+
+		inline float RadsToHz(float val)
+		{
+		  return val / 2 / M_PI;
 		}
 	}
 }

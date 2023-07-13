@@ -28,9 +28,9 @@ Bd_aug = [Bd;1];
 Cd_aug = [Cd 0];
 
 
-Q=100;
+Q=1000;
 R=1;
-S=100;
+S=1000;
 hz=100;
 
 CQC = Cd_aug'*Q*Cd_aug;

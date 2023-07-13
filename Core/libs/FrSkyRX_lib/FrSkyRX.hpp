@@ -25,6 +25,7 @@
 #include "Interfaces.hpp"
 #include "Timeout.hpp"
 #include "Buzzer.hpp"
+#include "Enums.hpp"
 #include "HC05.hpp"
 #include <stdint.h>
 
@@ -40,54 +41,55 @@ enum class FrSkyRXState: uint8_t
 class FrSkyRX:public Timeout, public CallsCounter, public PrintableSensor//: UART_Conn
 {
 private:
-	static constexpr const uint16_t mid_position = 992U;
-	static constexpr const float roll_scaleFactor = 0.00005F;
-	static constexpr const float pitch_scaleFactor = 0.00005F;
-	static constexpr const float yaw_scaleFactor = 0.001F;
-	static constexpr const uint8_t packet_length = 25U;
-	const uint8_t BEGIN_BIT = '\017';
-	const uint8_t END_BIT = '\0';
-
-	UART_HandleTypeDef *uart_port;
-	DMA_HandleTypeDef *uart_port_dma;
-	Buzzer *buzz;
-
-	uint8_t rx_buff[2U * packet_length];
-	bool wrongDataReceived;
-	uint16_t channels[16];
-	uint8_t rx_ok;
-	FrSkyRXState currentState;
+	static constexpr uint16_t mid_position = 992U;
+	static constexpr float roll_scaleFactor = 0.00005F;
+	static constexpr float pitch_scaleFactor = 0.00005F;
+	static constexpr float yaw_scaleFactor = 0.001F;
+	static constexpr uint8_t packetLength = 25U;
+	static constexpr uint8_t BEGIN_BIT = '\017';
+	static constexpr uint8_t END_BIT = '\0';
 
 	bool isDisconnected() const;
 	void updateValues();
 	void processStateMachine();
+	UART_HandleTypeDef* _uartPort;
+	DMA_HandleTypeDef* _uartPortDMA;
+	Buzzer* _buzz;
+	uint8_t _rxBuff[2U * packetLength];
+	bool _wrongDataReceived;
+	uint16_t _channels[16];
+	uint8_t _lb;
+	uint8_t _lu;
+	uint8_t _rb;
+	uint8_t _ru;
+	uint16_t _rawRoll;
+	uint16_t _rawPitch;
+	uint16_t _rawYaw;
+	uint8_t _rxOk;
+	FrSkyRXState _currentState;
 public:
-	float throttle;
-	float target_roll;
-	float target_pitch;
-	float target_yaw;
-
-	uint16_t raw_roll;
-	uint16_t raw_pitch;
-	uint16_t raw_yaw;
-	uint8_t lb;
-	uint8_t lu;
-	uint8_t rb;
-	uint8_t ru;
-
-	FrSkyRX(UART_HandleTypeDef *uart_port,DMA_HandleTypeDef *uart_port_dma,Buzzer *buzz,uint8_t timeout);
+	FrSkyRX(
+		UART_HandleTypeDef* uartPort,
+		DMA_HandleTypeDef* uartPortDMA,
+		Buzzer* buzz,
+		uint8_t timeout);
 	float& getThrottle();
+	uint8_t& getRU();
 	float& getTargetRoll();
 	float& getTargetPitch();
 	float& getTargetYaw();
 	FrSkyRXState getCurrentState() const;
-	const char* getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER> &senorsList);
-
 	void begin();
 	void update();
 	bool isRxOk();
 	uint8_t* getBuffer_ptr();
 	uint8_t getFrameLength();
+	float throttle;
+	float target_roll;
+	float target_pitch;
+	float target_yaw;
+
+	const char* getSensorValues_str(std::set<SENSOR_DATA_PARAMETER> &senorsList);
 };
 
 #endif /* LIBS_FRSKYRX_LIB_FRSKYRX_H_ */

@@ -9,66 +9,68 @@
 #include <stdlib.h>
 
 MB1043::MB1043(
-		UART_HandleTypeDef *uart_port,
-		DMA_HandleTypeDef *uart_port_dma,
+		UART_HandleTypeDef* uartPort,
+		DMA_HandleTypeDef* uartPortDMA,
 		uint8_t timeout):
-	uart_port {uart_port}
-	,uart_port_dma {uart_port_dma}
-	,wrongDataReceived {false}
-	,rx_buff {}
-	,distance_str {}
-	,distance {}
+	_uartPort {uartPort}
+	,_uartPortDMA {uartPortDMA}
+	,_wrongDataReceived {false}
+	,_rxBuff {}
+	,_distanceStr {}
+	,_distance {}
 {
 	setTimeoutValue(timeout);
 }
 
 void MB1043::begin()
 {
-	HAL_UART_Receive_DMA(this->uart_port, this->rx_buff, this->packet_length);
+	HAL_UART_Receive_DMA(this->_uartPort, this->_rxBuff, this->packetLength);
 }
 
 void MB1043::update()
 {
-	const bool isPacketOk = (this->rx_buff[0] == this->BEGIN_BIT) && (this->rx_buff[5]==this->END_BIT);
+	const bool isPacketOk = (this->_rxBuff[0] == this->BEGIN_BIT) && (this->_rxBuff[5]==this->END_BIT);
 
 	if (isPacketOk)
 	{
-		distance_str[0]=rx_buff[1];
-		distance_str[1]=rx_buff[2],
-		distance_str[2]=rx_buff[3],
-		distance_str[3]=rx_buff[4];
+		_distanceStr[0]=_rxBuff[1];
+		_distanceStr[1]=_rxBuff[2],
+		_distanceStr[2]=_rxBuff[3],
+		_distanceStr[3]=_rxBuff[4];
 
-		distance = atoi(distance_str);
+		_distance = atoi(_distanceStr);
 
 		resetTimeoutCounter();
 	}
-	else if (this->wrongDataReceived==false)
+	else if (this->_wrongDataReceived==false)
 	{
-		for (uint8_t iter=0;iter<this->packet_length-1U;iter++)
+		for (uint8_t iter=0;iter<this->packetLength-1U;iter++)
 		{
-			if ((this->rx_buff[iter]==this->END_BIT) && (this->rx_buff[iter+1U]==this->BEGIN_BIT))
+			if ((this->_rxBuff[iter]==this->END_BIT) && (this->_rxBuff[iter+1U]==this->BEGIN_BIT))
 			{
-				HAL_UART_Receive_DMA (this->uart_port, this->rx_buff, this->packet_length+iter+1);
-				this->wrongDataReceived = true;
+				HAL_UART_Receive_DMA (this->_uartPort, this->_rxBuff, this->packetLength+iter+1);
+				this->_wrongDataReceived = true;
 				return;
 			}
 		}
 	}
 
-	if (this->wrongDataReceived == true)
-		this->wrongDataReceived = false;
+	if (this->_wrongDataReceived == true)
+	{
+		this->_wrongDataReceived = false;
+	}
 
-	HAL_UART_Receive_DMA(this->uart_port, this->rx_buff, this->packet_length);
-	__HAL_DMA_DISABLE_IT(this->uart_port_dma, DMA_IT_HT);
+	HAL_UART_Receive_DMA(this->_uartPort, this->_rxBuff, this->packetLength);
+	__HAL_DMA_DISABLE_IT(this->_uartPortDMA, DMA_IT_HT);
 }
 
-const char* MB1043::getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER> &senorsList)
+const char* MB1043::getSensorValues_str(std::set<SENSOR_DATA_PARAMETER> &senorsList)
 {
 	strcpy(packet,"");
 
-	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::SONAR_DISTANCE)!=senorsList.end())
+	if (senorsList.find(SENSOR_DATA_PARAMETER::SONAR_DISTANCE)!=senorsList.end())
 	{
-		strcat(packet,toCharArray(distance));
+		strcat(packet,toCharArray(_distance));
 		strcat(packet,",");
 	}
 
@@ -77,12 +79,12 @@ const char* MB1043::getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER> &s
 
 char* MB1043::getDistance_str()
 {
-	return distance_str;
+	return _distanceStr;
 }
 
 uint8_t MB1043::getDistance()
 {
-	return distance;
+	return _distance;
 }
 
 uint8_t* MB1043::getTimeoutCounter()

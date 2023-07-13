@@ -28,27 +28,27 @@ private:
 
 	const float TIM_FREQ = (1.0/2000.0)*1000.0;
 
-	ADC_HandleTypeDef *adc_port;
-	Buzzer *buzz;
-	uint16_t frequency_tick;
-	uint32_t tick_counter;
-	uint32_t batteryVal;
-	float batteryPercentage;
-	float batteryVoltage;
+	ADC_HandleTypeDef* _adcPort;
+	Buzzer* _buzz;
+	uint16_t _frequencyTick;
+	uint32_t _tickCounter;
+	uint32_t _batteryVal;
+	float _batteryPercentage;
+	float _batteryVoltage;
 
 	uint16_t msToTick(uint16_t ms);
 	void toPercentage();
 public:
 	BatteryManagement(ADC_HandleTypeDef *adc_port,Buzzer *buzz,uint16_t frequency_ms):
-		adc_port(adc_port)
-		,buzz(buzz)
-		,frequency_tick{0}
-		,tick_counter{0}
-		,batteryVal{0}
-		,batteryPercentage{0}
-		,batteryVoltage{0}
+		_adcPort(adc_port)
+		,_buzz(buzz)
+		,_frequencyTick{0}
+		,_tickCounter{0}
+		,_batteryVal{0}
+		,_batteryPercentage{0}
+		,_batteryVoltage{0}
 	{
-		frequency_tick = msToTick(frequency_ms);
+		_frequencyTick = msToTick(frequency_ms);
 	}
 
 	float getBatteryPercentage();

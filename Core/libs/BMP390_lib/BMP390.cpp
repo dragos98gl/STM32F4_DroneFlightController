@@ -7,14 +7,14 @@
 
 #include "BMP390.hpp"
 
-BMP390::BMP390(SPI_HandleTypeDef *spi_port):
-	spi_port {spi_port}
-	,spiTxBuff {0U,0U}
-	,spiRxBuff {0U,0U}
-	,pressure {0.0}
-	,temp {0.0}
-	,raw_pressure {0U}
-	,raw_temp {0U}
+BMP390::BMP390(SPI_HandleTypeDef* spiPort):
+	_spiPort {spiPort}
+	,_spiTxBuff {0U,0U}
+	,_spiRxBuff {0U,0U}
+	,_pressure {0.0}
+	,_temp {0.0}
+	,_rawPressure {0U}
+	,_rawTemp {0U}
 {
 }
 
@@ -68,8 +68,8 @@ void BMP390::update()
 	uint8_t TEMP1=SPI_read(DATA_4);
 	uint8_t TEMP2=SPI_read(DATA_5);
 
-	this->raw_pressure = ((uint32_t)DATA2<<16)|((uint16_t)DATA1<<8)|DATA0;
-	this->raw_temp = ((uint32_t)TEMP2<<16)|((uint16_t)TEMP1<<8)|TEMP0;
+	this->_rawPressure = ((uint32_t)DATA2<<16)|((uint16_t)DATA1<<8)|DATA0;
+	this->_rawTemp = ((uint32_t)TEMP2<<16)|((uint16_t)TEMP1<<8)|TEMP0;
 
 	this->read_calib_data();
 	this->compensate_data();
@@ -87,12 +87,12 @@ void BMP390::compensate_temperature()
     double partial_data1 = 0;
     double partial_data2 = 0;
 
-    partial_data1 = static_cast<double>(this->raw_temp) - quantizedCalibCoef.par_t1;
+    partial_data1 = static_cast<double>(this->_rawTemp) - quantizedCalibCoef.par_t1;
     partial_data2 = partial_data1 * quantizedCalibCoef.par_t2;
 
     this->quantizedCalibCoef.t_lin = partial_data2 + (partial_data1 * partial_data1) * quantizedCalibCoef.par_t3;
 
-    this->temp = static_cast<double>(quantizedCalibCoef.t_lin);
+    this->_temp = static_cast<double>(quantizedCalibCoef.t_lin);
 }
 
 void BMP390::compensate_pressure()
@@ -112,23 +112,23 @@ void BMP390::compensate_pressure()
     partial_data1 = this->quantizedCalibCoef.par_p2 * this->quantizedCalibCoef.t_lin;
     partial_data2 = this->quantizedCalibCoef.par_p3 * (this->quantizedCalibCoef.t_lin * this->quantizedCalibCoef.t_lin);
     partial_data3 = this->quantizedCalibCoef.par_p4 * (this->quantizedCalibCoef.t_lin * this->quantizedCalibCoef.t_lin * this->quantizedCalibCoef.t_lin);
-    partial_out2 = static_cast<double>(this->raw_pressure) * (this->quantizedCalibCoef.par_p1 + partial_data1 + partial_data2 + partial_data3);
+    partial_out2 = static_cast<double>(this->_rawPressure) * (this->quantizedCalibCoef.par_p1 + partial_data1 + partial_data2 + partial_data3);
 
-    partial_data1 = static_cast<double>(this->raw_pressure) * static_cast<double>(this->raw_pressure);
+    partial_data1 = static_cast<double>(this->_rawPressure) * static_cast<double>(this->_rawPressure);
     partial_data2 = this->quantizedCalibCoef.par_p9 + this->quantizedCalibCoef.par_p10 * this->quantizedCalibCoef.t_lin;
     partial_data3 = partial_data1 * partial_data2;
-    partial_data4 = partial_data3 + (static_cast<double>(this->raw_pressure) * static_cast<double>(this->raw_pressure) * static_cast<double>(this->raw_pressure)) * this->quantizedCalibCoef.par_p11;
+    partial_data4 = partial_data3 + (static_cast<double>(this->_rawPressure) * static_cast<double>(this->_rawPressure) * static_cast<double>(this->_rawPressure)) * this->quantizedCalibCoef.par_p11;
 
-    this->pressure = (partial_out1 + partial_out2 + partial_data4) / 100.0f;
+    this->_pressure = (partial_out1 + partial_out2 + partial_data4) / 100.0f;
 }
 
-const char* BMP390::getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER> &senorsList)
+const char* BMP390::getSensorValues_str(std::set<SENSOR_DATA_PARAMETER> &senorsList)
 {
 	strcpy(packet,"");
 
-	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::BMP_RAW_PRESS)!=senorsList.end())
+	if (senorsList.find(SENSOR_DATA_PARAMETER::BMP_RAW_PRESS)!=senorsList.end())
 	{
-		strcat(packet,toCharArray(pressure));
+		strcat(packet,toCharArray(_pressure));
 		strcat(packet,",");
 	}
 
@@ -137,12 +137,12 @@ const char* BMP390::getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER> &s
 
 int32_t BMP390::getPressure()
 {
-	return this->pressure;
+	return this->_pressure;
 }
 
 int32_t BMP390::getTemp()
 {
-	return this->temp;
+	return this->_temp;
 }
 
 uint8_t BMP390::getChipID()
@@ -153,22 +153,22 @@ uint8_t BMP390::getChipID()
 void BMP390::SPI_write(uint8_t reg,uint8_t data)
 {
 	HAL_GPIO_WritePin(BMP_CS_PORT,BMP_CS_PIN,GPIO_PIN_RESET);
-	this->spiTxBuff[0] = reg;
-	this->spiTxBuff[1] = data;
-	HAL_SPI_Transmit_DMA(spi_port, (uint8_t*)spiTxBuff,2);
+	this->_spiTxBuff[0] = reg;
+	this->_spiTxBuff[1] = data;
+	HAL_SPI_Transmit_DMA(this->_spiPort, (uint8_t*)_spiTxBuff,2);
 	HAL_GPIO_WritePin(BMP_CS_PORT,BMP_CS_PIN,GPIO_PIN_SET);
 }
 
 uint8_t BMP390::SPI_read(uint8_t reg)
 {
 	HAL_GPIO_WritePin(BMP_CS_PORT, BMP_CS_PIN, GPIO_PIN_RESET);
-	this->spiTxBuff[0]=reg|0x80;
-	this->spiTxBuff[1]=0x00;
-	HAL_SPI_Transmit_DMA(spi_port, (uint8_t*)spiTxBuff, 2);
-	HAL_SPI_Receive_DMA(spi_port, (uint8_t*)spiRxBuff, 1);
+	this->_spiTxBuff[0]=reg|0x80;
+	this->_spiTxBuff[1]=0x00;
+	HAL_SPI_Transmit_DMA(this->_spiPort, (uint8_t*)_spiTxBuff, 2);
+	HAL_SPI_Receive_DMA(this->_spiPort, (uint8_t*)_spiRxBuff, 1);
 	HAL_GPIO_WritePin(BMP_CS_PORT, BMP_CS_PIN, GPIO_PIN_SET);
 
-	return this->spiRxBuff[0];
+	return this->_spiRxBuff[0];
 }
 
 void BMP390::read_calib_data()

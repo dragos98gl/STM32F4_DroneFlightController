@@ -17,40 +17,46 @@
 #include <stdlib.h>
 #include "ICM42688P.hpp"
 #include "PID_Control.hpp"
+#include "Enums.hpp"
 #include "VL53L0X.hpp"
 
 class PMW3901UY final:public Timeout ,public PrintableSensor, public CallsCounter//: UART_Conn f
 {
 private:
-	static constexpr const int packet_length = 9U;
-	const uint8_t BEGIN_BIT = 0xFE;
-	const uint8_t DATA_LEN_BIT = 0x04;
-	const uint8_t END_BIT = 0xAA;
+	static constexpr int packetLength = 9U;
+	static constexpr uint8_t BEGIN_BIT = 0xFE;
+	static constexpr uint8_t DATA_LEN_BIT = 0x04;
+	static constexpr uint8_t END_BIT = 0xAA;
 
-	UART_HandleTypeDef *uart_port;
-	DMA_HandleTypeDef *uart_port_dma;
+	void process();
+	UART_HandleTypeDef* _uartPort;
+	DMA_HandleTypeDef* _uartPortDMA;
 	ICM42688P& _icm;
 	VL53L0X& _vl53;
 	PID_Control& _pidX;
 	PID_Control& _pidY;
-
-	uint8_t rx_buff[2U * packet_length];
-	bool wrongDataReceived = false;
-	int16_t flow_x;
-	int16_t flow_y;
-	uint8_t quality;
-	float x_pos;
-	float y_pos;
-	float x_cm_pos;
-	float y_cm_pos;
-	float target_x;
-	float target_y;
-	float lastAngleX;
-	float lastAngleY;
-
-	void process();
+	uint8_t _rxBuff[2U * packetLength];
+	bool _wrongDataReceived;
+	int16_t _flowX;
+	int16_t _flowY;
+	uint8_t _quality;
+	float _xPos;
+	float _yPos;
+	float _xCmPos;
+	float _yCmPos;
+	float _targetX;
+	float _targetY;
+	float _lastAngleX;
+	float _lastAngleY;
 public:
-	PMW3901UY(UART_HandleTypeDef *uart_port,DMA_HandleTypeDef *uart_port_dma, uint8_t timeout ,ICM42688P& icm,VL53L0X& vl53, PID_Control& pidX,PID_Control& pidY);
+	PMW3901UY(
+		UART_HandleTypeDef* uartPort,
+		DMA_HandleTypeDef* uartPortDMA,
+		uint8_t timeout,
+		ICM42688P& icm,
+		VL53L0X& vl53,
+		PID_Control& pidX,
+		PID_Control& pidY);
 	void begin(void);
 	void update(void);
 	uint16_t getFlowX();
@@ -60,7 +66,7 @@ public:
 	float& getYpos();
 	float& getTargetX();
 	float& getTargetY();
-	const char* getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER> &senorsList);
+	const char* getSensorValues_str(std::set<SENSOR_DATA_PARAMETER> &senorsList);
 };
 
 #endif /* PMW3901UY_LIB_PMW3901UY_H_ */

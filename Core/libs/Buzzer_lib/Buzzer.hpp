@@ -13,28 +13,28 @@
 class Buzzer
 {
 private:
-	const int BUZZ_PIN = GPIO_PIN_4;
+	static constexpr float TIM_FREQ = (1.0/1000.0)*1000.0;
+	static constexpr int BUZZ_PIN = GPIO_PIN_4;
 	GPIO_TypeDef* BUZZ_PORT = GPIOA;
-	const float TIM_FREQ = (1.0/1000.0)*1000.0;
-
-	uint16_t freqTick;
-	uint16_t pauseTick;
-	uint16_t counterStart;
-	uint16_t counterEnd;
-	uint16_t repetitions;
-	bool busy=false;
 
 	void Buzz_on();
 	void Buzz_off();
 	uint16_t msToTick(uint16_t ms);
+	uint16_t _freqTick;
+	uint16_t _pauseTick;
+	uint16_t _counterStart;
+	uint16_t _counterEnd;
+	uint16_t _repetitions;
+	bool _busy;
+
 public:
 	Buzzer():
-		freqTick {0U}
-		,pauseTick {0U}
-		,counterStart {0U}
-		,counterEnd {0U}
-		,repetitions {0U}
-		,busy {false}
+		_freqTick {0U}
+		,_pauseTick {0U}
+		,_counterStart {0U}
+		,_counterEnd {0U}
+		,_repetitions {0U}
+		,_busy {false}
 	{
 	}
 

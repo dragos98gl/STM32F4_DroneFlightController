@@ -1,0 +1,11 @@
+../Core/libs/Utils/SDIODriver.cpp:23:6:void SDIODriver::Mount_SD(const TCHAR*)	16	static
+../Core/libs/Utils/SDIODriver.cpp:30:6:void SDIODriver::Unmount_SD(const TCHAR*)	16	static
+../Core/libs/Utils/SDIODriver.cpp:38:9:FRESULT SDIODriver::Scan_SD(char*)	72	static
+../Core/libs/Utils/SDIODriver.cpp:80:9:FRESULT SDIODriver::Format_SD()	72	static
+../Core/libs/Utils/SDIODriver.cpp:113:9:FRESULT SDIODriver::Write_File(char*, char*)	24	static
+../Core/libs/Utils/SDIODriver.cpp:172:9:FRESULT SDIODriver::Read_File(char*)	24	static
+../Core/libs/Utils/SDIODriver.cpp:239:9:FRESULT SDIODriver::Create_File(char*)	16	static
+../Core/libs/Utils/SDIODriver.cpp:288:9:FRESULT SDIODriver::Update_File(char*, char*)	24	static
+../Core/libs/Utils/SDIODriver.cpp:352:9:FRESULT SDIODriver::Remove_File(char*)	16	static
+../Core/libs/Utils/SDIODriver.cpp:386:9:FRESULT SDIODriver::Create_Dir(char*)	16	static
+../Core/libs/Utils/SDIODriver.cpp:406:6:void SDIODriver::Check_SD_Space()	16	static

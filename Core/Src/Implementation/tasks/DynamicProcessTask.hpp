@@ -40,6 +40,7 @@ void DynamicsProcessTask(void *pvParameters)
 			float xPositionPidOutput = flightControllerInstance->getXPositionPidInstance().getOut();
 			float yPositionPidOutput = flightControllerInstance->getYPositionPidInstance().getOut();
 			float altitudeMpcOutput = flightControllerInstance->getVL53L0Xinstance().getMPCout();
+			float throttle = flightControllerInstance->getFrSkyRXinstance().throttle;
 
 			testttt = yPositionPidOutput;
 
@@ -53,10 +54,10 @@ void DynamicsProcessTask(void *pvParameters)
 				drone::failsafe::quickLanding(*flightControllerInstance);
 			}
 
-			float CCR1_value = 3000.0F + flightControllerInstance->getFrSkyRXinstance().throttle + altitudeMpcOutput + rollPidOutput + pitchPidOutput + yawPidOutput - xPositionPidOutput - yPositionPidOutput;
-			float CCR2_value = 3000.0F + flightControllerInstance->getFrSkyRXinstance().throttle + altitudeMpcOutput + rollPidOutput - pitchPidOutput - yawPidOutput - xPositionPidOutput + yPositionPidOutput;
-			float CCR3_value = 3000.0F + flightControllerInstance->getFrSkyRXinstance().throttle + altitudeMpcOutput - rollPidOutput + pitchPidOutput - yawPidOutput + xPositionPidOutput - yPositionPidOutput;
-			float CCR4_value = 3000.0F + flightControllerInstance->getFrSkyRXinstance().throttle + altitudeMpcOutput - rollPidOutput - pitchPidOutput + yawPidOutput + xPositionPidOutput + yPositionPidOutput;
+			float CCR1_value = 3000.0F + throttle + altitudeMpcOutput + rollPidOutput + pitchPidOutput + yawPidOutput - xPositionPidOutput - yPositionPidOutput;
+			float CCR2_value = 3000.0F + throttle + altitudeMpcOutput + rollPidOutput - pitchPidOutput - yawPidOutput - xPositionPidOutput + yPositionPidOutput;
+			float CCR3_value = 3000.0F + throttle + altitudeMpcOutput - rollPidOutput + pitchPidOutput - yawPidOutput + xPositionPidOutput - yPositionPidOutput;
+			float CCR4_value = 3000.0F + throttle + altitudeMpcOutput - rollPidOutput - pitchPidOutput + yawPidOutput + xPositionPidOutput + yPositionPidOutput;
 
 			if (currentFaultsStatus == FaultsStatus::OKAY)
 			{

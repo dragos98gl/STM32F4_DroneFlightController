@@ -40,6 +40,7 @@ Core/libs/LIS3MDLTR_lib/LIS3MDLTR.o: \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
  C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/Enums.hpp \
  ../Core/libs/LIS3MDLTR_lib/LIS3MDLTR_reg.h
 ../Core/libs/LIS3MDLTR_lib/LIS3MDLTR.hpp:
 C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp:
@@ -81,4 +82,5 @@ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h:
 C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/Enums.hpp:
 ../Core/libs/LIS3MDLTR_lib/LIS3MDLTR_reg.h:

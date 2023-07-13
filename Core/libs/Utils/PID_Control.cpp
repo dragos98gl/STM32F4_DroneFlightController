@@ -9,18 +9,20 @@
 
 void PID_Control::update()
 {
-	this->error = this->reference - this->signal;
+	this->_error = this->_reference - this->_signal;
 
-	this->pid_p = this->error;
-	this->pid_i = this->pid_i + this->error;
-	this->pid_d = -(this->signal-this->last_signal);
+	this->_pidP = this->_error;
+	this->_pidI = this->_pidI + this->_error;
+	this->_pidD = -(this->_signal-this->_lastSignal);
 
-	this->last_signal = this->signal;
+	this->_pidD = this->_lowPassFilter.lsim(this->_pidD);
 
-	this->pid =  this->Kp * this->pid_p + this->Ki * this->pid_i + this->Kd * this->pid_d;
+	this->_lastSignal = this->_signal;
+
+	this->_pid =  this->_Kp * this->_pidP + this->_Ki * this->_pidI + this->_Kd * this->_pidD;
 }
 
 float PID_Control::getOut()
 {
-	return this->pid;
+	return this->_pid;
 }

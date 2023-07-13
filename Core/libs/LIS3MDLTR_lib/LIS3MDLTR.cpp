@@ -7,18 +7,18 @@
 
 #include "LIS3MDLTR.hpp"
 
-LIS3MDLTR::LIS3MDLTR(SPI_HandleTypeDef *spi_port):
-	spi_port {spi_port}
-	,spiTxBuff {0,0}
-	,spiRxBuff {0,0}
-	,x_mag {0}
-	,y_mag {0}
-	,z_mag {0}
-	,z_angle {0}
-	,x_raw {0}
-	,y_raw {0}
-	,z_raw {0}
-	,TEMP_val {0}
+LIS3MDLTR::LIS3MDLTR(SPI_HandleTypeDef* spiPort):
+	_spiPort {spiPort}
+	,_spiTxBuff {0,0}
+	,_spiRxBuff {0,0}
+	,_xMag {0}
+	,_yMag {0}
+	,_zMag {0}
+	,_zAngle {0}
+	,_xRaw {0}
+	,_yRaw {0}
+	,_zRaw {0}
+	,_temp {0}
 {
 }
 
@@ -38,31 +38,31 @@ void LIS3MDLTR::update()
 	uint8_t temp_high=SPI_read(TEMP_OUT_H);
 	uint8_t temp_low=SPI_read(TEMP_OUT_L);
 
-	x_raw = ((int16_t)x_high)<<8 | x_low;
-	y_raw = ((int16_t)y_high)<<8 | y_low;
-	z_raw = ((int16_t)z_high)<<8 | z_low;
-	TEMP_val = ((int16_t)temp_high)<<8 | temp_low;
+	this->_xRaw = ((int16_t)x_high)<<8 | x_low;
+	this->_yRaw = ((int16_t)y_high)<<8 | y_low;
+	this->_zRaw = ((int16_t)z_high)<<8 | z_low;
+	this->_temp = ((int16_t)temp_high)<<8 | temp_low;
 }
 
-const char* LIS3MDLTR::getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER> &senorsList)
+const char* LIS3MDLTR::getSensorValues_str(std::set<SENSOR_DATA_PARAMETER> &senorsList)
 {
 	strcpy(packet,"");
 
-	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::LIS_RAW_MAG_X)!=senorsList.end())
+	if (senorsList.find(SENSOR_DATA_PARAMETER::LIS_RAW_MAG_X)!=senorsList.end())
 	{
-		strcat(packet,toCharArray(x_raw));
+		strcat(packet,toCharArray(_xRaw));
 		strcat(packet,",");
 	}
 
-	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::LIS_RAW_MAG_Y)!=senorsList.end())
+	if (senorsList.find(SENSOR_DATA_PARAMETER::LIS_RAW_MAG_Y)!=senorsList.end())
 	{
-		strcat(packet,toCharArray(y_raw));
+		strcat(packet,toCharArray(_yRaw));
 		strcat(packet,",");
 	}
 
-	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::LIS_RAW_MAG_Z)!=senorsList.end())
+	if (senorsList.find(SENSOR_DATA_PARAMETER::LIS_RAW_MAG_Z)!=senorsList.end())
 	{
-		strcat(packet,toCharArray(z_raw));
+		strcat(packet,toCharArray(_zRaw));
 		strcat(packet,",");
 	}
 
@@ -130,39 +130,39 @@ bool LIS3MDLTR::initAndCheck(uint8_t addr,uint8_t val,uint8_t numberOfTries,bool
 void LIS3MDLTR::SPI_write(uint8_t reg,uint8_t data)
 {
 	HAL_GPIO_WritePin(LIS_CS_PORT,LIS_CS_PIN,GPIO_PIN_RESET);
-	spiTxBuff[0] = reg & 0x7f;
-	spiTxBuff[1] = data;
-	HAL_SPI_Transmit_DMA(spi_port, (uint8_t*)spiTxBuff,2);
+	_spiTxBuff[0] = reg & 0x7f;
+	_spiTxBuff[1] = data;
+	HAL_SPI_Transmit_DMA(_spiPort, (uint8_t*)_spiTxBuff,2);
 	HAL_GPIO_WritePin(LIS_CS_PORT,LIS_CS_PIN,GPIO_PIN_SET);
 }
 
 uint8_t LIS3MDLTR::SPI_read(uint8_t reg)
 {
 	HAL_GPIO_WritePin(LIS_CS_PORT, LIS_CS_PIN, GPIO_PIN_RESET);
-	spiTxBuff[0]=(reg & 0x3f)|0x80|0x40;
-	HAL_SPI_Transmit_DMA(spi_port, (uint8_t*)spiTxBuff, 1);
-	HAL_SPI_Receive_DMA(spi_port, (uint8_t*)spiRxBuff, 1);
+	_spiTxBuff[0]=(reg & 0x3f)|0x80|0x40;
+	HAL_SPI_Transmit_DMA(_spiPort, (uint8_t*)_spiTxBuff, 1);
+	HAL_SPI_Receive_DMA(_spiPort, (uint8_t*)_spiRxBuff, 1);
 	HAL_GPIO_WritePin(LIS_CS_PORT, LIS_CS_PIN, GPIO_PIN_SET);
 
-	return spiRxBuff[0];
+	return _spiRxBuff[0];
 }
 
 int16_t LIS3MDLTR::getX()
 {
-	return x_raw;
+	return _xRaw;
 }
 
 int16_t LIS3MDLTR::getY()
 {
-	return y_raw;
+	return _yRaw;
 }
 
 int16_t LIS3MDLTR::getZ()
 {
-	return z_raw;
+	return _zRaw;
 }
 
-int16_t LIS3MDLTR::getTEMP()
+int16_t LIS3MDLTR::getTemp()
 {
-	return TEMP_val;
+	return _zRaw;
 }

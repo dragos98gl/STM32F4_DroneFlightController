@@ -9,6 +9,7 @@
 #define INC_ICM42688P_H_
 
 #include "HC05.hpp"
+#include "Enums.hpp"
 #include "ICM42688P_reg.hpp"
 #include "Interfaces.hpp"
 #include "Buzzer.hpp"
@@ -21,62 +22,67 @@
 class ICM42688P: SPI_Conn,public PrintableSensor, public CallsCounter
 {
 private:
-	const float RADIANS_TO_DEGREES = 180.0F / M_PI;
-	const float GYRO_FULLSCALE = 32768.0F / 2000.0F;
-	const float DT = 1.0F / 1000.0F;
+	static constexpr float RADIANS_TO_DEGREES = 180.0F / M_PI;
+	static constexpr float GYRO_FULLSCALE = 32768.0F / 2000.0F;
+	static constexpr float DT = 1.0F / 1000.0F;
 	static constexpr uint16_t criticalStateAngleThreshold = 20.0F;//10
 
-	SPI_HandleTypeDef *spi_port;
-	Buzzer *buzz;
+	uint8_t SPI_read(uint8_t reg);
+	bool initAndCheck(
+		uint8_t addr,
+		uint8_t val,
+		uint8_t numberOfTries,
+		bool read_only = false);
+	void checkCriticalState();
+	void checkCrashState();
+	SPI_HandleTypeDef* _spiPort;
+	Buzzer* _buzz;
 	PID_Control& _rollPID;
 	PID_Control& _pitchPID;
 	PID_Control& _yawPID;
-
-	uint8_t spiTxBuff[2];
-	uint8_t spiRxBuff[2];
-	float gx;
-	float gy;
-	float gz;
-	float ax;
-	float ay;
-	float az;
-	float raw_gx;
-	float raw_gy;
-	float raw_gz;
-	float raw_ax;
-	float raw_ay;
-	float raw_az;
-	float temp;
-	float euler_x;
-	float euler_y;
-	float euler_z;
-	float gxDrift;
-	float gyDrift;
-	float gzDrift;
-	float axOffset;
-	float ayOffset;
-	float azOffset;
-	float axScale;
-	float ayScale;
-	float azScale;
-	float prev_raw_ax;
-	float prev_raw_ay;
-	float prev_raw_az;
-	float max_ax_dt;
-	float max_ay_dt;
-	float max_az_dt;
-	bool crashState;
-	bool criticalState;
-
-	uint8_t SPI_read(uint8_t reg);
-	bool initAndCheck(uint8_t addr,uint8_t val,uint8_t numberOfTries,bool read_only = false);
-	void checkCriticalState();
-	void checkCrashState();
+	uint8_t _spiTxBuff[2];
+	uint8_t _spiRxBuff[2];
+	float _gx;
+	float _gy;
+	float _gz;
+	float _ax;
+	float _ay;
+	float _az;
+	float _rawGx;
+	float _rawGy;
+	float _rawGz;
+	float _rawAx;
+	float _rawAy;
+	float _rawAz;
+	float _temp;
+	float _eulerX;
+	float _eulerY;
+	float _eulerZ;
+	float _gxDrift;
+	float _gyDrift;
+	float _gzDrift;
+	float _axOffset;
+	float _ayOffset;
+	float _azOffset;
+	float _axScale;
+	float _ayScale;
+	float _azScale;
+	float _prevRawAx;
+	float _prevRawAy;
+	float _prevRawAz;
+	float _maxAxDt;
+	float _maxAyDt;
+	float _maxAzDt;
+	bool _crashState;
+	bool _criticalState;
 public:
-
+	ICM42688P(
+		SPI_HandleTypeDef* spiPort,
+		Buzzer *buzz,
+		PID_Control& rollPID,
+		PID_Control& pitchPID,
+		PID_Control& yawPID);
 	void SPI_write(uint8_t reg,uint8_t data);
-	const char* getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER> &senorsList);
-	ICM42688P(SPI_HandleTypeDef *spi_port,Buzzer *buzz, PID_Control& rollPID,PID_Control& pitchPID, PID_Control& yawPID);
 	bool defaultInit();
 	void update();
 	uint8_t WhoAmI();
@@ -100,6 +106,7 @@ public:
 	void calibrate(uint32_t count);
 	bool isCriticalStateDetected();
 	bool isCrashDetected();
+	const char* getSensorValues_str(std::set<SENSOR_DATA_PARAMETER> &senorsList);
 };
 
 #endif /* INC_ICM42688P_H_ */

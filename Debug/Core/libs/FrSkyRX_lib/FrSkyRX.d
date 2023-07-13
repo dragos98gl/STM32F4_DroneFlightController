@@ -47,6 +47,7 @@ Core/libs/FrSkyRX_lib/FrSkyRX.o: ../Core/libs/FrSkyRX_lib/FrSkyRX.cpp \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
  C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/Enums.hpp \
  C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Interfaces/Timeout.hpp \
  C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Buzzer_lib/Buzzer.hpp \
  C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp
@@ -98,6 +99,7 @@ Core/libs/FrSkyRX_lib/FrSkyRX.o: ../Core/libs/FrSkyRX_lib/FrSkyRX.cpp \
 ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
 C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/Enums.hpp:
 C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Interfaces/Timeout.hpp:
 C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Buzzer_lib/Buzzer.hpp:
 C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp:

@@ -18,6 +18,9 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
     {
     	flightControllerInstance->getHC05instance().printfSensorsValues();
     }
+    if (huart->Instance == USART6)
+    {
+    }
 }
 
 int timCounter2 = 0;

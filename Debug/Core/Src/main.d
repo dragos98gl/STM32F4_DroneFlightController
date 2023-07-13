@@ -66,6 +66,7 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
  C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/ICM42688P_lib/ICM42688P_reg.hpp \
  C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Buzzer_lib/Buzzer.hpp \
  C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/PID_Control.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/LowPassFilter.hpp \
  C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/LIS3MDLTR_lib/LIS3MDLTR.hpp \
  C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/LIS3MDLTR_lib/LIS3MDLTR_reg.h \
  C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/PMW3901UY_lib/PMW3901UY.hpp \
@@ -73,6 +74,7 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
  C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/VL53L0X_lib/VL53L0X.hpp \
  C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/MPC_Controller.hpp \
  ../Core/Inc/arm_math.h \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/LowPassFilter.hpp \
  C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/MB1043_lib/MB1043.hpp \
  C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/FrSkyRX_lib/FrSkyRX.hpp \
  C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/BatteryManagement_lib/BatteryManagement.hpp \
@@ -86,7 +88,14 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
  C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/failsafe_functions.hpp \
  C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/Constants.hpp \
  C:/Users/Dragos/STM32F4_DroneFlightController/Core/Src/Implementation/tasks/FaultsCheckTask.hpp \
- C:/Users/Dragos/STM32F4_DroneFlightController/Core/Src/Implementation/ISRs/ISRs.hpp
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/Src/Implementation/ISRs/ISRs.hpp \
+ ../FATFS/App/fatfs.h ../Middlewares/Third_Party/FatFs/src/ff.h \
+ ../Middlewares/Third_Party/FatFs/src/integer.h ../FATFS/Target/ffconf.h \
+ ../FATFS/Target/bsp_driver_sd.h \
+ ../Middlewares/Third_Party/FatFs/src/ff_gen_drv.h \
+ ../Middlewares/Third_Party/FatFs/src/diskio.h \
+ ../Middlewares/Third_Party/FatFs/src/ff.h ../FATFS/Target/sd_diskio.h \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/SDIODriver.hpp
 ../Core/Inc/main.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
@@ -155,6 +164,7 @@ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/ICM42688P_lib/ICM42688P.
 C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/ICM42688P_lib/ICM42688P_reg.hpp:
 C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Buzzer_lib/Buzzer.hpp:
 C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/PID_Control.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/LowPassFilter.hpp:
 C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/LIS3MDLTR_lib/LIS3MDLTR.hpp:
 C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/LIS3MDLTR_lib/LIS3MDLTR_reg.h:
 C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/PMW3901UY_lib/PMW3901UY.hpp:
@@ -162,6 +172,7 @@ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Interfaces/Timeout.hpp:
 C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/VL53L0X_lib/VL53L0X.hpp:
 C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/MPC_Controller.hpp:
 ../Core/Inc/arm_math.h:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/LowPassFilter.hpp:
 C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/MB1043_lib/MB1043.hpp:
 C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/FrSkyRX_lib/FrSkyRX.hpp:
 C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/BatteryManagement_lib/BatteryManagement.hpp:
@@ -176,3 +187,13 @@ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/failsafe_functions
 C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/Constants.hpp:
 C:/Users/Dragos/STM32F4_DroneFlightController/Core/Src/Implementation/tasks/FaultsCheckTask.hpp:
 C:/Users/Dragos/STM32F4_DroneFlightController/Core/Src/Implementation/ISRs/ISRs.hpp:
+../FATFS/App/fatfs.h:
+../Middlewares/Third_Party/FatFs/src/ff.h:
+../Middlewares/Third_Party/FatFs/src/integer.h:
+../FATFS/Target/ffconf.h:
+../FATFS/Target/bsp_driver_sd.h:
+../Middlewares/Third_Party/FatFs/src/ff_gen_drv.h:
+../Middlewares/Third_Party/FatFs/src/diskio.h:
+../Middlewares/Third_Party/FatFs/src/ff.h:
+../FATFS/Target/sd_diskio.h:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Utils/SDIODriver.hpp:

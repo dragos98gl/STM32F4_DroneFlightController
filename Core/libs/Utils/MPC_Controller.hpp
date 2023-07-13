@@ -30,73 +30,69 @@ class MPC_Controller
 public:
 	MPC_Controller()
 	{
-		arm_mat_init_f32(&ft, 1, 100, (float32_t *)ft_data);
-		arm_mat_init_f32(&ft_t, 100, 1, (float32_t *)ft_t_data);
-		arm_mat_init_f32(&du, 100, 1, (float32_t *)du_data);
+		arm_mat_init_f32(&_ft, 1, 100, (float32_t*)_ftData);
+		arm_mat_init_f32(&_ftT, 100, 1, (float32_t*)_ftTData);
+		arm_mat_init_f32(&_du, 100, 1, (float32_t*)_duData);
 
-		arm_mat_init_f32(&Fdbt, 104, 100, (float32_t *)Fdbt_data);
-		arm_mat_init_f32(&HdbInv, 100, 100, (float32_t *)HdbInv_data);
-		arm_mat_init_f32(&xr, 1, 104, (float32_t *)xr_data);
+		arm_mat_init_f32(&_fdbt, 104, 100, (float32_t*)Fdbt_data);
+		arm_mat_init_f32(&_hdbInv, 100, 100, (float32_t*)HdbInv_data);
+		arm_mat_init_f32(&_xr, 1, 104, (float32_t*)_xrData);
 	}
 
 	float32_t predict(float32_t x1,float32_t ref)
 	{
-		arm_status status1 = arm_mat_mult_f32(&xr, &Fdbt, &ft);
-		arm_status status2 = arm_mat_trans_f32(&ft, &ft_t);
-		arm_status status3 = arm_mat_mult_f32(&HdbInv, &ft_t, &du);
+		arm_status status1 = arm_mat_mult_f32(&_xr, &_fdbt, &_ft);
+		arm_status status2 = arm_mat_trans_f32(&_ft, &_ftT);
+		arm_status status3 = arm_mat_mult_f32(&_hdbInv, &_ftT, &_du);
 
-		this->du0 = *(du.pData+0);
-		this->x_aug = this->x_aug + this->du0;
+		this->_du0 = *(this->_du.pData+0);
+		this->_xAug = this->_xAug + this->_du0;
 
-		if (x1<0.05)
+		if (x1<0.05 && this->_firstOverThreshold==false)
 		{
-			err = err + (ref-x1)*Ki;
+			this->_err = this->_err + this->_Ki;
 		} else
 		{
-			err = err + (ref-x1)*Ki_s;
+			this->_err = this->_err + (ref-x1)*this->_KiS;
+			this->_firstOverThreshold = true;
 		}
 
-		this->x3 = this->x_aug*0.8 - prev_x3*0.666666666666667;
-		this->x1_dt = x1 - this->prev_x1;
+		this->_x3 = this->_xAug*0.8 - this->_prevX3*0.666666666666667;
+		this->_x1Dt = x1 - this->_prevX1;
 
-		std::fill_n(xr_data, 104, err);
+		std::fill_n(this->_xrData, 104, this->_err);
 
-		xr_data[0] = x1;
-		xr_data[1] = x1_dt * 5.0F;
-		xr_data[2] = x3;
-		xr_data[3] = x_aug;
+		this->_xrData[0] = x1;
+		this->_xrData[1] = this->_x1Dt * 5.0F;
+		this->_xrData[2] = this->_x3;
+		this->_xrData[3] = this->_xAug;
 
-		this->prev_x1 = x1;
-		this->prev_x3 = this->x3;
+		this->_prevX1 = x1;
+		this->_prevX3 = this->_x3;
 
-		return x_aug;
+		return _xAug;
 	}
 private:
-	float32_t du0 = 0;
-
-	float32_t x_aug = 0;
-
-	float32_t x3 = 0;
-	float32_t prev_x3 = 0;
-
-	float32_t err = 0;
-	float32_t prev_x1 = 0;
-	float32_t x1_dt = 0;
-	float32_t Ki = 1.0F;
-	float32_t Ki_s = 0.1F;
-
-	arm_matrix_instance_f32 Fdbt;
-	arm_matrix_instance_f32 HdbInv;
-	arm_matrix_instance_f32 xr;
-
-	arm_matrix_instance_f32 ft;
-	arm_matrix_instance_f32 ft_t;
-	arm_matrix_instance_f32 du;
-
-	float32_t xr_data[104] ={0,0,0,0,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1};
-	float32_t ft_data[100] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-	float32_t ft_t_data[100] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-	float32_t du_data[100] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+	bool _firstOverThreshold = false;
+	float32_t _du0 = 0;
+	float32_t _xAug = 0;
+	float32_t _x3 = 0;
+	float32_t _prevX3 = 0;
+	float32_t _err = 0;
+	float32_t _prevX1 = 0;
+	float32_t _x1Dt = 0;
+	float32_t _Ki = 0.2F;
+	float32_t _KiS = 0.05F;
+	arm_matrix_instance_f32 _fdbt;
+	arm_matrix_instance_f32 _hdbInv;
+	arm_matrix_instance_f32 _xr;
+	arm_matrix_instance_f32 _ft;
+	arm_matrix_instance_f32 _ftT;
+	arm_matrix_instance_f32 _du;
+	float32_t _xrData[104] ={0,0,0,0,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1};
+	float32_t _ftData[100] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+	float32_t _ftTData[100] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+	float32_t _duData[100] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 };
 
 

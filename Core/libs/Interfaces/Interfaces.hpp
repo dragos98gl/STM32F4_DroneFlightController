@@ -10,6 +10,23 @@
 
 #include <stdint.h>
 #include <string.h>
+#include "Enums.hpp"
+#include <set>
+#include <string>
+
+class PrintableSensor
+{
+protected:
+	char packet[50]={};
+
+public:
+	virtual const char* getSensorValues_str(std::set<SENSOR_DATA_PARAMETER> &senorsList) = 0;
+
+	const char* toCharArray(int value)
+	{
+		return std::to_string(value).c_str();
+	}
+};
 
 class SPI_Conn
 {

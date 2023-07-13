@@ -9,31 +9,31 @@
 
 bool Buzzer::beep(int duration_ms,int freq_ms,int repetition_count)
 {
-	if (!this->busy)
+	if (!this->_busy)
 	{
-		this->busy = true;
+		this->_busy = true;
 
-		this->counterEnd = this->msToTick(duration_ms);
-		this->freqTick = this->msToTick(freq_ms);
-		this->repetitions = this->freqTick * repetition_count * 2U - 1U;
+		this->_counterEnd = this->msToTick(duration_ms);
+		this->_freqTick = this->msToTick(freq_ms);
+		this->_repetitions = this->_freqTick * repetition_count * 2U - 1U;
 
 		Buzz_on();
 
-		return busy;
+		return _busy;
 	}
 
-	return busy;
+	return _busy;
 }
 
 void Buzzer::run()
 {
-	if (this->busy)
+	if (this->_busy)
 	{
-		this->counterStart++;
+		this->_counterStart++;
 
-		if ((this->repetitions > 0U) && (this->freqTick!=0U))
+		if ((this->_repetitions > 0U) && (this->_freqTick!=0U))
 		{
-			if (!((this->counterStart/this->freqTick) % 2U))
+			if (!((this->_counterStart/this->_freqTick) % 2U))
 			{
 				this->Buzz_on();
 			}
@@ -41,13 +41,13 @@ void Buzzer::run()
 			{
 				this->Buzz_off();
 			}
-			this->repetitions--;
+			this->_repetitions--;
 		} else
 		{
 			this->Buzz_off();
 		}
 
-		if (this->counterStart >= this->counterEnd)
+		if (this->_counterStart >= this->_counterEnd)
 		{
 			this->stop();
 		}
@@ -56,14 +56,14 @@ void Buzzer::run()
 
 void Buzzer::stop()
 {
-	this->busy = false;
-	this->counterStart = 0U;
+	this->_busy = false;
+	this->_counterStart = 0U;
 	this->Buzz_off();
 }
 
 bool Buzzer::isBusy()
 {
-	return busy;
+	return _busy;
 }
 
 uint16_t Buzzer::msToTick(uint16_t ms)

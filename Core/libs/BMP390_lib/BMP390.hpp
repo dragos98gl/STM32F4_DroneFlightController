@@ -55,30 +55,33 @@ private:
 	    double t_lin {0};
 	} quantizedCalibCoef;
 
-	SPI_HandleTypeDef *spi_port;
-
-	uint8_t spiTxBuff[2];
-	uint8_t spiRxBuff[2];
-	double pressure;
-	double temp;
-	uint32_t raw_pressure;
-	uint32_t raw_temp;
-
 	void SPI_write(uint8_t reg,uint8_t data);
 	uint8_t SPI_read(uint8_t reg);
-	bool initAndCheck(uint8_t addr,uint8_t val,uint8_t numberOfTries,bool read_only = false);
+	bool initAndCheck(
+		uint8_t addr,
+		uint8_t val,
+		uint8_t numberOfTries,
+		bool read_only = false);
 	void read_calib_data();
 	void compensate_data();
 	void compensate_temperature();
 	void compensate_pressure();
+	SPI_HandleTypeDef* _spiPort;
+	uint8_t _spiTxBuff[2];
+	uint8_t _spiRxBuff[2];
+	double _pressure;
+	double _temp;
+	uint32_t _rawPressure;
+	uint32_t _rawTemp;
+
 public:
-	BMP390(SPI_HandleTypeDef *spi_port);
+	BMP390(SPI_HandleTypeDef* spiPort);
 	bool defaultInit();
 	void update();
 	int32_t getPressure();
 	int32_t getTemp();
 	uint8_t getChipID();
-	const char* getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER> &senorsList);
+	const char* getSensorValues_str(std::set<SENSOR_DATA_PARAMETER> &senorsList);
 };
 
 

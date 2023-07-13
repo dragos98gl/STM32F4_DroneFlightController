@@ -26,6 +26,8 @@
 #include "FlightControllerImplementation.hpp"
 #include "SensorsDataReadTask.hpp"
 #include "ISRs.hpp"
+#include "fatfs.h"
+#include "SDIODriver.hpp"
 
 ADC_HandleTypeDef hadc1;
 DMA_HandleTypeDef hdma_adc1;
@@ -45,6 +47,7 @@ DMA_HandleTypeDef hdma_usart1_tx;
 DMA_HandleTypeDef hdma_usart2_rx;
 DMA_HandleTypeDef hdma_usart3_rx;
 DMA_HandleTypeDef hdma_usart6_rx;
+DMA_HandleTypeDef hdma_usart6_tx;
 
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
@@ -59,17 +62,21 @@ static void MX_USART2_UART_Init(void);
 static void MX_USART6_UART_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_TIM3_Init();
+static void MX_SDIO_SD_Init(void);
 
+char buffer[100];
 int main(void)
 {
   HAL_Init();//1.19 17 0.38 37 88.20
   SystemClock_Config();
 
   MX_GPIO_Init();
+  MX_USB_DEVICE_Init();
   MX_DMA_Init();
   MX_SPI2_Init();
   MX_USART1_UART_Init();
   MX_SDIO_SD_Init();
+  MX_FATFS_Init();
   MX_USART3_UART_Init();
   MX_ADC1_Init();
   MX_UART4_Init();
@@ -84,8 +91,7 @@ int main(void)
   flightControllerInstance->getHC05instance().addSensor(&flightControllerInstance->getVL53L0Xinstance());
   flightControllerInstance->getHC05instance().addSensor(&flightControllerInstance->getICM42688Pinstance());
 
-  flightControllerInstance->getHC05instance().addSensorParameter(HC05::SENSOR_DATA_PARAMETER::PMW_POS_Y);
-  flightControllerInstance->getHC05instance().addSensorParameter(HC05::SENSOR_DATA_PARAMETER::PMW_POS_X);
+  flightControllerInstance->getHC05instance().addSensorParameter(SENSOR_DATA_PARAMETER::VL53_DISTANCE);
   flightControllerInstance->getHC05instance().printfSensorsValues();
 
   TIM3 -> CCR1 = 0;
@@ -97,6 +103,34 @@ int main(void)
   HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_2);
   HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_3);
   HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_4);
+
+  	char data[] = {0xA5,0x51,0xF6};
+
+	HAL_UART_Transmit(&huart6, (uint8_t*)data, strlen(data),1000);
+	HAL_Delay(100);
+
+  	char data1[] = {0xA5,0x25,0xCA};
+	HAL_UART_Transmit(&huart6, (uint8_t*)data1, strlen(data1),1000);
+	HAL_Delay(100);
+
+	SDIODriver sdioDriver;
+	sdioDriver.Mount_SD("/");
+	sdioDriver.Format_SD();
+	sdioDriver.Create_File("FILE1.TXT");
+	sdioDriver.Unmount_SD("/");
+
+	sdioDriver.Mount_SD("/");
+	for (int i=0;i<10;i++)
+	{
+		long long t = HAL_GetTick();
+
+		sprintf(buffer, std::to_string(t).c_str());
+		strcat(buffer,"\n");
+		sdioDriver.Update_File("FILE1.TXT", buffer);
+
+		HAL_Delay(1000);
+	}
+	sdioDriver.Unmount_SD("/");
 
   xTaskCreate(sensorsDataReadTask,"SensorsDataReadTask",1024,NULL,tskIDLE_PRIORITY+3, flightControllerInstance->getSensorsDataReadHandlerPtr());
   vTaskStartScheduler();
@@ -590,6 +624,9 @@ static void MX_DMA_Init(void)
   /* DMA2_Stream1_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA2_Stream1_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream1_IRQn);
+  /* DMA2_Stream6_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream6_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream6_IRQn);
   /* DMA2_Stream7_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA2_Stream7_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream7_IRQn);

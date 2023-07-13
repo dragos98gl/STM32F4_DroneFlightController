@@ -9,82 +9,82 @@
 
 MemoryManagement& FlightControllorImplementation::getNvmInstance()
 {
-	return this->nvmInstance;
+	return this->_nvmInstance;
 }
 
 PID_Control& FlightControllorImplementation::getRollPidInstance()
 {
-	return this->roll_pid;
+	return this->_rollPID;
 }
 
 PID_Control& FlightControllorImplementation::getPitchPidInstance()
 {
-	return this->pitch_pid;
+	return this->_pitchPID;
 }
 
 PID_Control& FlightControllorImplementation::getYawPidInstance()
 {
-	return this->yaw_pid;
+	return this->_yawPID;
 }
 
 PID_Control& FlightControllorImplementation::getXPositionPidInstance()
 {
-	return this->xPosition_pid;
+	return this->_xPositionPID;
 }
 
 PID_Control& FlightControllorImplementation::getYPositionPidInstance()
 {
-	return this->yPosition_pid;
+	return this->_yPositionPID;
 }
 
 LIS3MDLTR& FlightControllorImplementation::getLIS3MDLTRinstance()
 {
-	return this->lis;
+	return this->_lis;
 }
 
 Buzzer& FlightControllorImplementation::getBuzzerinstance()
 {
-	return this->buzz;
+	return this->_buzz;
 }
 
 BMP390& FlightControllorImplementation::getBMP390instance()
 {
-	return this->bmp;
+	return this->_bmp;
 }
 
 ICM42688P& FlightControllorImplementation::getICM42688Pinstance()
 {
-	return this->icm;
+	return this->_icm;
 }
 
 HC05& FlightControllorImplementation::getHC05instance()
 {
-	return this->bt;
+	return this->_bt;
 }
 
 PMW3901UY& FlightControllorImplementation::getPMW3901UYinstance()
 {
-	return this->pmw;
+	return this->_pmw;
 }
 
 FrSkyRX& FlightControllorImplementation::getFrSkyRXinstance()
 {
-	return this->remote_rx;
+	return this->_remote_rx;
 }
 
 MB1043& FlightControllorImplementation::getMB1043instance()
 {
-	return this->sonar;
+	return this->_sonar;
 }
 
 VL53L0X& FlightControllorImplementation::getVL53L0Xinstance()
 {
-	return this->vl53;
+	return this->_vl53;
 }
 
 BatteryManagement& FlightControllorImplementation::getBatteryManagementinstance()
 {
-	return this->battMgmt;
+	return this->_battMgmt;
 }
 
 TaskHandle_t* FlightControllorImplementation::getFaultsCheckHandlerPtr()

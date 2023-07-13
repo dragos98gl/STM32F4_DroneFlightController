@@ -11,44 +11,44 @@
 
 void BatteryManagement::run()
 {
-	tick_counter++;
+	_tickCounter++;
 	toPercentage();
 
-	if (tick_counter>=frequency_tick)
+	if (_tickCounter>=_frequencyTick)
 	{
-		HAL_ADC_Start_DMA(adc_port, &batteryVal,1);
+		HAL_ADC_Start_DMA(_adcPort, &_batteryVal,1);
 
-		if (batteryVal<=BATERRY_MIN_3V2 && batteryVal > BATTERY_CONNECTED_THRESHOLD)
+		if (_batteryVal<=BATERRY_MIN_3V2 && _batteryVal > BATTERY_CONNECTED_THRESHOLD)
 		{
-			buzz->beep(2000U,200U,1U);
+			_buzz->beep(2000U,200U,1U);
 		}
 
-		tick_counter = 0;
+		_tickCounter = 0;
 	}
 }
 
 void BatteryManagement::toPercentage()
 {
-	if(batteryVal>BATERRY_MAX_4V2)
+	if(_batteryVal>BATERRY_MAX_4V2)
 	{
-		batteryPercentage = 100;
-		batteryVoltage = 4.2;
+		_batteryPercentage = 100;
+		_batteryVoltage = 4.2;
 	}
-	else if(batteryVal<BATERRY_MIN_3V2)
+	else if(_batteryVal<BATERRY_MIN_3V2)
 	{
-		batteryPercentage = 0;
-		batteryVoltage = 3.2;
+		_batteryPercentage = 0;
+		_batteryVoltage = 3.2;
 	}
 	else
 	{
-		batteryVoltage = 3.2+(450.0-(BATERRY_MAX_4V2-batteryVal))/(BATERRY_MAX_4V2-BATERRY_MIN_3V2);
-		batteryPercentage = 123.0 - 123.0/pow((1.0 + pow(batteryVoltage/3.7,80)),0.165);
+		_batteryVoltage = 3.2+(450.0-(BATERRY_MAX_4V2-_batteryVoltage))/(BATERRY_MAX_4V2-BATERRY_MIN_3V2);
+		_batteryPercentage = 123.0 - 123.0/pow((1.0 + pow(_batteryVoltage/3.7,80)),0.165);
 	}
 }
 
 float BatteryManagement::getBatteryPercentage()
 {
-	return batteryPercentage;
+	return _batteryPercentage;
 }
 
 uint16_t BatteryManagement::msToTick(uint16_t ms)

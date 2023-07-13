@@ -9,51 +9,51 @@
 #include "Constants.hpp"
 
 ICM42688P::ICM42688P(
-		SPI_HandleTypeDef *spi_port,
-		Buzzer *buzz,
+		SPI_HandleTypeDef* spiPort,
+		Buzzer* buzz,
 		PID_Control& rollPID,
 		PID_Control& pitchPID,
 		PID_Control& yawPID):
-	spi_port {spi_port}
-	,buzz {buzz}
+	_spiPort {spiPort}
+	,_buzz {buzz}
 	,_rollPID (rollPID)
 	,_pitchPID (pitchPID)
 	,_yawPID (yawPID)
-	,spiTxBuff {0U,0U}
-	,spiRxBuff {0U,0U}
-	,gx {0.0F}
-	,gy {0.0F}
-	,gz {0.0F}
-	,ax {0.0F}
-	,ay {0.0F}
-	,az {0.0F}
-	,raw_gx {0.0F}
-	,raw_gy {0.0F}
-	,raw_gz {0.0F}
-	,raw_ax {0.0F}
-	,raw_ay {0.0F}
-	,raw_az {0.0F}
-	,temp {0.0F}
-	,euler_x {0.0F}
-	,euler_y {0.0F}
-	,euler_z {0.0F}
-	,gxDrift {-12.0F}
-	,gyDrift {-13.0F}
-	,gzDrift {7.00F}
-	,axOffset {2135.0F}
-	,ayOffset {-850.0F / 2.0F}
-	,azOffset {2570.0F / 2.0F}
-	,axScale {2.0F}
-	,ayScale {2.0F}
-	,azScale {2.0F}
-	,prev_raw_ax {0.0F}
-	,prev_raw_ay {0.0F}
-	,prev_raw_az {0.0F}
-	,max_ax_dt {0.0F}
-	,max_ay_dt {0.0F}
-	,max_az_dt {0.0F}
-	,crashState {false}
-	,criticalState {false}
+	,_spiTxBuff {0U,0U}
+	,_spiRxBuff {0U,0U}
+	,_gx {0.0F}
+	,_gy {0.0F}
+	,_gz {0.0F}
+	,_ax {0.0F}
+	,_ay {0.0F}
+	,_az {0.0F}
+	,_rawGx {0.0F}
+	,_rawGy {0.0F}
+	,_rawGz {0.0F}
+	,_rawAx {0.0F}
+	,_rawAy {0.0F}
+	,_rawAz {0.0F}
+	,_temp {0.0F}
+	,_eulerX {0.0F}
+	,_eulerY {0.0F}
+	,_eulerZ {0.0F}
+	,_gxDrift {-12.0F}
+	,_gyDrift {-13.0F}
+	,_gzDrift {7.00F}
+	,_axOffset {1030.0F}
+	,_ayOffset {-974.0F / 2.0F}
+	,_azOffset {2570.0F / 2.0F}
+	,_axScale {2.0F}
+	,_ayScale {2.0F}
+	,_azScale {2.0F}
+	,_prevRawAx {0.0F}
+	,_prevRawAy {0.0F}
+	,_prevRawAz {0.0F}
+	,_maxAxDt {0.0F}
+	,_maxAyDt {0.0F}
+	,_maxAzDt {0.0F}
+	,_crashState {false}
+	,_criticalState {false}
 {
 }
 
@@ -92,9 +92,9 @@ bool ICM42688P::defaultInit()
 	HAL_Delay(50);
 
 	this->update();
-	this->euler_x = this->ay;
-	this->euler_y = this->ax;
-	this->euler_z = this->az;
+	this->_eulerX = this->_ay;
+	this->_eulerY = this->_ax;
+	this->_eulerZ = this->_az;
 
 	return true;
 }
@@ -111,61 +111,61 @@ bool ICM42688P::initAndCheck(uint8_t addr,uint8_t val,uint8_t numberOfTries,bool
 	return false;
 }
 
-const char* ICM42688P::getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER> &senorsList)
+const char* ICM42688P::getSensorValues_str(std::set<SENSOR_DATA_PARAMETER> &senorsList)
 {
 	strcpy(packet,"");
 
-	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_GX)!=senorsList.end())
+	if (senorsList.find(SENSOR_DATA_PARAMETER::ICM_RAW_GX)!=senorsList.end())
 	{
-		strcat(packet,toCharArray(euler_x));
+		strcat(packet,toCharArray(_eulerX));
 		strcat(packet,",");
 	}
 
-	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_GY)!=senorsList.end())
+	if (senorsList.find(SENSOR_DATA_PARAMETER::ICM_RAW_GY)!=senorsList.end())
 	{
-		strcat(packet,toCharArray(euler_y));
+		strcat(packet,toCharArray(_eulerY));
 		strcat(packet,",");
 	}
 
-	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_GZ)!=senorsList.end())
+	if (senorsList.find(SENSOR_DATA_PARAMETER::ICM_RAW_GZ)!=senorsList.end())
 	{
-		strcat(packet,toCharArray(euler_z));
+		strcat(packet,toCharArray(_eulerZ));
 		strcat(packet,",");
 	}
 
-	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_AX)!=senorsList.end())
+	if (senorsList.find(SENSOR_DATA_PARAMETER::ICM_RAW_AX)!=senorsList.end())
 	{
-		strcat(packet,toCharArray(-ax));
+		strcat(packet,toCharArray(-_ax));
 		strcat(packet,",");
 	}
 
-	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_AY)!=senorsList.end())
+	if (senorsList.find(SENSOR_DATA_PARAMETER::ICM_RAW_AY)!=senorsList.end())
 	{
-		strcat(packet,toCharArray(ay));
+		strcat(packet,toCharArray(_ay));
 		strcat(packet,",");
 	}
 
-	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::ICM_RAW_AZ)!=senorsList.end())
+	if (senorsList.find(SENSOR_DATA_PARAMETER::ICM_RAW_AZ)!=senorsList.end())
 	{
-		strcat(packet,toCharArray(az));
+		strcat(packet,toCharArray(_az));
 		strcat(packet,",");
 	}
 
-	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::ICM_AX)!=senorsList.end())
+	if (senorsList.find(SENSOR_DATA_PARAMETER::ICM_AX)!=senorsList.end())
 	{
-		strcat(packet,toCharArray(max_ax_dt));
+		strcat(packet,toCharArray(_maxAxDt));
 		strcat(packet,",");
 	}
 
-	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::ICM_AY)!=senorsList.end())
+	if (senorsList.find(SENSOR_DATA_PARAMETER::ICM_AY)!=senorsList.end())
 	{
-		strcat(packet,toCharArray(max_ay_dt));
+		strcat(packet,toCharArray(_maxAyDt));
 		strcat(packet,",");
 	}
 
-	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::ICM_AZ)!=senorsList.end())
+	if (senorsList.find(SENSOR_DATA_PARAMETER::ICM_AZ)!=senorsList.end())
 	{
-		strcat(packet,toCharArray(max_az_dt));
+		strcat(packet,toCharArray(_maxAzDt));
 		strcat(packet,",");
 	}
 
@@ -191,13 +191,13 @@ void ICM42688P::update()
 	uint8_t tempL = SPI_read(TEMP_DATA0);
 	uint8_t tempH = SPI_read(TEMP_DATA1);
 
-	this->raw_ax = (static_cast<float>(((int16_t)(((int16_t)axH<<8) | axL))) - this->axOffset);// * this->axScale;
-	this->raw_ay = (static_cast<float>(((int16_t)(((int16_t)ayH<<8) | ayL))) - this->ayOffset);// * this->ayScale;
-	this->raw_az = (static_cast<float>(((int16_t)(((int16_t)azH<<8) | azL))) - this->azOffset);// * this->azScale;
-	this->raw_gx = static_cast<float>((int16_t)(((int16_t)gxH<<8) | gxL)) - this->gxDrift;
-	this->raw_gy = static_cast<float>((int16_t)(((int16_t)gyH<<8) | gyL)) - this->gyDrift;
-	this->raw_gz = static_cast<float>((int16_t)(((int16_t)gzH<<8) | gzL)) - this->gzDrift;
-	this->temp = static_cast<float>((int16_t)(((int16_t)tempH<<8) | tempL)) / 132.48F + 25.0F;
+	this->_rawAx = (static_cast<float>(((int16_t)(((int16_t)axH<<8) | axL))) - this->_axOffset);// * this->axScale;
+	this->_rawAy = (static_cast<float>(((int16_t)(((int16_t)ayH<<8) | ayL))) - this->_ayOffset);// * this->ayScale;
+	this->_rawAz = (static_cast<float>(((int16_t)(((int16_t)azH<<8) | azL))) - this->_azOffset);// * this->azScale;
+	this->_rawGx = static_cast<float>((int16_t)(((int16_t)gxH<<8) | gxL)) - this->_gxDrift;
+	this->_rawGy = static_cast<float>((int16_t)(((int16_t)gyH<<8) | gyL)) - this->_gyDrift;
+	this->_rawGz = static_cast<float>((int16_t)(((int16_t)gzH<<8) | gzL)) - this->_gzDrift;
+	this->_temp = static_cast<float>((int16_t)(((int16_t)tempH<<8) | tempL)) / 132.48F + 25.0F;
 
 	this->toEuler();
 
@@ -211,82 +211,82 @@ void ICM42688P::update()
 
 void ICM42688P::checkCriticalState()
 {
-	if (abs(this->euler_x) >=criticalStateAngleThreshold || abs(this->euler_y) >=criticalStateAngleThreshold)
+	if (abs(this->_eulerX) >=criticalStateAngleThreshold || abs(this->_eulerY) >=criticalStateAngleThreshold)
 	{
-		this->criticalState = true;
+		this->_criticalState = true;
 	}
 }
 
 void ICM42688P::checkCrashState()
 {
-	if (this->prev_raw_ax == 0.0F)
-		this->prev_raw_ax = this->raw_ax;
+	if (this->_prevRawAx == 0.0F)
+		this->_prevRawAx = this->_rawAx;
 
-	if (this->prev_raw_ay == 0.0F)
-		this->prev_raw_ay = this->raw_ay;
+	if (this->_prevRawAy == 0.0F)
+		this->_prevRawAy = this->_rawAy;
 
-	if (this->prev_raw_az == 0.0F)
-		this->prev_raw_az = this->raw_az;
+	if (this->_prevRawAz == 0.0F)
+		this->_prevRawAz = this->_rawAz;
 
-	float ax_dt = fabs(this->raw_ax-this->prev_raw_ax);
-	float ay_dt = fabs(this->raw_ay-this->prev_raw_ay);
-	float az_dt = fabs(this->raw_az-this->prev_raw_az);
+	float ax_dt = fabs(this->_rawAx-this->_prevRawAx);
+	float ay_dt = fabs(this->_rawAy-this->_prevRawAy);
+	float az_dt = fabs(this->_rawAz-this->_prevRawAz);
 
 	if (ax_dt > constCrashAccDtThreshold ||
 			ay_dt > constCrashAccDtThreshold ||
 			az_dt > constCrashAccDtThreshold)
 	{
-		this->crashState = true;
+		this->_crashState = true;
 	}
 
-	if (ax_dt > max_ax_dt)
-		max_ax_dt = ax_dt;
+	if (ax_dt > _maxAxDt)
+		_maxAxDt = ax_dt;
 
-	if (ay_dt > max_ay_dt)
-		max_ay_dt = ay_dt;
+	if (ay_dt > _maxAyDt)
+		_maxAyDt = ay_dt;
 
-	if (az_dt > max_az_dt)
-		max_az_dt = az_dt;
+	if (az_dt > _maxAzDt)
+		_maxAzDt = az_dt;
 
-	this->prev_raw_ax=this->raw_ax;
-	this->prev_raw_ay=this->raw_ay;
-	this->prev_raw_az=this->raw_az;
+	this->_prevRawAx=this->_rawAx;
+	this->_prevRawAy=this->_rawAy;
+	this->_prevRawAz=this->_rawAz;
 }
 
 bool ICM42688P::isCriticalStateDetected()
 {
-	return this->criticalState;
+	return this->_criticalState;
 }
 
 bool ICM42688P::isCrashDetected()
 {
-	return this->crashState;
+	return this->_crashState;
 }
 
 
 void ICM42688P::toEuler()
 {
-	this->gx = this->gx + this->raw_gx*(DT/GYRO_FULLSCALE);
-	this->gy = this->gy + this->raw_gy*(DT/GYRO_FULLSCALE);
-	this->gz = this->gz + this->raw_gz*(DT/GYRO_FULLSCALE);
+	this->_gx = this->_gx + this->_rawGx*(DT/GYRO_FULLSCALE);
+	this->_gy = this->_gy + this->_rawGy*(DT/GYRO_FULLSCALE);
+	this->_gz = this->_gz + this->_rawGz*(DT/GYRO_FULLSCALE);
 
-	this->euler_x = this->euler_x + this->raw_gx*(DT/GYRO_FULLSCALE);
-	this->euler_y = this->euler_y + this->raw_gy*(DT/GYRO_FULLSCALE);
-	this->euler_z = this->euler_z + this->raw_gz*(DT/GYRO_FULLSCALE);
+	this->_eulerX = this->_eulerX + this->_rawGx*(DT/GYRO_FULLSCALE);
+	this->_eulerY = this->_eulerY + this->_rawGy*(DT/GYRO_FULLSCALE);
+	this->_eulerZ = this->_eulerZ + this->_rawGz*(DT/GYRO_FULLSCALE);
 
-	this->ax = atan2(this->raw_ax,sqrt(this->raw_ay*this->raw_ay + this->raw_az*this->raw_az))*RADIANS_TO_DEGREES;
-	this->ay = atan2(this->raw_ay,sqrt(this->raw_ax*this->raw_ax + this->raw_az*this->raw_az))*RADIANS_TO_DEGREES;
-	this->az = atan2(this->raw_az,sqrt(this->raw_ax*this->raw_ax + this->raw_ay*this->raw_ay))*RADIANS_TO_DEGREES -90.0F;
+	this->_ax = atan2(this->_rawAx,sqrt(this->_rawAy*this->_rawAy + this->_rawAz*this->_rawAz))*RADIANS_TO_DEGREES;
+	this->_ay = atan2(this->_rawAy,sqrt(this->_rawAx*this->_rawAx + this->_rawAz*this->_rawAz))*RADIANS_TO_DEGREES;
+	this->_az = atan2(this->_rawAz,sqrt(this->_rawAx*this->_rawAx + this->_rawAy*this->_rawAy))*RADIANS_TO_DEGREES -90.0F;
 
-	this->euler_x = this->euler_x*0.9999+this->ay*0.0001;
-	this->euler_y = this->euler_y*0.9999-this->ax*0.0001;
+	this->_eulerX = this->_eulerX*0.9999+this->_ay*0.0001;
+	this->_eulerY = this->_eulerY*0.9999-this->_ax*0.0001;
 }
 
 void ICM42688P::computeGyroDrift(uint32_t count)
 {
-	this->gxDrift = 0.0F;
-	this->gyDrift = 0.0F;
-	this->gzDrift = 0.0F;
+	this->_gxDrift = 0.0F;
+	this->_gyDrift = 0.0F;
+	this->_gzDrift = 0.0F;
 
 	for (uint32_t i=0;i < count;i++)
 	{
@@ -297,25 +297,25 @@ void ICM42688P::computeGyroDrift(uint32_t count)
 		uint8_t gzL = SPI_read(GYRO_DATA_Z0);
 		uint8_t gzH = SPI_read(GYRO_DATA_Z1);
 
-		this->raw_gx = static_cast<float>((int16_t)(((int16_t)gxH<<8) | gxL));
-		this->raw_gy = static_cast<float>((int16_t)(((int16_t)gyH<<8) | gyL));
-		this->raw_gz = static_cast<float>((int16_t)(((int16_t)gzH<<8) | gzL));
+		this->_rawGx = static_cast<float>((int16_t)(((int16_t)gxH<<8) | gxL));
+		this->_rawGy = static_cast<float>((int16_t)(((int16_t)gyH<<8) | gyL));
+		this->_rawGz = static_cast<float>((int16_t)(((int16_t)gzH<<8) | gzL));
 
-		this->gxDrift += this->raw_gx;
-		this->gyDrift += this->raw_gy;
-		this->gzDrift += this->raw_gz;
+		this->_gxDrift += this->_rawGx;
+		this->_gyDrift += this->_rawGy;
+		this->_gzDrift += this->_rawGz;
 	}
 
-	this->gxDrift /= static_cast<float>(count);
-	this->gyDrift /= static_cast<float>(count);
-	this->gzDrift /= static_cast<float>(count);
+	this->_gxDrift /= static_cast<float>(count);
+	this->_gyDrift /= static_cast<float>(count);
+	this->_gzDrift /= static_cast<float>(count);
 }
 
 void ICM42688P::computeAccOffset(uint32_t count)
 {
-	this->axOffset = 0.0F;
-	this->ayOffset = 0.0F;
-	this->azOffset = 0.0F;
+	this->_axOffset = 0.0F;
+	this->_ayOffset = 0.0F;
+	this->_azOffset = 0.0F;
 
 	for (uint32_t i=0;i < count;i++)
 	{
@@ -326,56 +326,56 @@ void ICM42688P::computeAccOffset(uint32_t count)
 		uint8_t azL = SPI_read(ACCEL_DATA_Z0);
 		uint8_t azH = SPI_read(ACCEL_DATA_Z1);
 
-		this->raw_ax = static_cast<float>(((int16_t)(((int16_t)axH<<8) | axL)));
-		this->raw_ay = static_cast<float>(((int16_t)(((int16_t)ayH<<8) | ayL)));
-		this->raw_az = static_cast<float>(((int16_t)(((int16_t)azH<<8) | azL)));
+		this->_rawAx = static_cast<float>(((int16_t)(((int16_t)axH<<8) | axL)));
+		this->_rawAy = static_cast<float>(((int16_t)(((int16_t)ayH<<8) | ayL)));
+		this->_rawAz = static_cast<float>(((int16_t)(((int16_t)azH<<8) | azL)));
 
-		this->axOffset += this->raw_ax;
-		this->ayOffset += this->raw_ay;
-		this->azOffset += this->raw_az;
+		this->_axOffset += this->_rawAx;
+		this->_ayOffset += this->_rawAy;
+		this->_azOffset += this->_rawAz;
 	}
 
-	this->axOffset /= static_cast<float>(count);
-	this->ayOffset /= static_cast<float>(count);
-	this->azOffset = this->azOffset / static_cast<float>(count) - 8192.0F;
+	this->_axOffset /= static_cast<float>(count);
+	this->_ayOffset /= static_cast<float>(count);
+	this->_azOffset = this->_azOffset / static_cast<float>(count) - 8192.0F;
 }
 
 void ICM42688P::calibrate(uint32_t count)
 {
-	this->buzz->beep(3000U,100U,2U);
+	this->_buzz->beep(3000U,100U,2U);
 	this->computeGyroDrift(count);
 	this->computeAccOffset(count);
-	this->buzz->beep(200U,100U,1U);
+	this->_buzz->beep(200U,100U,1U);
 }
 
 float ICM42688P::getEulerX()
 {
-	return this->euler_x;
+	return this->_eulerX;
 }
 
 float& ICM42688P::getEulerXref()
 {
-	return this->euler_x;
+	return this->_eulerX;
 }
 
 float ICM42688P::getEulerY()
 {
-	return this->euler_y;
+	return this->_eulerY;
 }
 
 float& ICM42688P::getEulerYref()
 {
-	return this->euler_y;
+	return this->_eulerY;
 }
 
 float ICM42688P::getEulerZ()
 {
-	return this->euler_z;
+	return this->_eulerZ;
 }
 
 float& ICM42688P::getEulerZref()
 {
-	return this->euler_z;
+	return this->_eulerZ;
 }
 
 uint8_t ICM42688P::WhoAmI()
@@ -385,37 +385,37 @@ uint8_t ICM42688P::WhoAmI()
 
 int16_t ICM42688P::getGyroX()
 {
-	return this->gx;
+	return this->_gx;
 }
 
 int16_t ICM42688P::getGyroY()
 {
-	return this->gy;
+	return this->_gy;
 }
 
 int16_t ICM42688P::getGyroZ()
 {
-	return this->gz;
+	return this->_gz;
 }
 
 int16_t ICM42688P::getAccX()
 {
-	return this->raw_ax;
+	return this->_rawAx;
 }
 
 int16_t ICM42688P::getAccY()
 {
-	return this->ay;
+	return this->_ay;
 }
 
 int16_t ICM42688P::getAccZ()
 {
-	return this->az;
+	return this->_az;
 }
 
 int16_t ICM42688P::getTempX()
 {
-	return this->temp;
+	return this->_temp;
 }
 
 uint8_t ICM42688P::getIntStatus()
@@ -426,20 +426,20 @@ uint8_t ICM42688P::getIntStatus()
 void ICM42688P::SPI_write(uint8_t reg,uint8_t data)
 {
 	HAL_GPIO_WritePin(ICM_CS_PORT,ICM_CS_PIN,GPIO_PIN_RESET);
-	this->spiTxBuff[0] = reg;
-	this->spiTxBuff[1] = data;
-	HAL_SPI_Transmit_DMA(spi_port, (uint8_t*)spiTxBuff,2);
+	this->_spiTxBuff[0] = reg;
+	this->_spiTxBuff[1] = data;
+	HAL_SPI_Transmit_DMA(_spiPort, (uint8_t*)_spiTxBuff,2);
 	HAL_GPIO_WritePin(ICM_CS_PORT,ICM_CS_PIN,GPIO_PIN_SET);
 }
 
 uint8_t ICM42688P::SPI_read(uint8_t reg)
 {
 	HAL_GPIO_WritePin(ICM_CS_PORT, ICM_CS_PIN, GPIO_PIN_RESET);
-	this->spiTxBuff[0]=reg|0x80;
+	this->_spiTxBuff[0]=reg|0x80;
 
-	HAL_SPI_Transmit_DMA(this->spi_port, (uint8_t*)spiTxBuff, 1);
-	HAL_SPI_Receive_DMA(this->spi_port, (uint8_t*)spiRxBuff, 1);
+	HAL_SPI_Transmit_DMA(this->_spiPort, (uint8_t*)_spiTxBuff, 1);
+	HAL_SPI_Receive_DMA(this->_spiPort, (uint8_t*)_spiRxBuff, 1);
 	HAL_GPIO_WritePin(ICM_CS_PORT, ICM_CS_PIN, GPIO_PIN_SET);
 
-	return this->spiRxBuff[0];
+	return this->_spiRxBuff[0];
 }
