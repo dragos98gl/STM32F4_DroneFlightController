@@ -29,21 +29,34 @@ void BatteryManagement::run()
 
 void BatteryManagement::toPercentage()
 {
-	if(batteryVal>BATERRY_MAX_4V2)
-	{
-		batteryPercentage = 100;
-		batteryVoltage = 4.2;
-	}
-	else if(batteryVal<BATERRY_MIN_3V2)
-	{
-		batteryPercentage = 0;
-		batteryVoltage = 3.2;
-	}
-	else
+	//if(batteryVal>BATERRY_MAX_4V2)
+	//{
+		//batteryPercentage = 100;
+		//batteryVoltage = 4.2;
+	//}
+	//else if(batteryVal<BATERRY_MIN_3V2)
+	//{
+		//batteryPercentage = 0;
+		//batteryVoltage = 3.2;
+	//}
+	//else
 	{
 		batteryVoltage = 3.2+(450.0-(BATERRY_MAX_4V2-batteryVal))/(BATERRY_MAX_4V2-BATERRY_MIN_3V2);
 		batteryPercentage = 123.0 - 123.0/pow((1.0 + pow(batteryVoltage/3.7,80)),0.165);
 	}
+}
+
+const char* BatteryManagement::getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER> &senorsList)
+{
+	strcpy(packet,"");
+
+	if (senorsList.find(HC05::SENSOR_DATA_PARAMETER::SONAR_DISTANCE)!=senorsList.end())
+	{
+		strcat(packet,toCharArray(static_cast<int>(batteryVoltage*10000)));
+		strcat(packet,",");
+	}
+
+	return packet;
 }
 
 float BatteryManagement::getBatteryPercentage()

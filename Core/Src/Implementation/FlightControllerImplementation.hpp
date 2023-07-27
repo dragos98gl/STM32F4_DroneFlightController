@@ -97,7 +97,7 @@ public:
 	  remote_rx (huart3, hdma_usart3_rx, &buzz, 1),
 	  sonar (huart4,hdma_uart4_rx,255U),
 	  vl53(huart6,hdma_usart6_rx,255U),
-	  battMgmt (hadc1,&buzz,1000U),
+	  battMgmt (hadc1,&buzz,100U),
 	  roll_pid(icm.getEulerYref(),zeroRef,6,0,5000),
 	  pitch_pid(icm.getEulerXref(),zeroRef,6,0,5000),
 	  yaw_pid(icm.getEulerZref(),zeroRef,10,0,0),

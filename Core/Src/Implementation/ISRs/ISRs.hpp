@@ -11,15 +11,6 @@
 #include "stm32f4xx_hal.h"
 #include "FlightControllerImplementation.hpp"
 
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
-{
-	FlightControllorImplementation *flightControllerInstance = FlightControllorImplementation::getInstance();
-    if (huart->Instance == USART1)
-    {
-    	flightControllerInstance->getHC05instance().printfSensorsValues();
-    }
-}
-
 int timCounter2 = 0;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {

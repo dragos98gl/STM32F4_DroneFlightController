@@ -44,7 +44,7 @@ void PMW3901UY::begin()
 
 void PMW3901UY::update()
 {
-	const bool isPacketOk = (this->rx_buff[0]==this->BEGIN_BIT && this->rx_buff[1]==this->DATA_LEN_BIT && this->rx_buff[8]==this->END_BIT);
+	const bool isPacketOk = (this->rx_buff[6]==this->END_BIT);
 
 	if(isPacketOk)
 	{
@@ -66,7 +66,7 @@ void PMW3901UY::update()
 	{
 		for (uint8_t iter=0;iter<this->packet_length-1U;iter++)
 		{
-			if ((this->rx_buff[iter]==this->END_BIT) && (this->rx_buff[iter+1U]==this->BEGIN_BIT))
+			if ((this->rx_buff[iter]==this->END_BIT))
 			{
 				HAL_UART_Receive_DMA (this->uart_port, this->rx_buff, this->packet_length+iter+1);
 				this->wrongDataReceived = true;

@@ -53,32 +53,14 @@ void DynamicsProcessTask(void *pvParameters)
 				drone::failsafe::quickLanding(*flightControllerInstance);
 			}
 
-			float CCR1_value = 3000.0F + flightControllerInstance->getFrSkyRXinstance().throttle + altitudeMpcOutput + rollPidOutput + pitchPidOutput + yawPidOutput - xPositionPidOutput - yPositionPidOutput;
-			float CCR2_value = 3000.0F + flightControllerInstance->getFrSkyRXinstance().throttle + altitudeMpcOutput + rollPidOutput - pitchPidOutput - yawPidOutput - xPositionPidOutput + yPositionPidOutput;
-			float CCR3_value = 3000.0F + flightControllerInstance->getFrSkyRXinstance().throttle + altitudeMpcOutput - rollPidOutput + pitchPidOutput - yawPidOutput + xPositionPidOutput - yPositionPidOutput;
-			float CCR4_value = 3000.0F + flightControllerInstance->getFrSkyRXinstance().throttle + altitudeMpcOutput - rollPidOutput - pitchPidOutput + yawPidOutput + xPositionPidOutput + yPositionPidOutput;
+			float CCR1_value = 3000.0F + flightControllerInstance->getFrSkyRXinstance().throttle;
+			float CCR2_value = 3000.0F + flightControllerInstance->getFrSkyRXinstance().throttle;
+			float CCR3_value = 3000.0F + flightControllerInstance->getFrSkyRXinstance().throttle;
+			float CCR4_value = 3000.0F + flightControllerInstance->getFrSkyRXinstance().throttle;
 
 			if (currentFaultsStatus == FaultsStatus::OKAY)
 			{
-				if (CCR1_value<3300.0F)
-					CCR1_value = 3300.0F;
-				if (CCR1_value>6000.0F)
-					CCR1_value = 6000.0F;
 
-				if (CCR2_value<3300.0F)
-					CCR2_value = 3300.0F;
-				if (CCR2_value>6000.0F)
-					CCR2_value = 6000.0F;
-
-				if (CCR3_value<3300.0F)
-					CCR3_value = 3300.0F;
-				if (CCR3_value>6000.0F)
-					CCR3_value = 6000.0F;
-
-				if (CCR4_value<3300.0F)
-					CCR4_value = 3300.0F;
-				if (CCR4_value>6000.0F)
-					CCR4_value = 6000.0F;
 			}
 
 			if (currentFaultsStatus == FaultsStatus::CRITICAL)

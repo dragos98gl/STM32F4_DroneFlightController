@@ -11,6 +11,7 @@
 #include "Buzzer.hpp"
 #include "stm32f4xx_hal.h"
 #include "math.h"
+#include "HC05.hpp"
 
 /*
 	2700........4.2
@@ -19,7 +20,7 @@
 	0...........0V
 	450.........1V
 */
-class BatteryManagement
+class BatteryManagement: public PrintableSensor
 {
 private:
 	const uint16_t BATERRY_MAX_4V2 = 2850;
@@ -53,6 +54,7 @@ public:
 
 	float getBatteryPercentage();
 	void run();
+	const char* getSensorValues_str(std::set<HC05::SENSOR_DATA_PARAMETER> &senorsList);
 };
 
 #endif /* LIBS_BATTERYMANAGEMENT_LIB_BATTERYMANAGEMENT_HPP_ */

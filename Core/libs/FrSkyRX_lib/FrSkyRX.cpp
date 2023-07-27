@@ -76,7 +76,7 @@ void FrSkyRX::processStateMachine()
 	switch (this->currentState)
 	{
 	case FrSkyRXState::NOT_CONNECTED:
-		if ((this->lu == 0U) && (this->throttle < 300U) && (this->rb == 1U))
+		if ((this->lu == 0U) && (this->throttle < 3001U) && (this->rb == 1U))
 		{
 			this->currentState = FrSkyRXState::CONNECTED;
 			buzz->stop();
@@ -130,6 +130,10 @@ FrSkyRXState FrSkyRX::getCurrentState() const
 	return this->currentState;
 }
 
+extern long ttt;
+extern long ttt2;
+int th[6] {500,600,700,800,900,1000};//{500,1000,1500,2000};
+int thIndex = 0;
 void FrSkyRX::updateValues()
 {
 	this->channels[0]  = static_cast<int16_t>(rx_buff[1] | (rx_buff[2] << 8 & 0x07FF));
@@ -150,7 +154,18 @@ void FrSkyRX::updateValues()
 	this->channels[14] = static_cast<int16_t>(rx_buff[20] >> 2 | (rx_buff[21] << 6 & 0x07FF));
 	this->channels[15] = static_cast<int16_t>(rx_buff[21] >> 5 | (rx_buff[22] << 3 & 0x07FF));
 
-	this->throttle = static_cast<float>(channels[2]);
+
+	this->throttle = th[thIndex];
+
+	if (ttt2>5000)
+	{
+		ttt2=0;
+		thIndex++;
+
+		if (thIndex==6)
+			thIndex = 0;
+	}
+
 	this->raw_roll = this->channels[0];
 	this->raw_pitch = this->channels[1];
 	this->raw_yaw = this->channels[3];

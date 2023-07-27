@@ -9,7 +9,9 @@
 #define SRC_IMPLEMENTATION_TASKS_FAULTSCHECKTASK_HPP_
 
 #include "FlightControllerImplementation.hpp"
-
+long int ttt = 0;
+long int ttt2 = 0;
+long int ttt3 = 0;
 bool isFailureFaultDetected(FlightControllorImplementation& flightControllerInstance)
 {
 	const bool isRxDisconnected = flightControllerInstance.getFrSkyRXinstance().getCurrentState()==FrSkyRXState::TIMEOUT;
@@ -24,7 +26,7 @@ bool isCriticalFaultDetected(FlightControllorImplementation& flightControllerIns
 
 	const bool isCrashDetected = flightControllerInstance.getICM42688Pinstance().isCriticalStateDetected();
 	if (isCrashDetected)
-		return true;
+		return false;
 
 	return false;
 }
@@ -38,6 +40,16 @@ void FaultsCheckTask(void *pvParameters)
 
 	for( ;; )
 	{
+		ttt++;
+		ttt2++;
+		ttt3++;
+
+		if (ttt3>=200)
+		{
+	    	flightControllerInstance->getHC05instance().printfSensorsValues();
+	    	ttt3 = 0;
+		}
+
 		FaultsStatus currentFaultsStatus = flightControllerInstance->getCurrentFaultsStatus();
 
 		flightControllerInstance->getPMW3901UYinstance().incrementTimeoutCounter();

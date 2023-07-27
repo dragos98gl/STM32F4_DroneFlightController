@@ -29,16 +29,19 @@ void MB1043::begin()
 
 void MB1043::update()
 {
-	const bool isPacketOk = (this->rx_buff[0] == this->BEGIN_BIT) && (this->rx_buff[5]==this->END_BIT);
+	const bool isPacketOk = (this->rx_buff[8]==this->END_BIT);
 
 	if (isPacketOk)
 	{
-		distance_str[0]=rx_buff[1];
-		distance_str[1]=rx_buff[2],
-		distance_str[2]=rx_buff[3],
-		distance_str[3]=rx_buff[4];
+		distance_str[0]=rx_buff[0];
+		distance_str[1]=rx_buff[1],
+		distance_str[2]=rx_buff[2],
+		distance_str[3]=rx_buff[3];
+		distance_str[4]=rx_buff[4];
+		distance_str[5]=rx_buff[5];
+		distance_str[6]=rx_buff[6];
 
-		distance = atoi(distance_str);
+		distance = atof(distance_str);
 
 		resetTimeoutCounter();
 	}
@@ -46,7 +49,7 @@ void MB1043::update()
 	{
 		for (uint8_t iter=0;iter<this->packet_length-1U;iter++)
 		{
-			if ((this->rx_buff[iter]==this->END_BIT) && (this->rx_buff[iter+1U]==this->BEGIN_BIT))
+			if ((this->rx_buff[iter]==this->END_BIT))
 			{
 				HAL_UART_Receive_DMA (this->uart_port, this->rx_buff, this->packet_length+iter+1);
 				this->wrongDataReceived = true;

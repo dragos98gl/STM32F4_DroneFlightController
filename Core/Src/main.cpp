@@ -82,12 +82,12 @@ int main(void)
 
   FlightControllorImplementation *flightControllerInstance = FlightControllorImplementation::getInstance();
 
-  flightControllerInstance->getHC05instance().addSensor(&flightControllerInstance->getPMW3901UYinstance());
-  flightControllerInstance->getHC05instance().addSensor(&flightControllerInstance->getVL53L0Xinstance());
-  flightControllerInstance->getHC05instance().addSensor(&flightControllerInstance->getICM42688Pinstance());
+  flightControllerInstance->getHC05instance().addSensor(&flightControllerInstance->getBatteryManagementinstance());
+  flightControllerInstance->getHC05instance().addSensor(&flightControllerInstance->getMB1043instance());
+  flightControllerInstance->getHC05instance().addSensor(&flightControllerInstance->getFrSkyRXinstance());
 
-  flightControllerInstance->getHC05instance().addSensorParameter(HC05::SENSOR_DATA_PARAMETER::PMW_POS_Y);
-  flightControllerInstance->getHC05instance().addSensorParameter(HC05::SENSOR_DATA_PARAMETER::PMW_POS_X);
+  flightControllerInstance->getHC05instance().addSensorParameter(HC05::SENSOR_DATA_PARAMETER::FRSKY_THROTTLE);
+  flightControllerInstance->getHC05instance().addSensorParameter(HC05::SENSOR_DATA_PARAMETER::SONAR_DISTANCE);
   flightControllerInstance->getHC05instance().printfSensorsValues();
 
   TIM3 -> CCR1 = 0;

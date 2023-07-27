@@ -38,7 +38,9 @@ Core/libs/BatteryManagement_lib/BatteryManagement.o: \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp \
+ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp
 ../Core/libs/BatteryManagement_lib/BatteryManagement.hpp:
 C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Buzzer_lib/Buzzer.hpp:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
@@ -78,3 +80,5 @@ C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Buzzer_lib/Buzzer.hpp:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/HC05_lib/HC05.hpp:
+C:/Users/Dragos/STM32F4_DroneFlightController/Core/libs/Interfaces/Interfaces.hpp:

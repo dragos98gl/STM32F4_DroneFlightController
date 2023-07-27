@@ -16,17 +16,16 @@
 class MB1043:public Timeout ,public PrintableSensor, public CallsCounter //: UART_Conn
 {
 private:
-	static constexpr const int packet_length = 6U;
-	uint8_t BEGIN_BIT = 'R';
-	uint8_t END_BIT = '\r';
+	static constexpr const int packet_length = 9U;
+	const uint8_t END_BIT = '\n';
 
 	UART_HandleTypeDef *uart_port;
 	DMA_HandleTypeDef *uart_port_dma;
 
 	bool wrongDataReceived = false;
 	uint8_t rx_buff[2U * packet_length];
-	char distance_str[4];
-	uint16_t distance;
+	char distance_str[7];
+	float distance;
 public:
 	MB1043(UART_HandleTypeDef *uart_port,DMA_HandleTypeDef *uart_port_dma,uint8_t timeout);
 	void begin();
